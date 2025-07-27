@@ -1,0 +1,13 @@
+# Ignoring generated files
+./sanity.types.ts
+node_modules
+.next
+dist
+build
+*.snap
+*.lock
+public
+out
+coverage
+pnpm-lock.yaml
+turbo
