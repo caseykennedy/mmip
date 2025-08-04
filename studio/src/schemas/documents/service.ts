@@ -2,9 +2,9 @@ import { DocumentTextIcon, ComposeIcon, SearchIcon } from '@sanity/icons'
 import { format, parseISO } from 'date-fns'
 import { defineField, defineType } from 'sanity'
 
-export const post = defineType({
-  name: 'post',
-  title: 'Post',
+export const service = defineType({
+  name: 'service',
+  title: 'Service',
   icon: DocumentTextIcon,
   type: 'document',
   groups: [
@@ -13,22 +13,6 @@ export const post = defineType({
     { name: 'seo', title: 'SEO', icon: SearchIcon },
   ],
   fields: [
-    // Post type selector
-    defineField({
-      name: 'postType',
-      title: 'Type',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Guide', value: 'guide' },
-          { title: 'Story', value: 'story' },
-          { title: 'Tool', value: 'tool' },
-        ],
-        layout: 'radio',
-        direction: 'horizontal',
-      },
-      validation: Rule => Rule.required(),
-    }),
     // Content group fields
     defineField({
       group: 'content',
@@ -52,13 +36,6 @@ export const post = defineType({
       title: 'Cover Image',
       type: 'imageWithAlt',
       validation: Rule => Rule.required(),
-    }),
-    defineField({
-      group: 'content',
-      name: 'date',
-      title: 'Date',
-      type: 'datetime',
-      initialValue: () => new Date().toISOString(),
     }),
     // Region selector
     defineField({
@@ -87,25 +64,11 @@ export const post = defineType({
     }),
     defineField({
       group: 'content',
-      name: 'topic',
-      title: 'Topic',
+      title: 'Service Category',
+      name: 'serviceCategory',
       type: 'reference',
-      to: [{ type: 'topic' }],
-      options: {
-        filter: ({ document }: any) => {
-          const categoryRef = document.category?._ref
-          if (!categoryRef) {
-            return {
-              filter: '_id == $empty',
-              params: { empty: '' },
-            }
-          }
-          return {
-            filter: 'parentCategory._ref == $categoryRef',
-            params: { categoryRef },
-          }
-        },
-      },
+      to: [{ type: 'serviceCategory' }],
+      options: { disableNew: true },
       validation: Rule => Rule.required(),
     }),
     defineField({
@@ -162,6 +125,35 @@ export const post = defineType({
       title: 'Downloadable Asset',
       type: 'file',
       hidden: ({ parent }) => parent?.postType !== 'tool',
+    }),
+
+    // Service-specific group and fields
+    defineField({
+      group: 'service',
+      name: 'location',
+      title: 'Service Location',
+      type: 'string',
+      hidden: ({ parent }) => parent?.postType !== 'service',
+    }),
+    defineField({
+      group: 'service',
+      name: 'serviceType',
+      title: 'Service Type',
+      type: 'string',
+      options: { list: ['Health', 'Legal', 'Emergency', 'Other'] },
+      hidden: ({ parent }) => parent?.postType !== 'service',
+    }),
+    defineField({
+      group: 'service',
+      name: 'contactInfo',
+      title: 'Contact Information',
+      type: 'object',
+      fields: [
+        { name: 'phone', title: 'Phone', type: 'string' },
+        { name: 'email', title: 'Email', type: 'string' },
+        { name: 'website', title: 'Website', type: 'url' },
+      ],
+      hidden: ({ parent }) => parent?.postType !== 'service',
     }),
 
     // SEO group

@@ -1,5 +1,5 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
-import {HomeIcon} from '@sanity/icons'
+import { defineArrayMember, defineField, defineType } from 'sanity'
+import { HomeIcon } from '@sanity/icons'
 
 export const home = defineType({
   name: 'home',
@@ -16,7 +16,7 @@ export const home = defineType({
           name: 'heading',
           title: 'Hero Heading',
           type: 'string',
-          validation: (Rule) => Rule.required(),
+          validation: Rule => Rule.required(),
         }),
         defineField({
           name: 'subheading',
@@ -64,13 +64,13 @@ export const home = defineType({
               name: 'category',
               title: 'Section Category',
               type: 'reference',
-              to: [{type: 'category'}],
+              to: [{ type: 'category' }],
             }),
             defineField({
               name: 'items',
               title: 'Manual Selection',
               type: 'array',
-              of: [defineArrayMember({type: 'reference', to: [{type: 'post'}]})],
+              of: [defineArrayMember({ type: 'reference', to: [{ type: 'post' }] })],
             }),
             defineField({
               name: 'fallbackToLatest',
@@ -91,13 +91,13 @@ export const home = defineType({
       name: 'pageBuilder',
       title: 'Page Builder',
       type: 'array',
-      of: [defineArrayMember({type: 'callToAction'}), defineArrayMember({type: 'infoSection'})],
+      of: [defineArrayMember({ type: 'callToAction' }), defineArrayMember({ type: 'infoSection' })],
       options: {
         insertMenu: {
           views: [
             {
               name: 'grid',
-              previewImageUrl: (schemaTypeName) =>
+              previewImageUrl: schemaTypeName =>
                 `/static/page-builder-thumbnails/${schemaTypeName}.webp`,
             },
           ],
@@ -111,4 +111,18 @@ export const home = defineType({
       type: 'metadata',
     }),
   ],
+
+  preview: {
+    select: {
+      title: 'hero.heading',
+      media: 'hero.image',
+    },
+    prepare({ title, media }) {
+      return {
+        title: title || 'Homepage',
+        subtitle: 'Singleton – Site Home',
+        media,
+      }
+    },
+  },
 })

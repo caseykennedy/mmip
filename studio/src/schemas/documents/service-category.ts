@@ -1,9 +1,9 @@
-import {defineType, defineField} from 'sanity'
-import {FolderIcon} from '@sanity/icons'
+import { defineType, defineField } from 'sanity'
+import { FolderIcon } from '@sanity/icons'
 
-export const postType = defineType({
-  name: 'postType',
-  title: 'Post type',
+export const serviceCategory = defineType({
+  name: 'serviceCategory',
+  title: 'Service Category',
   type: 'document',
   icon: FolderIcon,
   fields: [
@@ -11,7 +11,7 @@ export const postType = defineType({
       name: 'name',
       title: 'Name',
       type: 'string',
-      validation: (Rule) => Rule.required().min(3).max(50),
+      validation: Rule => Rule.required().min(3).max(50),
     }),
     defineField({
       name: 'slug',
@@ -21,14 +21,14 @@ export const postType = defineType({
         source: 'name',
         maxLength: 96,
       },
-      validation: (Rule) => Rule.required(),
+      validation: Rule => Rule.required(),
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       description: 'Brief description of the category (max 200 characters)',
-      validation: (Rule) => Rule.max(200),
+      validation: Rule => Rule.max(200),
     }),
     defineField({
       name: 'image',
@@ -46,11 +46,11 @@ export const postType = defineType({
 
   preview: {
     select: {
-      title: 'name',
+      title: 'title',
       image: 'image',
       subtitle: 'description',
     },
-    prepare({title, image, subtitle}) {
+    prepare({ title, image, subtitle }) {
       return {
         title,
         subtitle: subtitle?.length > 100 ? subtitle.slice(0, 100) + '…' : subtitle,

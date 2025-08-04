@@ -1,6 +1,6 @@
-import {getExtension, getImageDimensions} from '@sanity/asset-utils'
-import {defineType, defineField} from 'sanity'
-import {EarthGlobeIcon} from '@sanity/icons'
+import { getExtension, getImageDimensions } from '@sanity/asset-utils'
+import { defineType, defineField } from 'sanity'
+import { EarthGlobeIcon } from '@sanity/icons'
 
 export const metadata = defineType({
   name: 'metadata',
@@ -13,7 +13,7 @@ export const metadata = defineType({
       title: 'Meta Title',
       type: 'string',
       description: 'Used in the HTML <title> tag and search engine listings',
-      validation: (Rule) => Rule.max(60).warning('Try to keep under 60 characters'),
+      validation: Rule => Rule.max(60).warning('Try to keep under 60 characters'),
     }),
     defineField({
       name: 'metaDescription',
@@ -21,7 +21,7 @@ export const metadata = defineType({
       type: 'text',
       rows: 2,
       description: 'Used in search engine results and social shares',
-      validation: (Rule) => Rule.max(160).warning('Try to keep under 160 characters'),
+      validation: Rule => Rule.max(160).warning('Try to keep under 160 characters'),
     }),
     defineField({
       name: 'openGraphImage',
@@ -31,8 +31,8 @@ export const metadata = defineType({
       options: {
         hotspot: true,
       },
-      validation: (rule) =>
-        rule.custom((value) => {
+      validation: rule =>
+        rule.custom(value => {
           if (!value?.asset?._ref) {
             return true
           }
@@ -43,7 +43,7 @@ export const metadata = defineType({
             return 'Image must be a JPG or PNG'
           }
 
-          const {width, height} = getImageDimensions(value.asset._ref)
+          const { width, height } = getImageDimensions(value.asset._ref)
 
           if (width < 1200 || height < 630) {
             return 'Image must be at least 1200x630 pixels'

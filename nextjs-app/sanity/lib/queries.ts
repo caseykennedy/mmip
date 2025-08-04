@@ -5,12 +5,21 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]`)
 const postFields = /* groq */ `
   _id,
   "status": select(_originalId in path("drafts.**") => "draft", "published"),
+  postType,
   "title": coalesce(title, "Untitled"),
   "slug": slug.current,
   excerpt,
   coverImage,
   "date": coalesce(date, _updatedAt),
+  region,
+  category->{name, "slug": slug.current, description},
+  topic->{name, "slug": slug.current, description},
+  "tags": tags->[]{name, "slug": slug.current, description},
+  excerpt[]{...},
+  notes[]{...},
   "authors": author[]->{firstName, lastName, picture},
+  asset,
+  metadata
 `
 
 const linkReference = /* groq */ `
@@ -76,12 +85,12 @@ export const morePostsQuery = defineQuery(`
 export const postQuery = defineQuery(`
   *[_type == "post" && slug.current == $slug] [0] {
     content[]{
-    ...,
-    markDefs[]{
       ...,
-      ${linkReference}
-    }
-  },
+      markDefs[]{
+        ...,
+        ${linkReference}
+      }
+    },
     ${postFields}
   }
 `)

@@ -12,7 +12,7 @@ import { sanityFetch, SanityLive } from '@/sanity/lib/live'
 import { settingsQuery } from '@/sanity/lib/queries'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 
-import { handleError } from './client-utils'
+import { handleError } from '../lib/handle-error'
 
 import './globals.css'
 import { SpeedInsights } from '@vercel/speed-insights/next'

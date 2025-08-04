@@ -1,5 +1,5 @@
-import {defineArrayMember, defineType, defineField} from 'sanity'
-import {ImageIcon} from '@sanity/icons'
+import { defineArrayMember, defineType, defineField } from 'sanity'
+import { ImageIcon } from '@sanity/icons'
 
 /**
  * This is the schema definition for the rich text fields used for
@@ -21,25 +21,25 @@ export const blockContent = defineType({
     defineArrayMember({
       type: 'block',
       styles: [
-        {title: 'Normal', value: 'normal'},
-        {title: 'Small', value: 'small'},
-        {title: 'Lead', value: 'lead'},
-        {title: 'H2', value: 'h2'},
-        {title: 'H3', value: 'h3'},
-        {title: 'H4', value: 'h4'},
-        {title: 'Blockquote', value: 'blockquote'},
+        { title: 'Normal', value: 'normal' },
+        { title: 'Small', value: 'small' },
+        { title: 'Lead', value: 'lead' },
+        { title: 'H2', value: 'h2' },
+        { title: 'H3', value: 'h3' },
+        { title: 'H4', value: 'h4' },
+        { title: 'Blockquote', value: 'blockquote' },
       ],
       lists: [
-        {title: 'Numbered', value: 'number'},
-        {title: 'Bullet', value: 'bullet'},
+        { title: 'Numbered', value: 'number' },
+        { title: 'Bullet', value: 'bullet' },
       ],
       marks: {
         decorators: [
-          {title: 'Strong', value: 'strong'},
-          {title: 'Emphasis', value: 'em'},
-          {title: 'Underline', value: 'underline'},
-          {title: 'Strike', value: 'strike-through'},
-          {title: 'Code', value: 'code'},
+          { title: 'Strong', value: 'strong' },
+          { title: 'Emphasis', value: 'em' },
+          { title: 'Underline', value: 'underline' },
+          { title: 'Strike', value: 'strike-through' },
+          { title: 'Code', value: 'code' },
         ],
         annotations: [
           {
@@ -54,9 +54,9 @@ export const blockContent = defineType({
                 initialValue: 'href',
                 options: {
                   list: [
-                    {title: 'URL', value: 'href'},
-                    {title: 'Page', value: 'page'},
-                    {title: 'Post', value: 'post'},
+                    { title: 'URL', value: 'href' },
+                    { title: 'Page', value: 'page' },
+                    { title: 'Post', value: 'post' },
                   ],
                   layout: 'radio',
                 },
@@ -65,8 +65,8 @@ export const blockContent = defineType({
                 name: 'href',
                 title: 'URL',
                 type: 'url',
-                hidden: ({parent}) => parent?.linkType !== 'href' && parent?.linkType != null,
-                validation: (Rule) =>
+                hidden: ({ parent }) => parent?.linkType !== 'href' && parent?.linkType != null,
+                validation: Rule =>
                   Rule.custom((value, context: any) => {
                     if (context.parent?.linkType === 'href' && !value) {
                       return 'URL is required when Link Type is URL'
@@ -78,9 +78,9 @@ export const blockContent = defineType({
                 name: 'page',
                 title: 'Page',
                 type: 'reference',
-                to: [{type: 'page'}],
-                hidden: ({parent}) => parent?.linkType !== 'page',
-                validation: (Rule) =>
+                to: [{ type: 'page' }],
+                hidden: ({ parent }) => parent?.linkType !== 'page',
+                validation: Rule =>
                   Rule.custom((value, context: any) => {
                     if (context.parent?.linkType === 'page' && !value) {
                       return 'Page reference is required when Link Type is Page'
@@ -92,9 +92,9 @@ export const blockContent = defineType({
                 name: 'post',
                 title: 'Post',
                 type: 'reference',
-                to: [{type: 'post'}],
-                hidden: ({parent}) => parent?.linkType !== 'post',
-                validation: (Rule) =>
+                to: [{ type: 'post' }],
+                hidden: ({ parent }) => parent?.linkType !== 'post',
+                validation: Rule =>
                   Rule.custom((value, context: any) => {
                     if (context.parent?.linkType === 'post' && !value) {
                       return 'Post reference is required when Link Type is Post'

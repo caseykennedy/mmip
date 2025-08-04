@@ -1,5 +1,5 @@
-import {defineType, defineField} from 'sanity'
-import {TagIcon} from '@sanity/icons'
+import { defineType, defineField } from 'sanity'
+import { TagIcon } from '@sanity/icons'
 
 export const tag = defineType({
   name: 'tag',
@@ -11,7 +11,7 @@ export const tag = defineType({
       name: 'name',
       title: 'Name',
       type: 'string',
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'slug',
@@ -20,14 +20,14 @@ export const tag = defineType({
       options: {
         source: 'name',
       },
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
   ],
   preview: {
     select: {
       title: 'name',
     },
-    prepare: ({title}) => ({
+    prepare: ({ title }) => ({
       title,
       media: TagIcon,
     }),

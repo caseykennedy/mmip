@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import DateComponent from '@/app/components/date'
 import OnBoarding from '@/app/components/onboarding'
-import { Post as PostType } from '@/sanity.types'
+import type { Post as PostType } from '@/sanity.types'
 import { sanityFetch } from '@/sanity/lib/live'
 import { allPostsQuery, morePostsQuery } from '@/sanity/lib/queries'
 
@@ -57,7 +57,9 @@ export const MorePosts = async ({ skip, limit }: { skip: string; limit: number }
 
   return (
     <Posts heading={`Recent Posts (${data?.length})`}>
-      {data?.map((post: any) => <Post key={post._id} post={post} />)}
+      {data?.map((post: any) => (
+        <Post key={post._id} post={post} />
+      ))}
     </Posts>
   )
 }
