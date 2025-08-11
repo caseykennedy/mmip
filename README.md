@@ -73,7 +73,7 @@ The schema for the `Post` document type is defined in the `studio/src/schemaType
 
 #### 1. Deploy Sanity Studio
 
-Your Next.js frontend (`/nextjs-app`) and Sanity Studio (`/studio`) are still only running on your local computer. It's time to deploy and get it into the hands of other content editors.
+Your Next.js frontend (`/frontend`) and Sanity Studio (`/studio`) are still only running on your local computer. It's time to deploy and get it into the hands of other content editors.
 
 Back in your Studio directory (`/studio`), run the following command to deploy your Sanity Studio.
 

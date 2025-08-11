@@ -4,9 +4,8 @@
   "packageManager": "pnpm@8.15.4",
   "scripts": {
     "dev": "npm-run-all --parallel dev:*",
-    "dev:next": "pnpm --filter nextjs-app run dev",
-    "dev:studio": "pnpm --filter studio run dev",
-    "import-sample-data": "pnpm --filter studio run import-sample-data"
+    "dev:next": "pnpm --filter frontend run dev",
+    "dev:studio": "pnpm --filter studio run dev"
   },
   "keywords": [
     "Sanity",

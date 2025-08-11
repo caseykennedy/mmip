@@ -3,19 +3,19 @@
  * Learn more: https://www.sanity.io/docs/configuration
  */
 
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
-import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './src/schemas'
-import {structure} from './src/structure'
-import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
+import { visionTool } from '@sanity/vision'
+import { schemaTypes } from './src/schemas'
+import { structure } from './src/structure'
+import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
 import {
   presentationTool,
   defineDocuments,
   defineLocations,
   type DocumentLocation,
 } from 'sanity/presentation'
-import {assist} from '@sanity/assist'
+import { assist } from '@sanity/assist'
 
 // Environment variables for project configuration
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-projectID'
@@ -85,7 +85,7 @@ export default defineConfig({
               name: 'name',
               slug: 'slug.current',
             },
-            resolve: (doc) => ({
+            resolve: doc => ({
               locations: [
                 {
                   title: doc?.name || 'Untitled',
@@ -99,7 +99,7 @@ export default defineConfig({
               title: 'title',
               slug: 'slug.current',
             },
-            resolve: (doc) => ({
+            resolve: doc => ({
               locations: [
                 {
                   title: doc?.title || 'Untitled',

@@ -10,7 +10,8 @@
     "prebuild": "pnpm run extract-types",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "extract-types": "sanity schema extract --enforce-required-fields"
+    "extract-types": "sanity schema extract --enforce-required-fields",
+    "clean": "rm -rf node_modules && rm -rf .sanity"
   },
   "keywords": [
     "sanity"
@@ -23,7 +24,7 @@
     "date-fns": "^3.6.0",
     "pluralize-esm": "^9.0.5",
     "react": "^19.0.0",
-    "react-dom": "^19.1.0",
+    "react-dom": "^19.0.0",
     "rxjs": "^7.8.1",
     "sanity": "^4.2.0",
     "sanity-plugin-asset-source-unsplash": "^3.0.4",
