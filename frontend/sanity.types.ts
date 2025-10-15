@@ -446,7 +446,7 @@ export type Post = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  postType: 'guide' | 'story' | 'tool'
+  postType: 'article' | 'guide' | 'tool'
   title: string
   slug: Slug
   coverImage: {
@@ -483,24 +483,15 @@ export type Post = {
     _key: string
     [internalGroqTypeReferenceTo]?: 'tag'
   }>
-  excerpt: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
+  authors: Array<{
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
     _key: string
+    [internalGroqTypeReferenceTo]?: 'person'
   }>
+  excerpt?: string
+  content?: BlockContent
   notes?: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -518,14 +509,6 @@ export type Post = {
     level?: number
     _type: 'block'
     _key: string
-  }>
-  content?: BlockContent
-  authors: Array<{
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    _key: string
-    [internalGroqTypeReferenceTo]?: 'person'
   }>
   asset?: {
     asset?: {
@@ -1053,31 +1036,14 @@ export type SitemapDataResult = Array<
     }
 >
 // Variable: allPostsQuery
-// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  "authors": author[]->{firstName, lastName, picture},  asset,  metadata  }
+// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  authors[]->{firstName, lastName, picture},  asset,  metadata  }
 export type AllPostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
-  postType: 'guide' | 'story' | 'tool'
+  postType: 'article' | 'guide' | 'tool'
   title: string
   slug: string
-  excerpt: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+  excerpt: null
   coverImage: {
     asset?: {
       _ref: string
@@ -1126,7 +1092,109 @@ export type AllPostsQueryResult = Array<{
     _type: 'block'
     _key: string
   }> | null
-  authors: null
+  authors: Array<{
+    firstName: string
+    lastName: string
+    picture: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    }
+  }>
+  asset: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+    }
+    media?: unknown
+    _type: 'file'
+  } | null
+  metadata: Metadata | null
+}>
+// Variable: getPostsByTypeQuery
+// Query: *[_type == "post" && postType == $postType] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  authors[]->{firstName, lastName, picture},  asset,  metadata  }
+export type GetPostsByTypeQueryResult = Array<{
+  _id: string
+  status: 'draft' | 'published'
+  postType: 'article' | 'guide' | 'tool'
+  title: string
+  slug: string
+  excerpt: null
+  coverImage: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt: string
+    _type: 'imageWithAlt'
+  }
+  date: string
+  region: 'central' | 'north' | 'south'
+  category: {
+    name: string
+    slug: string
+    description: string | null
+  }
+  topic: {
+    name: string
+    slug: string
+    description: string | null
+  }
+  tags: Array<{
+    name: string
+    slug: string
+    description: null
+  }>
+  notes: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
+  authors: Array<{
+    firstName: string
+    lastName: string
+    picture: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    }
+  }>
   asset: {
     asset?: {
       _ref: string
@@ -1140,31 +1208,14 @@ export type AllPostsQueryResult = Array<{
   metadata: Metadata | null
 }>
 // Variable: morePostsQuery
-// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  "authors": author[]->{firstName, lastName, picture},  asset,  metadata  }
+// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  authors[]->{firstName, lastName, picture},  asset,  metadata  }
 export type MorePostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
-  postType: 'guide' | 'story' | 'tool'
+  postType: 'article' | 'guide' | 'tool'
   title: string
   slug: string
-  excerpt: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+  excerpt: null
   coverImage: {
     asset?: {
       _ref: string
@@ -1213,7 +1264,23 @@ export type MorePostsQueryResult = Array<{
     _type: 'block'
     _key: string
   }> | null
-  authors: null
+  authors: Array<{
+    firstName: string
+    lastName: string
+    picture: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    }
+  }>
   asset: {
     asset?: {
       _ref: string
@@ -1227,7 +1294,7 @@ export type MorePostsQueryResult = Array<{
   metadata: Metadata | null
 }>
 // Variable: postQuery
-// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{      ...,      markDefs[]{        ...,          _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }    },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  "authors": author[]->{firstName, lastName, picture},  asset,  metadata  }
+// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{      ...,      markDefs[]{        ...,          _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }    },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  authors[]->{firstName, lastName, picture},  asset,  metadata  }
 export type PostQueryResult = {
   content: Array<
     | {
@@ -1270,27 +1337,10 @@ export type PostQueryResult = {
   > | null
   _id: string
   status: 'draft' | 'published'
-  postType: 'guide' | 'story' | 'tool'
+  postType: 'article' | 'guide' | 'tool'
   title: string
   slug: string
-  excerpt: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+  excerpt: null
   coverImage: {
     asset?: {
       _ref: string
@@ -1339,7 +1389,148 @@ export type PostQueryResult = {
     _type: 'block'
     _key: string
   }> | null
-  authors: null
+  authors: Array<{
+    firstName: string
+    lastName: string
+    picture: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    }
+  }>
+  asset: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+    }
+    media?: unknown
+    _type: 'file'
+  } | null
+  metadata: Metadata | null
+} | null
+// Variable: getPostQuery
+// Query: *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {    content[]{      ...,      markDefs[]{        ...,          _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }    },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  authors[]->{firstName, lastName, picture},  asset,  metadata  }
+export type GetPostQueryResult = {
+  content: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }>
+        style?: 'blockquote' | 'h2' | 'h3' | 'h4' | 'lead' | 'normal' | 'small'
+        listItem?: 'bullet' | 'number'
+        markDefs: Array<{
+          linkType?: 'href' | 'page' | 'post'
+          href?: string
+          page: string | null
+          post: string | null
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }> | null
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | {
+        asset?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+        }
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt: string
+        _type: 'portableImage'
+        _key: string
+        markDefs: null
+      }
+  > | null
+  _id: string
+  status: 'draft' | 'published'
+  postType: 'article' | 'guide' | 'tool'
+  title: string
+  slug: string
+  excerpt: null
+  coverImage: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt: string
+    _type: 'imageWithAlt'
+  }
+  date: string
+  region: 'central' | 'north' | 'south'
+  category: {
+    name: string
+    slug: string
+    description: string | null
+  }
+  topic: {
+    name: string
+    slug: string
+    description: string | null
+  }
+  tags: Array<{
+    name: string
+    slug: string
+    description: null
+  }>
+  notes: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
+  authors: Array<{
+    firstName: string
+    lastName: string
+    picture: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    }
+  }>
   asset: {
     asset?: {
       _ref: string
@@ -1362,6 +1553,50 @@ export type PostPagesSlugsResult = Array<{
 export type PagesSlugsResult = Array<{
   slug: string
 }>
+// Variable: allCategoriesQuery
+// Query: *[_type == "category" && defined(slug.current)] {      _id,  name,  "slug": slug.current,  description,  image,  order  }
+export type AllCategoriesQueryResult = Array<{
+  _id: string
+  name: string
+  slug: string
+  description: string | null
+  image: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt: string
+    _type: 'imageWithAlt'
+  } | null
+  order: number | null
+}>
+// Variable: getCategoryQuery
+// Query: *[_type == 'category' && slug.current == $slug][0]{      _id,  name,  "slug": slug.current,  description,  image,  order  }
+export type GetCategoryQueryResult = {
+  _id: string
+  name: string
+  slug: string
+  description: string | null
+  image: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt: string
+    _type: 'imageWithAlt'
+  } | null
+  order: number | null
+} | null
 
 // Query TypeMap
 import '@sanity/client'
@@ -1370,10 +1605,14 @@ declare module '@sanity/client' {
     '*[_type == "settings"][0]': SettingsQueryResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        \n  link {\n    ...,\n    \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n  }\n,\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
-    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  "authors": author[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': AllPostsQueryResult
-    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  "authors": author[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': MorePostsQueryResult
-    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n      ...,\n      markDefs[]{\n        ...,\n        \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n    },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  "authors": author[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': PostQueryResult
+    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': AllPostsQueryResult
+    '\n  *[_type == "post" && postType == $postType] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': GetPostsByTypeQueryResult
+    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': MorePostsQueryResult
+    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n      ...,\n      markDefs[]{\n        ...,\n        \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n    },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': PostQueryResult
+    '\n  *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {\n    content[]{\n      ...,\n      markDefs[]{\n        ...,\n        \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n    },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': GetPostQueryResult
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult
+    '\n  *[_type == "category" && defined(slug.current)] {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image,\n  order\n\n  }\n': AllCategoriesQueryResult
+    '\n  *[_type == \'category\' && slug.current == $slug][0]{\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image,\n  order\n\n  }\n': GetCategoryQueryResult
   }
 }

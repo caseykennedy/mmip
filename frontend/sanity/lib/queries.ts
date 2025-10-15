@@ -17,7 +17,7 @@ const postFields = /* groq */ `
   "tags": tags->[]{name, "slug": slug.current, description},
   excerpt[]{...},
   notes[]{...},
-  "authors": author[]->{firstName, lastName, picture},
+  authors[]->{firstName, lastName, picture},
   asset,
   metadata
 `
@@ -76,6 +76,12 @@ export const allPostsQuery = defineQuery(`
   }
 `)
 
+export const getPostsByTypeQuery = defineQuery(`
+  *[_type == "post" && postType == $postType] | order(date desc, _updatedAt desc) {
+    ${postFields}
+  }
+`)
+
 export const morePostsQuery = defineQuery(`
   *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {
     ${postFields}
@@ -95,6 +101,19 @@ export const postQuery = defineQuery(`
   }
 `)
 
+export const getPostQuery = defineQuery(`
+  *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {
+    content[]{
+      ...,
+      markDefs[]{
+        ...,
+        ${linkReference}
+      }
+    },
+    ${postFields}
+  }
+`)
+
 export const postPagesSlugs = defineQuery(`
   *[_type == "post" && defined(slug.current)]
   {"slug": slug.current}
@@ -103,4 +122,27 @@ export const postPagesSlugs = defineQuery(`
 export const pagesSlugs = defineQuery(`
   *[_type == "page" && defined(slug.current)]
   {"slug": slug.current}
+`)
+
+// Categories
+
+const categoryFields = /* groq */ `
+  _id,
+  name,
+  "slug": slug.current,
+  description,
+  image,
+  order
+`
+
+export const allCategoriesQuery = defineQuery(`
+  *[_type == "category" && defined(slug.current)] {
+    ${categoryFields}
+  }
+`)
+
+export const getCategoryQuery = defineQuery(`
+  *[_type == 'category' && slug.current == $slug][0]{
+    ${categoryFields}
+  }
 `)

@@ -9,19 +9,20 @@ export const post = defineType({
   type: 'document',
   groups: [
     { name: 'content', title: 'Content', icon: ComposeIcon },
-    { name: 'service', title: 'Service', icon: ComposeIcon },
     { name: 'seo', title: 'SEO', icon: SearchIcon },
   ],
   fields: [
-    // Post type selector
+    // ─────────────────────────────
+    // Post settings
+    // ─────────────────────────────
     defineField({
       name: 'postType',
-      title: 'Type',
+      title: 'Post type',
       type: 'string',
       options: {
         list: [
+          { title: 'Article', value: 'article' },
           { title: 'Guide', value: 'guide' },
-          { title: 'Story', value: 'story' },
           { title: 'Tool', value: 'tool' },
         ],
         layout: 'radio',
@@ -29,7 +30,6 @@ export const post = defineType({
       },
       validation: Rule => Rule.required(),
     }),
-    // Content group fields
     defineField({
       group: 'content',
       name: 'title',
@@ -60,7 +60,10 @@ export const post = defineType({
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
     }),
-    // Region selector
+
+    // ─────────────────────────────
+    // Taxonomy
+    // ─────────────────────────────
     defineField({
       name: 'region',
       title: 'Region',
@@ -75,6 +78,7 @@ export const post = defineType({
         direction: 'vertical',
       },
       validation: Rule => Rule.required(),
+      hidden: ({ parent }) => parent?.postType !== 'tool',
     }),
     defineField({
       group: 'content',
@@ -118,14 +122,30 @@ export const post = defineType({
       options: { layout: 'tags' },
       validation: Rule => Rule.max(4).required(),
     }),
+
+    // ─────────────────────────────
+    // Body content
+    // ─────────────────────────────
+    defineField({
+      group: 'content',
+      name: 'authors',
+      title: 'Authors',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'person' }] }],
+      options: { layout: 'grid' },
+      validation: Rule => Rule.required(),
+    }),
     defineField({
       group: 'content',
       title: 'Excerpt',
       name: 'excerpt',
-      type: 'array',
-      of: [{ type: 'block' }],
-      validation: Rule => Rule.max(140).required(),
-      options: { search: { weight: 5 } },
+      type: 'text',
+    }),
+    defineField({
+      group: 'content',
+      name: 'content',
+      title: 'Content',
+      type: 'blockContent',
     }),
     defineField({
       group: 'content',
@@ -136,26 +156,9 @@ export const post = defineType({
       of: [{ type: 'block' }],
     }),
 
-    // Article/Tool shared content
-    defineField({
-      group: 'content',
-      name: 'content',
-      title: 'Content',
-      type: 'blockContent',
-      hidden: ({ parent }) => parent?.postType === 'service',
-    }),
-    defineField({
-      group: 'content',
-      name: 'authors',
-      title: 'Authors',
-      type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'person' }] }],
-      options: { layout: 'grid' },
-      validation: Rule => Rule.required(),
-      hidden: ({ parent }) => parent?.postType === 'service',
-    }),
-
-    // Tool-only field
+    // ─────────────────────────────
+    // Tool-specific Fields
+    // ─────────────────────────────
     defineField({
       group: 'content',
       name: 'asset',
@@ -164,7 +167,9 @@ export const post = defineType({
       hidden: ({ parent }) => parent?.postType !== 'tool',
     }),
 
-    // SEO group
+    // ─────────────────────────────
+    // SEO
+    // ─────────────────────────────
     defineField({
       group: 'seo',
       name: 'metadata',
@@ -172,6 +177,10 @@ export const post = defineType({
       type: 'metadata',
     }),
   ],
+
+  // ─────────────────────────────
+  // Preview
+  // ─────────────────────────────
   preview: {
     select: {
       title: 'title',

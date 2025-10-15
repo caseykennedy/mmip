@@ -48,8 +48,8 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
 
   return {
     authors:
-      post?.author?.firstName && post?.author?.lastName
-        ? [{ name: `${post.author.firstName} ${post.author.lastName}` }]
+      post?.authors?.[0].firstName && post?.authors?.[0].lastName
+        ? [{ name: `${post.authors?.[0].firstName} ${post.authors?.[0].lastName}` }]
         : [],
     title: post?.title,
     description: post?.excerpt,
@@ -79,8 +79,8 @@ export default async function PostPage(props: Props) {
                 </h2>
               </div>
               <div className="flex max-w-3xl items-center gap-4">
-                {post.author && post.author.firstName && post.author.lastName && (
-                  <Avatar person={post.author} date={post.date} />
+                {post.authors && post.authors?.[0].firstName && post.authors?.[0].lastName && (
+                  <Avatar person={post.authors[0]} date={post.date} />
                 )}
               </div>
             </div>

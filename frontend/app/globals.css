@@ -8,43 +8,71 @@
   /* ============================ */
 
   /* Base neutrals */
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-offwhite: #fffdf9;
-  --color-warm-white: #f5f1eb;
-  --color-ivory: #fefefe;
-  --color-warm-ivory: #fcfbf9;
-  --color-light-ivory: #f3efe8;
-  --color-beige: #eee8e1;
+  --color-sand-50: #faf8f4;
+  --color-sand-100: #f1ede7;
+  --color-sand-200: #ede8dd;
+  --color-sand-300: #e5dfc9;
+  --color-sand-400: #d8cdb5;
+  --color-sand-500: #cdc0a9;
+  --color-sand-600: #bfb193;
+  --color-sand-700: #b3a98c;
+  --color-sand-800: #988f73;
+  --color-sand-900: #7d745f;
 
-  --color-warm-black: #2f2a26;
-  --color-warm-gray: #5a514b;
-  --color-gray-muted: #8c837d;
-  --color-gray-accent: #7c3aed;
-  --color-gray-dark: #4e4a45;
-  --color-gray-darker: #3f3c38;
-  --color-gray-deep: #2f2d2a;
+  --color-zinc-50: #f8f8fa;
+  --color-zinc-100: #f3f3f6;
+  --color-zinc-200: #e2e3e8;
+  --color-zinc-300: #c9cad1;
+  --color-zinc-400: #9b9ca6;
+  --color-zinc-500: #6f707b;
+  --color-zinc-600: #53545f;
+  --color-zinc-700: #3c3d46;
+  --color-zinc-800: #2a2b32;
+  --color-zinc-900: #191a1f;
 
-  /* Surface hues (rich, earthy) */
-  --color-green-500: #597e52;
-  --color-green-600: #4e6f47;
-  --color-green-700: #3f5c3a;
+  --color-terracota-50: #fdf5f4;
+  --color-terracota-100: #f6eae8;
+  --color-terracota-200: #f1d2cd;
+  --color-terracota-300: #efb6ae;
+  --color-terracota-400: #d98478;
+  --color-terracota-500: #a2574b;
+  --color-terracota-600: #874238;
+  --color-terracota-700: #6b2f27;
+  --color-terracota-800: #53211f;
+  --color-terracota-900: #3a120f;
 
-  --color-peach-500: #dd8362;
-  --color-peach-600: #c47155;
-  --color-peach-700: #aa5f48;
+  --color-gold-50: #fff8e7;
+  --color-gold-100: #ffedc4;
+  --color-gold-200: #f9dc9a;
+  --color-gold-300: #ebc37d;
+  --color-gold-400: #dfa94e;
+  --color-gold-500: #ce8c00;
+  --color-gold-600: #b57800;
+  --color-gold-700: #996200;
+  --color-gold-800: #744801;
+  --color-gold-900: #4a2d00;
 
-  --color-orange-500: #d67b32;
-  --color-orange-600: #bd6b2c;
-  --color-orange-700: #a35b25;
+  --color-sage-50: #f7faf5;
+  --color-sage-100: #e3ede4;
+  --color-sage-200: #c9dcc9;
+  --color-sage-300: #adc1aa;
+  --color-sage-400: #8f9d84;
+  --color-sage-500: #788968;
+  --color-sage-600: #616f52;
+  --color-sage-700: #5c6649;
+  --color-sage-800: #454d38;
+  --color-sage-900: #2d3327;
 
-  --color-blue-500: #457b9d;
-  --color-blue-600: #3c6d8a;
-  --color-blue-700: #345d74;
-
-  --color-purple-500: #7c3aed;
-  --color-purple-600: #6a2fd5;
-  --color-purple-700: #5d26b8;
+  --color-twilight-50: #f6f8fb;
+  --color-twilight-100: #e3eaf3;
+  --color-twilight-200: #c9d7e8;
+  --color-twilight-300: #bacade;
+  --color-twilight-400: #92a9cd;
+  --color-twilight-500: #7995b9;
+  --color-twilight-600: #5f7499;
+  --color-twilight-700: #4d668f;
+  --color-twilight-800: #354a6b;
+  --color-twilight-900: #1c335b;
 
   /* Feedback (pastels/muted) */
   --color-success-300: #bcd8c1;
@@ -66,79 +94,31 @@
   --color-info-400: #a4c1cf;
   --color-info-500: #91aebc;
   --color-info-fg: #243944;
-
-  /* Icon */
-  --color-icon-base: #4a403a;
-  --color-icon-accent: var(--color-purple-500);
-  --color-icon-inverse: var(--color-white);
-
-  /* Border */
-  --color-border-base: #dcd4ce;
-  --color-border-muted: #e7e2dd;
-  --color-border-accent: var(--color-purple-500);
-  --color-divider: #e2dcd6;
-
-  /* Buttons */
-  --color-btn-black: #1a1a1a;
-  --color-btn-black-hover: var(--color-black);
-  --color-btn-black-active: #2e2e2e;
-
-  /* Disabled */
-  --color-disabled-bg: #d2cbc5;
-  --color-disabled-fg: #918b85;
-
-  /* Rings */
-  --color-ring-purple-50a: rgba(124, 58, 237, 0.5);
-  --color-ring-error-50a: rgba(163, 58, 58, 0.5);
 }
 
 :root {
   /* ========================================================= */
   /* Foundation Colors (Backgrounds & Foregrounds)             */
   /* ========================================================= */
-  --color-bg: var(--color-offwhite);
-  --color-bg-subtle: var(--color-warm-white);
+  --color-bg: var(--color-sand-50);
+  --color-bg-subtle: var(--color-sand-100);
   --color-bg-overlay: rgba(0, 0, 0, 0.85);
 
-  --color-fg: var(--color-warm-black);
-  --color-fg-subtle: var(--color-warm-gray);
-  --color-fg-accent: var(--color-purple-500);
-  --color-fg-muted: var(--color-gray-muted);
+  --color-fg: var(--color-zinc-900);
+  --color-fg-subtle: var(--color-zinc-700);
+  --color-fg-accent: var(--color-twilight-900);
+  --color-fg-muted: var(--color-zinc-600);
 
   /* ========================================================= */
   /* Surface Colors (Rich, earthy, interactive containers)     */
   /* ========================================================= */
+  --color-surface: var(--color-sand-100);
+  --color-surface-fg: var(--color-fg);
+  --color-surface-hover: var(--color-sand-200);
+
   --color-surface-green: var(--color-green-500);
   --color-surface-green-fg: var(--color-white);
   --color-surface-green-hover: var(--color-green-600);
-  --color-surface-green-active: var(--color-green-700);
-
-  --color-surface-peach: var(--color-peach-500);
-  --color-surface-peach-fg: var(--color-white);
-  --color-surface-peach-hover: var(--color-peach-600);
-  --color-surface-peach-active: var(--color-peach-700);
-
-  --color-surface-orange: var(--color-orange-500);
-  --color-surface-orange-fg: var(--color-white);
-  --color-surface-orange-hover: var(--color-orange-600);
-  --color-surface-orange-active: var(--color-orange-700);
-
-  --color-surface-blue: var(--color-blue-500);
-  --color-surface-blue-fg: var(--color-white);
-  --color-surface-blue-hover: var(--color-blue-600);
-  --color-surface-blue-active: var(--color-blue-700);
-
-  --color-surface-purple: var(--color-purple-500);
-  --color-surface-purple-fg: var(--color-white);
-  --color-surface-purple-hover: var(--color-purple-600);
-  --color-surface-purple-active: var(--color-purple-700);
-
-  --color-surface: var(--color-ivory);
-  --color-surface-fg: var(--color-warm-black);
-  --color-surface-hover: var(--color-light-ivory);
-  --color-surface-elevated: var(--color-warm-ivory);
-  --color-surface-elevated-fg: var(--color-warm-black);
-  --color-surface-elevated-hover: var(--color-beige);
 
   /* ========================================================= */
   /* Feedback Colors (Pastel/Muted for alerts & status)        */
@@ -166,37 +146,68 @@
   /* ========================================================= */
   /* Icon Colors                                               */
   /* ========================================================= */
-  --color-icon: var(--color-icon-base);
-  --color-icon-accent: var(--color-icon-accent);
-  --color-icon-inverse: var(--color-icon-inverse);
+  --color-icon: var(--color-twilight-900);
 
   /* ========================================================= */
   /* Interactive Colors (States & Buttons)                     */
   /* ========================================================= */
-  --color-primary: var(--color-btn-black);
-  --color-primary-hover: var(--color-btn-black-hover);
-  --color-primary-active: var(--color-btn-black-active);
+  --color-primary: var(--color-gold-500);
+  --color-primary-hover: var(--color-gold-700);
   --color-primary-fg: var(--color-white);
 
-  --color-secondary: var(--color-gray-dark);
+  --color-secondary: var(--color-twilight-900);
   --color-secondary-hover: var(--color-gray-darker);
   --color-secondary-active: var(--color-gray-deep);
   --color-secondary-fg: var(--color-white);
 
-  --color-disabled: var(--color-disabled-bg);
-  --color-disabled-fg: var(--color-disabled-fg);
+  --color-disabled: var(--color-zinc-300);
+  --color-disabled-fg: var(--color-zinc-500);
 
   /* ========================================================= */
   /* Border & Divider Colors                                   */
   /* ========================================================= */
-  --color-border: var(--color-border-base);
-  --color-border-active: var(--color-border-accent);
-  --color-border-muted: var(--color-border-muted);
-  --color-divider: var(--color-divider);
+  --color-border: var(--color-sand-300);
 
   /* ========================================================= */
   /* Rings & Focus                                             */
   /* ========================================================= */
-  --color-ring-focus: var(--color-ring-purple-50a);
+  --color-ring-focus: var(--color-gold-500);
   --color-ring-error: var(--color-ring-error-50a);
 }
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply relative flex min-h-screen w-full flex-col justify-between scroll-smooth font-body text-base font-medium tracking-normal antialiased;
+
+    -webkit-text-size-adjust: 100%;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-feature-settings: 'pnum';
+    text-rendering: geometricPrecision;
+    font-feature-settings: 'pnum';
+    font-variant-numeric: proportional-nums;
+    font-variant-ligatures: common-ligatures discretionary-ligatures;
+  }
+
+  ::selection {
+    /* @apply; */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-bold leading-snug text-foreground-accent;
+  }
+}
+
+/* @layer base {
+  .container {
+    @apply w-full max-w-screen-site px-6 sm:px-20 md:px-8 lg:px-10;
+  }
+} */

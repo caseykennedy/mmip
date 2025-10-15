@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import { draftMode } from 'next/headers'
 import { toPlainText, VisualEditing } from 'next-sanity'
 import { Toaster } from 'sonner'
@@ -7,38 +6,40 @@ import { Toaster } from 'sonner'
 import DraftModeToast from '@/app/components/draft-mode-toast'
 import Footer from '@/app/components/footer'
 import Header from '@/app/components/header'
+import { BASE_URL, SITE_NAME } from '@/lib/constants'
+import { handleError } from '@/lib/handle-error'
+import { cn } from '@/lib/utils'
 import * as demo from '@/sanity/lib/demo'
 import { sanityFetch, SanityLive } from '@/sanity/lib/live'
 import { settingsQuery } from '@/sanity/lib/queries'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 
-import { handleError } from '../lib/handle-error'
+import { HelveticaNowFont, RealHeadFont } from './fonts'
 
 import './globals.css'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
-/**
- * Generate metadata for the page.
- * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
- */
 export async function generateMetadata(): Promise<Metadata> {
   const { data: settings } = await sanityFetch({
     query: settingsQuery,
     // Metadata should never contain stega
     stega: false,
   })
+
   const title = settings?.title || demo.title
   const description = settings?.description || demo.description
 
   const ogImage = resolveOpenGraphImage(settings?.ogImage)
+
   let metadataBase: URL | undefined = undefined
   try {
     metadataBase = settings?.ogImage?.metadataBase
       ? new URL(settings.ogImage.metadataBase)
       : undefined
   } catch {
-    // ignore
+    // ignore invalid URL
   }
+
   return {
     metadataBase,
     title: {
@@ -46,23 +47,49 @@ export async function generateMetadata(): Promise<Metadata> {
       default: title,
     },
     description: toPlainText(description),
+    keywords: ['default', 'keywords'],
+    authors: [{ name: 'Default Author' }],
+    generator: 'Next.js',
+    applicationName: SITE_NAME,
+    publisher: SITE_NAME,
+    manifest: `${BASE_URL}/manifest.webmanifest`,
     openGraph: {
+      title: title,
+      description: toPlainText(description),
+      url: BASE_URL,
+      siteName: SITE_NAME,
       images: ogImage ? [ogImage] : [],
+      locale: 'en_US',
+      type: 'website',
+    },
+    alternates: {
+      canonical: '/',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: false,
+    },
+    icons: {
+      icon: '/favicon.ico',
+      shortcut: '/favicon-16x16.png',
+      apple: '/apple-touch-icon.png',
     },
   }
 }
-
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
-})
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled: isDraftMode } = await draftMode()
 
   return (
-    <html lang="en" className={`${inter.variable} bg-white text-black`}>
+    <html
+      lang="en"
+      className={cn(
+        'bg-background text-foreground',
+        HelveticaNowFont.variable,
+        RealHeadFont.variable,
+      )}
+    >
       <body>
         <section className="min-h-screen pt-24">
           {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
