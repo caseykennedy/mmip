@@ -8,6 +8,11 @@ export const home = defineType({
   icon: HomeIcon,
   fields: [
     defineField({
+      name: 'name',
+      title: 'Page Name',
+      type: 'string',
+    }),
+    defineField({
       name: 'hero',
       title: 'Hero Section',
       type: 'object',
@@ -21,7 +26,8 @@ export const home = defineType({
         defineField({
           name: 'subheading',
           title: 'Hero Subheading',
-          type: 'string',
+          type: 'text',
+          rows: 2,
         }),
         defineField({
           name: 'image',
@@ -34,75 +40,40 @@ export const home = defineType({
       ],
     }),
 
-    // Uncomment and define if re-enabling featuredSections
-    // defineField({
-    //   name: 'featuredSections',
-    //   title: 'Featured Sections',
-    //   type: 'array',
-    //   of: [
-    //     defineArrayMember({ type: 'reference', to: [{ type: 'resource' }] }),
-    //     defineArrayMember({ type: 'reference', to: [{ type: 'post' }] }),
-    //     defineArrayMember({ type: 'callToAction' }),
-    //   ],
-    // }),
-
     defineField({
-      name: 'sections',
-      title: 'Homepage Sections',
+      name: 'featuredPosts',
+      title: 'Featured Resources',
+      description:
+        'Select up to three featured resources. Order determines layout: guide → tool → article.',
       type: 'array',
       of: [
-        defineArrayMember({
-          type: 'object',
-          title: 'Featured Resources',
-          fields: [
-            defineField({
-              name: 'title',
-              title: 'Section Title',
-              type: 'string',
-            }),
-            defineField({
-              name: 'category',
-              title: 'Section Category',
-              type: 'reference',
-              to: [{ type: 'category' }],
-            }),
-            defineField({
-              name: 'items',
-              title: 'Manual Selection',
-              type: 'array',
-              of: [defineArrayMember({ type: 'reference', to: [{ type: 'post' }] })],
-            }),
-            defineField({
-              name: 'fallbackToLatest',
-              title: 'Fallback to latest resources if empty?',
-              type: 'boolean',
-            }),
-            defineField({
-              name: 'limit',
-              title: 'Max Items',
-              type: 'number',
-            }),
-          ],
-        }),
+        {
+          type: 'reference',
+          to: [{ type: 'post' }],
+        },
       ],
+      validation: Rule => Rule.max(3).required(),
     }),
 
     defineField({
-      name: 'pageBuilder',
-      title: 'Page Builder',
+      name: 'showFeaturedServices',
+      title: 'Show featured services',
+      type: 'boolean',
+    }),
+
+    defineField({
+      name: 'featuredServices',
+      title: 'Featured Services',
+      description: 'Select six featured services.',
       type: 'array',
-      of: [defineArrayMember({ type: 'callToAction' }), defineArrayMember({ type: 'infoSection' })],
-      options: {
-        insertMenu: {
-          views: [
-            {
-              name: 'grid',
-              previewImageUrl: schemaTypeName =>
-                `/static/page-builder-thumbnails/${schemaTypeName}.webp`,
-            },
-          ],
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'service' }],
         },
-      },
+      ],
+      validation: Rule => Rule.min(6).max(6).required(),
+      hidden: ({ parent }) => !parent?.showFeaturedServices,
     }),
 
     defineField({

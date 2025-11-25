@@ -75,25 +75,6 @@ export type CallToAction = {
   link?: Link
 }
 
-export type Link = {
-  _type: 'link'
-  linkType?: 'href' | 'page' | 'post'
-  href?: string
-  page?: {
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    [internalGroqTypeReferenceTo]?: 'page'
-  }
-  post?: {
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    [internalGroqTypeReferenceTo]?: 'post'
-  }
-  openInNewTab?: boolean
-}
-
 export type BlockContent = Array<
   | {
       children?: Array<{
@@ -367,12 +348,71 @@ export type Settings = {
   }
 }
 
+export type Navigation = {
+  _id: string
+  _type: 'navigation'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  mainNav?: Array<{
+    link?: Link
+    hasDropdown?: boolean
+    menuLabel?: string
+    dropdownMenu?: Array<
+      {
+        _key: string
+      } & Link
+    >
+    _type: 'item'
+    _key: string
+  }>
+  footerNav?: Array<
+    {
+      _key: string
+    } & Link
+  >
+}
+
+export type Link = {
+  _type: 'link'
+  linkType?: 'page' | 'post' | 'category' | 'href'
+  label?: string
+  openInNewTab?: boolean
+  href?: string
+  page?:
+    | {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+    | {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'home'
+      }
+  post?: {
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: 'post'
+  }
+  category?: {
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: 'category'
+  }
+}
+
 export type Home = {
   _id: string
   _type: 'home'
   _createdAt: string
   _updatedAt: string
   _rev: string
+  name?: string
   hero?: {
     heading: string
     subheading?: string
@@ -868,13 +908,14 @@ export type SanityAssetSourceData = {
 export type AllSanitySchemaTypes =
   | InfoSection
   | CallToAction
-  | Link
   | BlockContent
   | Tag
   | Service
   | ServiceCategory
   | Person
   | Settings
+  | Navigation
+  | Link
   | Home
   | Page
   | Post
@@ -949,8 +990,90 @@ export type SettingsQueryResult = {
     _type: 'image'
   }
 } | null
+// Variable: navigationQuery
+// Query: *[_type == "navigation"][0]{    mainNav[]{      _key,      _type,      link{          _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      "slug": slug.current    }  }      },      hasDropdown,      menuLabel,      dropdownMenu[]{          _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      "slug": slug.current    }  }      }    },    footerNav[]{        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      "slug": slug.current    }  }    }  }
+export type NavigationQueryResult = {
+  mainNav: Array<{
+    _key: string
+    _type: 'item'
+    link: {
+      _type: 'link'
+      linkType: 'category' | 'href' | 'page' | 'post' | null
+      label: string | null
+      openInNewTab: boolean | null
+      page:
+        | {
+            name: string
+            slug: string
+          }
+        | {
+            name: string | null
+            slug: null
+          }
+        | null
+      post: {
+        title: string
+        slug: string
+      } | null
+      category: {
+        name: string
+        slug: string
+      } | null
+    } | null
+    hasDropdown: boolean | null
+    menuLabel: string | null
+    dropdownMenu: Array<{
+      _type: 'link'
+      linkType: 'category' | 'href' | 'page' | 'post' | null
+      label: string | null
+      openInNewTab: boolean | null
+      page:
+        | {
+            name: string
+            slug: string
+          }
+        | {
+            name: string | null
+            slug: null
+          }
+        | null
+      post: {
+        title: string
+        slug: string
+      } | null
+      category: {
+        name: string
+        slug: string
+      } | null
+    }> | null
+  }> | null
+  footerNav: Array<{
+    _type: 'link'
+    linkType: 'category' | 'href' | 'page' | 'post' | null
+    label: string | null
+    openInNewTab: boolean | null
+    page:
+      | {
+          name: string
+          slug: string
+        }
+      | {
+          name: string | null
+          slug: null
+        }
+      | null
+    post: {
+      title: string
+      slug: string
+    } | null
+    category: {
+      name: string
+      slug: string
+    } | null
+  }> | null
+} | null
 // Variable: getPageQuery
-// Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    name,    slug,    heading,    subheading,    "pageBuilder": pageBuilder[]{      ...,      _type == "callToAction" => {          link {    ...,      _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }  },      },      _type == "infoSection" => {        content[]{          ...,          markDefs[]{            ...,              _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }          }        }      },    },  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    name,    slug,    heading,    subheading,    "pageBuilder": pageBuilder[]{      ...,      _type == "callToAction" => {          link {      _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      "slug": slug.current    }  }  },      },      _type == "infoSection" => {        content[]{          ...,          markDefs[]{            ...,              _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      "slug": slug.current    }  }          }        }      },    },  }
 export type GetPageQueryResult = {
   _id: string
   _type: 'page'
@@ -967,11 +1090,27 @@ export type GetPageQueryResult = {
         buttonText?: string
         link: {
           _type: 'link'
-          linkType?: 'href' | 'page' | 'post'
-          href?: string
-          page: string | null
-          post: string | null
-          openInNewTab?: boolean
+          linkType: 'category' | 'href' | 'page' | 'post' | null
+          label: string | null
+          openInNewTab: boolean | null
+          page:
+            | {
+                name: string
+                slug: string
+              }
+            | {
+                name: string | null
+                slug: null
+              }
+            | null
+          post: {
+            title: string
+            slug: string
+          } | null
+          category: {
+            name: string
+            slug: string
+          } | null
         } | null
       }
     | {
@@ -990,13 +1129,21 @@ export type GetPageQueryResult = {
               style?: 'blockquote' | 'h2' | 'h3' | 'h4' | 'lead' | 'normal' | 'small'
               listItem?: 'bullet' | 'number'
               markDefs: Array<{
-                linkType?: 'href' | 'page' | 'post'
+                linkType: 'href' | 'page' | 'post' | null
                 href?: string
-                page: string | null
-                post: string | null
-                openInNewTab?: boolean
+                page: {
+                  name: string
+                  slug: string
+                } | null
+                post: {
+                  title: string
+                  slug: string
+                } | null
+                openInNewTab: boolean | null
                 _type: 'link'
                 _key: string
+                label: null
+                category: null
               }> | null
               level?: number
               _type: 'block'
@@ -1294,7 +1441,7 @@ export type MorePostsQueryResult = Array<{
   metadata: Metadata | null
 }>
 // Variable: postQuery
-// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{      ...,      markDefs[]{        ...,          _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }    },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  authors[]->{firstName, lastName, picture},  asset,  metadata  }
+// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{      ...,      markDefs[]{        ...,          _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      "slug": slug.current    }  }      }    },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  authors[]->{firstName, lastName, picture},  asset,  metadata  }
 export type PostQueryResult = {
   content: Array<
     | {
@@ -1307,13 +1454,21 @@ export type PostQueryResult = {
         style?: 'blockquote' | 'h2' | 'h3' | 'h4' | 'lead' | 'normal' | 'small'
         listItem?: 'bullet' | 'number'
         markDefs: Array<{
-          linkType?: 'href' | 'page' | 'post'
+          linkType: 'href' | 'page' | 'post' | null
           href?: string
-          page: string | null
-          post: string | null
-          openInNewTab?: boolean
+          page: {
+            name: string
+            slug: string
+          } | null
+          post: {
+            title: string
+            slug: string
+          } | null
+          openInNewTab: boolean | null
           _type: 'link'
           _key: string
+          label: null
+          category: null
         }> | null
         level?: number
         _type: 'block'
@@ -1419,7 +1574,7 @@ export type PostQueryResult = {
   metadata: Metadata | null
 } | null
 // Variable: getPostQuery
-// Query: *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {    content[]{      ...,      markDefs[]{        ...,          _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }    },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  authors[]->{firstName, lastName, picture},  asset,  metadata  }
+// Query: *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {    content[]{      ...,      markDefs[]{        ...,          _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      "slug": slug.current    }  }      }    },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  region,  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  "tags": tags->[]{name, "slug": slug.current, description},  excerpt[]{...},  notes[]{...},  authors[]->{firstName, lastName, picture},  asset,  metadata  }
 export type GetPostQueryResult = {
   content: Array<
     | {
@@ -1432,13 +1587,21 @@ export type GetPostQueryResult = {
         style?: 'blockquote' | 'h2' | 'h3' | 'h4' | 'lead' | 'normal' | 'small'
         listItem?: 'bullet' | 'number'
         markDefs: Array<{
-          linkType?: 'href' | 'page' | 'post'
+          linkType: 'href' | 'page' | 'post' | null
           href?: string
-          page: string | null
-          post: string | null
-          openInNewTab?: boolean
+          page: {
+            name: string
+            slug: string
+          } | null
+          post: {
+            title: string
+            slug: string
+          } | null
+          openInNewTab: boolean | null
           _type: 'link'
           _key: string
+          label: null
+          category: null
         }> | null
         level?: number
         _type: 'block'
@@ -1603,13 +1766,14 @@ import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult
-    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        \n  link {\n    ...,\n    \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n  }\n,\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
+    '\n  *[_type == "navigation"][0]{\n    mainNav[]{\n      _key,\n      _type,\n      link{\n        \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      "slug": slug.current\n    }\n  }\n\n      },\n      hasDropdown,\n      menuLabel,\n      dropdownMenu[]{\n        \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      "slug": slug.current\n    }\n  }\n\n      }\n    },\n    footerNav[]{\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      "slug": slug.current\n    }\n  }\n\n    }\n  }\n': NavigationQueryResult
+    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        \n  link {\n    \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      "slug": slug.current\n    }\n  }\n\n  }\n,\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      "slug": slug.current\n    }\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
     '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': AllPostsQueryResult
     '\n  *[_type == "post" && postType == $postType] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': GetPostsByTypeQueryResult
     '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': MorePostsQueryResult
-    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n      ...,\n      markDefs[]{\n        ...,\n        \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n    },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': PostQueryResult
-    '\n  *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {\n    content[]{\n      ...,\n      markDefs[]{\n        ...,\n        \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n    },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': GetPostQueryResult
+    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n      ...,\n      markDefs[]{\n        ...,\n        \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      "slug": slug.current\n    }\n  }\n\n      }\n    },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': PostQueryResult
+    '\n  *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {\n    content[]{\n      ...,\n      markDefs[]{\n        ...,\n        \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      "slug": slug.current\n    }\n  }\n\n      }\n    },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  region,\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  "tags": tags->[]{name, "slug": slug.current, description},\n  excerpt[]{...},\n  notes[]{...},\n  authors[]->{firstName, lastName, picture},\n  asset,\n  metadata\n\n  }\n': GetPostQueryResult
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult
     '\n  *[_type == "category" && defined(slug.current)] {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image,\n  order\n\n  }\n': AllCategoriesQueryResult

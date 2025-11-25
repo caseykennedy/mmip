@@ -1,7 +1,5 @@
 import { defineQuery } from 'next-sanity'
 
-export const settingsQuery = defineQuery(`*[_type == "settings"][0]`)
-
 const postFields = /* groq */ `
   _id,
   "status": select(_originalId in path("drafts.**") => "draft", "published"),
@@ -24,17 +22,53 @@ const postFields = /* groq */ `
 
 const linkReference = /* groq */ `
   _type == "link" => {
-    "page": page->slug.current,
-    "post": post->slug.current
+    _type,
+    linkType,
+    label,
+    openInNewTab,
+    page->{
+      name,
+      "slug": slug.current
+    },
+    post->{
+      title,
+      "slug": slug.current
+    },
+    category->{
+      name,
+      "slug": slug.current
+    }
   }
 `
 
 const linkFields = /* groq */ `
   link {
-    ...,
     ${linkReference}
   }
 `
+
+// Singletons
+export const settingsQuery = defineQuery(`*[_type == "settings"][0]`)
+
+export const navigationQuery = defineQuery(`
+  *[_type == "navigation"][0]{
+    mainNav[]{
+      _key,
+      _type,
+      link{
+        ${linkReference}
+      },
+      hasDropdown,
+      menuLabel,
+      dropdownMenu[]{
+        ${linkReference}
+      }
+    },
+    footerNav[]{
+      ${linkReference}
+    }
+  }
+`)
 
 export const getPageQuery = defineQuery(`
   *[_type == 'page' && slug.current == $slug][0]{

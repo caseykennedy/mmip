@@ -1,11 +1,11 @@
 import { defineType, defineField } from 'sanity'
-import { FolderIcon } from '@sanity/icons'
+import { TagIcon } from '@sanity/icons'
 
-export const serviceCategory = defineType({
-  name: 'serviceCategory',
-  title: 'Service Category',
+export const serviceType = defineType({
+  name: 'serviceType',
+  title: 'Service Type',
   type: 'document',
-  icon: FolderIcon,
+  icon: TagIcon,
   fields: [
     defineField({
       name: 'name',
@@ -27,26 +27,24 @@ export const serviceCategory = defineType({
       name: 'description',
       title: 'Description',
       type: 'text',
-      description: 'Brief description of the category (max 200 characters)',
+      description: 'Brief description of the service type (max 200 characters)',
       validation: Rule => Rule.max(200),
     }),
     defineField({
       name: 'image',
       title: 'Image',
       type: 'imageWithAlt',
-      description: 'Optional image representing this category',
     }),
     defineField({
       name: 'order',
       title: 'Order',
       type: 'number',
-      description: 'Controls manual ordering of categories in lists',
     }),
   ],
 
   preview: {
     select: {
-      title: 'title',
+      title: 'name',
       image: 'image',
       subtitle: 'description',
     },
@@ -54,7 +52,7 @@ export const serviceCategory = defineType({
       return {
         title,
         subtitle: subtitle?.length > 100 ? subtitle.slice(0, 100) + '…' : subtitle,
-        media: image || FolderIcon,
+        media: image || TagIcon,
       }
     },
   },

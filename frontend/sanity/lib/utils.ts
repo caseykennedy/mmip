@@ -1,7 +1,7 @@
 import { createDataAttribute, CreateDataAttributeProps } from 'next-sanity'
 
-import { Link } from '@/sanity.types'
 import { dataset, projectId, studioUrl } from '@/sanity/lib/api'
+import { ResolvedLinkType } from '@/types'
 
 import createImageUrlBuilder from '@sanity/image-url'
 
@@ -27,29 +27,56 @@ export function resolveOpenGraphImage(image: any, width = 1200, height = 627) {
 }
 
 // Depending on the type of link, we need to fetch the corresponding page, post, or URL.  Otherwise return null.
-export function linkResolver(link: Link | undefined) {
+export function linkResolver(link: ResolvedLinkType | undefined) {
   if (!link) return null
 
-  // If linkType is not set but href is, lets set linkType to "href".  This comes into play when pasting links into the portable text editor because a link type is not assumed.
-  if (!link.linkType && link.href) {
-    link.linkType = 'href'
-  }
+  // If linkType is missing but href exists (portable text case)
+  const linkType = link.linkType ?? (link.href ? 'href' : undefined)
+  if (!linkType) return null
 
-  switch (link.linkType) {
+  switch (linkType) {
     case 'href':
       return link.href || null
     case 'page':
-      if (link?.page && typeof link.page === 'string') {
-        return `/${link.page}`
-      }
+      return link.page ? (link.page.name === 'Home' ? '/' : `/${link.page.slug}`) : null
     case 'post':
-      if (link?.post && typeof link.post === 'string') {
-        return `/posts/${link.post}`
-      }
+      return link.post ? `/posts/${link.post.slug}` : null
+    case 'category':
+      return link.category ? `/${link.category.slug}` : null
     default:
       return null
   }
 }
+
+// export function linkLabelResolver(link: Link | undefined) {
+//   if (!link) return null
+
+//   if (link.label) return link.label
+
+//   // If linkType is not set but href is, lets set linkType to "href".  This comes into play when pasting links into the portable text editor because a link type is not assumed.
+//   if (!link.linkType && link.href) {
+//     link.linkType = 'href'
+//   }
+
+//   switch (link.linkType) {
+//     case 'href':
+//       return link.label || null
+//     case 'page':
+//       if (link.page && typeof link.page === 'string') {
+//         return link.page.name
+//       }
+//     case 'post':
+//       if (link.post && typeof link.post === 'string') {
+//         return link.post.title
+//       }
+//     case 'category':
+//       if (link.category && typeof link.category === 'string') {
+//         return link.category.name
+//       }
+//     default:
+//       return null
+//   }
+// }
 
 type DataAttributeConfig = CreateDataAttributeProps &
   Required<Pick<CreateDataAttributeProps, 'id' | 'type' | 'path'>>

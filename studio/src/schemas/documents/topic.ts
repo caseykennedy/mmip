@@ -1,5 +1,5 @@
-import {defineType, defineField} from 'sanity'
-import {FolderIcon} from '@sanity/icons'
+import { defineType, defineField } from 'sanity'
+import { FolderIcon } from '@sanity/icons'
 
 export const topic = defineType({
   name: 'topic',
@@ -11,13 +11,13 @@ export const topic = defineType({
       name: 'name',
       title: 'Name',
       type: 'string',
-      validation: (Rule) => Rule.required().min(3).max(50),
+      validation: Rule => Rule.required().min(3).max(50),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      validation: (Rule) => Rule.required(),
+      validation: Rule => Rule.required(),
       options: {
         source: 'name',
         maxLength: 96,
@@ -27,23 +27,23 @@ export const topic = defineType({
       title: 'Parent category',
       name: 'parentCategory',
       type: 'reference',
-      to: [{type: 'category'}],
+      to: [{ type: 'category' }],
       options: {
         disableNew: true,
       },
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       description: 'Brief description of the category',
-      validation: (Rule) => Rule.max(200),
+      validation: Rule => Rule.max(200),
     }),
     defineField({
       name: 'image',
       title: 'Image',
-      type: 'imageWithAlt', // your custom image schema with alt
+      type: 'imageWithAlt',
       description: 'Optional image representing this category',
     }),
     defineField({
@@ -53,17 +53,16 @@ export const topic = defineType({
       description: 'Optional numeric order to control listing position',
     }),
   ],
-
   preview: {
     select: {
-      title: 'title',
+      title: 'name',
       image: 'image',
-      subtitle: 'description',
+      subtitle: 'parentCategory.name',
     },
-    prepare({title, image, subtitle}) {
+    prepare({ title, image, subtitle }) {
       return {
         title,
-        subtitle: subtitle?.length > 100 ? subtitle.slice(0, 100) + '…' : subtitle,
+        subtitle,
         media: image || FolderIcon,
       }
     },

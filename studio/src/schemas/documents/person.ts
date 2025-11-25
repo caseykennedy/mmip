@@ -1,5 +1,5 @@
-import {UserIcon} from '@sanity/icons'
-import {defineField, defineType} from 'sanity'
+import { UserIcon } from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
 
 /**
  * Person schema.  Define and edit the fields for the 'person' content type.
@@ -16,13 +16,13 @@ export const person = defineType({
       name: 'firstName',
       title: 'First Name',
       type: 'string',
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'lastName',
       title: 'Last Name',
       type: 'string',
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'picture',
@@ -34,7 +34,7 @@ export const person = defineType({
           type: 'string',
           title: 'Alternative text',
           description: 'Important for SEO and accessibility.',
-          validation: (rule) => {
+          validation: rule => {
             // Custom validation to ensure alt text is provided if the image is present. https://www.sanity.io/docs/validation
             return rule.custom((alt, context) => {
               if ((context.document?.picture as any)?.asset?._ref && !alt) {
@@ -51,13 +51,12 @@ export const person = defineType({
           imageDescriptionField: 'alt',
         },
       },
-      validation: (rule) => rule.required(),
+      validation: rule => rule.required(),
     }),
     defineField({
       name: 'biography',
       title: 'Biography',
-      type: 'array',
-      of: [{type: 'block'}],
+      type: 'blockContentBasic',
     }),
     defineField({
       name: 'twitterId',

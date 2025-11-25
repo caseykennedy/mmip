@@ -1,9 +1,10 @@
 import Link from 'next/link'
 
 import { linkResolver } from '@/sanity/lib/utils'
+import type { ResolvedLinkType } from '@/types'
 
 interface ResolvedLinkProps {
-  link: any
+  link: ResolvedLinkType
   children: React.ReactNode
   className?: string
 }

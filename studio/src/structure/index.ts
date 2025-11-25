@@ -1,9 +1,10 @@
-import { CogIcon, FolderIcon } from '@sanity/icons'
+import { CogIcon, FolderIcon, MenuIcon } from '@sanity/icons'
 import type { StructureBuilder, StructureResolver } from 'sanity/structure'
 import pluralize from 'pluralize-esm'
 
 const DISABLED_TYPES = [
   'home',
+  'navigation',
   'settings',
   'assist.instruction.context',
   'post',
@@ -11,7 +12,7 @@ const DISABLED_TYPES = [
   'topic',
   'tag',
   'service',
-  'serviceCategory',
+  'serviceType',
 ]
 
 export const structure: StructureResolver = (S: StructureBuilder) =>
@@ -22,6 +23,11 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
         .title('Home')
         .child(S.document().schemaType('home').documentId('home'))
         .icon(CogIcon),
+
+      S.listItem()
+        .title('Navigation')
+        .child(S.document().schemaType('navigation').documentId('navigation'))
+        .icon(MenuIcon),
 
       S.listItem()
         .title('Site Settings')
@@ -54,7 +60,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
             .title('Services')
             .items([
               S.documentTypeListItem('service').title('Services'),
-              S.documentTypeListItem('serviceCategory').title('Service Categories'),
+              S.documentTypeListItem('serviceType').title('Service Types'),
             ]),
         ),
 

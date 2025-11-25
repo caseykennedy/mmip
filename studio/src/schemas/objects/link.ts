@@ -1,5 +1,5 @@
-import {defineField, defineType} from 'sanity'
-import {LinkIcon} from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
+import { LinkIcon } from '@sanity/icons'
 
 /**
  * Link schema object. This link object lets the user first select the type of link and then
@@ -20,19 +20,31 @@ export const link = defineType({
       initialValue: 'url',
       options: {
         list: [
-          {title: 'URL', value: 'href'},
-          {title: 'Page', value: 'page'},
-          {title: 'Post', value: 'post'},
+          { title: 'Page', value: 'page' },
+          { title: 'Post', value: 'post' },
+          { title: 'Category', value: 'category' },
+          { title: 'URL', value: 'href' },
         ],
         layout: 'radio',
       },
     }),
     defineField({
+      name: 'label',
+      title: 'Link Label',
+      type: 'string',
+    }),
+    defineField({
+      name: 'openInNewTab',
+      title: 'Open in new tab',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
       name: 'href',
       title: 'URL',
       type: 'url',
-      hidden: ({parent}) => parent?.linkType !== 'href',
-      validation: (Rule) =>
+      hidden: ({ parent }) => parent?.linkType !== 'href',
+      validation: Rule =>
         // Custom validation to ensure URL is provided if the link type is 'href'
         Rule.custom((value, context: any) => {
           if (context.parent?.linkType === 'href' && !value) {
@@ -45,9 +57,9 @@ export const link = defineType({
       name: 'page',
       title: 'Page',
       type: 'reference',
-      to: [{type: 'page'}],
-      hidden: ({parent}) => parent?.linkType !== 'page',
-      validation: (Rule) =>
+      to: [{ type: 'page' }, { type: 'home' }],
+      hidden: ({ parent }) => parent?.linkType !== 'page',
+      validation: Rule =>
         // Custom validation to ensure page reference is provided if the link type is 'page'
         Rule.custom((value, context: any) => {
           if (context.parent?.linkType === 'page' && !value) {
@@ -60,9 +72,9 @@ export const link = defineType({
       name: 'post',
       title: 'Post',
       type: 'reference',
-      to: [{type: 'post'}],
-      hidden: ({parent}) => parent?.linkType !== 'post',
-      validation: (Rule) =>
+      to: [{ type: 'post' }],
+      hidden: ({ parent }) => parent?.linkType !== 'post',
+      validation: Rule =>
         // Custom validation to ensure post reference is provided if the link type is 'post'
         Rule.custom((value, context: any) => {
           if (context.parent?.linkType === 'post' && !value) {
@@ -72,25 +84,36 @@ export const link = defineType({
         }),
     }),
     defineField({
-      name: 'openInNewTab',
-      title: 'Open in new tab',
-      type: 'boolean',
-      initialValue: false,
+      name: 'category',
+      title: 'Category',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      hidden: ({ parent }) => parent?.linkType !== 'category',
+      validation: Rule =>
+        // Custom validation to ensure category reference is provided if the link type is 'category'
+        Rule.custom((value, context: any) => {
+          if (context.parent?.linkType === 'category' && !value) {
+            return 'Category reference is required when Link Type is Category'
+          }
+          return true
+        }),
     }),
   ],
   preview: {
     select: {
       linkType: 'linkType',
       url: 'href',
-      pageTitle: 'page.title',
+      pageName: 'page.name',
       postTitle: 'post.title',
+      categoryName: 'category.name',
     },
     prepare(selection) {
-      const {linkType, url, pageTitle, postTitle} = selection
+      const { linkType, url, pageName, postTitle, categoryName } = selection
       let title = ''
       if (linkType === 'url') title = url
-      else if (linkType === 'page') title = pageTitle || 'Page'
+      else if (linkType === 'page') title = pageName || 'Page'
       else if (linkType === 'post') title = postTitle || 'Post'
+      else if (linkType === 'category') title = categoryName || 'Category'
 
       return {
         title: title || 'Link',

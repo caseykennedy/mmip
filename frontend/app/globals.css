@@ -102,6 +102,7 @@
   /* ========================================================= */
   --color-bg: var(--color-sand-50);
   --color-bg-subtle: var(--color-sand-100);
+  --color-bg-emphasis: var(--color-sand-100);
   --color-bg-overlay: rgba(0, 0, 0, 0.85);
 
   --color-fg: var(--color-zinc-900);
@@ -181,7 +182,7 @@
   }
 
   body {
-    @apply relative flex min-h-screen w-full flex-col justify-between scroll-smooth font-body text-base font-medium tracking-normal antialiased;
+    @apply relative flex min-h-screen w-full flex-col justify-between scroll-smooth font-body text-base font-normal tracking-normal antialiased;
 
     -webkit-text-size-adjust: 100%;
     -moz-osx-font-smoothing: grayscale;
@@ -202,12 +203,28 @@
   h4,
   h5,
   h6 {
-    @apply font-heading font-bold leading-snug text-foreground-accent;
+    @apply font-heading font-bold leading-normal text-foreground-accent;
+  }
+
+  .display {
+    @apply text-5xl md:text-6xl md:leading-heading;
+  }
+
+  h1 {
+    @apply text-4xl md:text-7xl;
+  }
+
+  .lead {
+    @apply text-xl leading-body;
+  }
+
+  p {
+    @apply text-lg leading-body;
   }
 }
 
-/* @layer base {
+@layer components {
   .container {
-    @apply w-full max-w-screen-site px-6 sm:px-20 md:px-8 lg:px-10;
+    @apply w-full max-w-screen-xl;
   }
-} */
+}

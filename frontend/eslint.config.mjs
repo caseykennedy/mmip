@@ -1,5 +1,6 @@
 import { FlatCompat } from '@eslint/eslintrc'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import tailwind from 'eslint-plugin-tailwindcss'
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
@@ -38,4 +39,5 @@ export default [
       'simple-import-sort/exports': 'warn',
     },
   },
+  ...tailwind.configs['flat/recommended'],
 ]

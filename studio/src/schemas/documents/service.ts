@@ -1,43 +1,33 @@
 import { DocumentTextIcon, ComposeIcon, SearchIcon } from '@sanity/icons'
-import { format, parseISO } from 'date-fns'
+import { de } from 'date-fns/locale'
 import { defineField, defineType } from 'sanity'
 
 export const service = defineType({
   name: 'service',
   title: 'Service',
-  icon: DocumentTextIcon,
   type: 'document',
+  icon: DocumentTextIcon,
   groups: [
     { name: 'content', title: 'Content', icon: ComposeIcon },
-    { name: 'service', title: 'Service', icon: ComposeIcon },
     { name: 'seo', title: 'SEO', icon: SearchIcon },
   ],
   fields: [
-    // Content group fields
     defineField({
       group: 'content',
-      name: 'title',
-      title: 'Title',
+      name: 'name',
+      title: 'Name',
       type: 'string',
-      validation: Rule => Rule.required(),
       options: { search: { weight: 10 } },
+      validation: Rule => Rule.required(),
     }),
     defineField({
       group: 'seo',
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: { source: 'title', maxLength: 96 },
+      options: { source: 'name', maxLength: 96 },
       validation: Rule => Rule.required(),
     }),
-    defineField({
-      group: 'content',
-      name: 'coverImage',
-      title: 'Cover Image',
-      type: 'imageWithAlt',
-      validation: Rule => Rule.required(),
-    }),
-    // Region selector
     defineField({
       name: 'region',
       title: 'Region',
@@ -55,108 +45,100 @@ export const service = defineType({
     }),
     defineField({
       group: 'content',
-      title: 'Pillar Category',
-      name: 'category',
+      name: 'serviceType',
+      title: 'Service Type',
       type: 'reference',
-      to: [{ type: 'category' }],
+      to: [{ type: 'serviceType' }],
       options: { disableNew: true },
       validation: Rule => Rule.required(),
     }),
     defineField({
       group: 'content',
-      title: 'Service Category',
-      name: 'serviceCategory',
-      type: 'reference',
-      to: [{ type: 'serviceCategory' }],
-      options: { disableNew: true },
-      validation: Rule => Rule.required(),
-    }),
-    defineField({
-      group: 'content',
-      title: 'Tags',
-      description: 'Tag the topics in the post.',
       name: 'tags',
+      title: 'Tags',
       type: 'array',
       of: [{ type: 'reference', to: [{ type: 'tag' }], options: { disableNew: true } }],
       options: { layout: 'tags' },
+      description: 'Tag relevant topics for this service',
       validation: Rule => Rule.max(4).required(),
     }),
     defineField({
       group: 'content',
-      title: 'Excerpt',
-      name: 'excerpt',
-      type: 'array',
-      of: [{ type: 'block' }],
+      name: 'featured',
+      title: 'Featured Service',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      group: 'content',
+      name: 'coverImage',
+      title: 'Cover Image',
+      type: 'imageWithAlt',
+      validation: Rule => Rule.required(),
+    }),
+    defineField({
+      group: 'content',
+      name: 'shortDescription',
+      title: 'Short Description',
+      type: 'blockContentBasic',
       validation: Rule => Rule.max(140).required(),
       options: { search: { weight: 5 } },
     }),
     defineField({
       group: 'content',
-      title: 'Notes',
-      description: 'Notes, references or credits.',
-      name: 'notes',
-      type: 'array',
-      of: [{ type: 'block' }],
-    }),
-
-    // Article/Tool shared content
-    defineField({
-      group: 'content',
-      name: 'content',
-      title: 'Content',
+      name: 'description',
+      title: 'Description',
       type: 'blockContent',
-      hidden: ({ parent }) => parent?.postType === 'service',
-    }),
-    defineField({
-      group: 'content',
-      name: 'authors',
-      title: 'Authors',
-      type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'person' }] }],
-      options: { layout: 'grid' },
       validation: Rule => Rule.required(),
-      hidden: ({ parent }) => parent?.postType === 'service',
+      options: { search: { weight: 5 } },
     }),
-
-    // Tool-only field
     defineField({
       group: 'content',
-      name: 'asset',
-      title: 'Downloadable Asset',
-      type: 'file',
-      hidden: ({ parent }) => parent?.postType !== 'tool',
-    }),
-
-    // Service-specific group and fields
-    defineField({
-      group: 'service',
-      name: 'location',
-      title: 'Service Location',
-      type: 'string',
-      hidden: ({ parent }) => parent?.postType !== 'service',
+      name: 'notes',
+      title: 'Notes',
+      type: 'blockContent',
     }),
     defineField({
-      group: 'service',
-      name: 'serviceType',
-      title: 'Service Type',
-      type: 'string',
-      options: { list: ['Health', 'Legal', 'Emergency', 'Other'] },
-      hidden: ({ parent }) => parent?.postType !== 'service',
-    }),
-    defineField({
-      group: 'service',
+      group: 'content',
       name: 'contactInfo',
       title: 'Contact Information',
       type: 'object',
       fields: [
-        { name: 'phone', title: 'Phone', type: 'string' },
-        { name: 'email', title: 'Email', type: 'string' },
-        { name: 'website', title: 'Website', type: 'url' },
+        defineField({ name: 'address', title: 'Address', type: 'string' }),
+        defineField({ name: 'city', title: 'City', type: 'string' }),
+        defineField({ name: 'state', title: 'State', type: 'string' }),
+        defineField({ name: 'zip', title: 'ZIP Code', type: 'string' }),
+        defineField({ name: 'phone', title: 'Phone', type: 'string' }),
+        defineField({ name: 'email', title: 'Email', type: 'string' }),
+        defineField({ name: 'website', title: 'Website', type: 'url' }),
       ],
-      hidden: ({ parent }) => parent?.postType !== 'service',
     }),
-
-    // SEO group
+    defineField({
+      group: 'content',
+      name: 'hours',
+      title: 'Operating Hours',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'days',
+          title: 'Days',
+          type: 'string',
+          description: 'Monday – Friday',
+        }),
+        defineField({
+          name: 'open',
+          title: 'Open Time',
+          type: 'string',
+          description: '9:00 AM',
+        }),
+        defineField({
+          name: 'close',
+          title: 'Close Time',
+          type: 'string',
+          description: '5:00 PM',
+        }),
+      ],
+    }),
     defineField({
       group: 'seo',
       name: 'metadata',
@@ -166,24 +148,22 @@ export const service = defineType({
   ],
   preview: {
     select: {
-      title: 'title',
-      postType: 'postType',
-      authors: 'authors',
-      date: 'date',
+      title: 'name',
+      serviceType: 'serviceType.name',
+      region: 'region',
       media: 'coverImage',
     },
-    prepare({ title, media, authors, date, postType }) {
-      const authorName = authors?.length
-        ? `${authors[0]?.firstName ?? ''} ${authors[0]?.lastName ?? ''}`.trim()
-        : null
-
+    prepare({ title, serviceType, region, media }) {
       const subtitles = [
-        postType && postType.charAt(0).toUpperCase() + postType.slice(1),
-        authorName && `by ${authorName}`,
-        date && `on ${format(parseISO(date), 'LLL d, yyyy')}`,
+        serviceType && serviceType.charAt(0).toUpperCase() + serviceType.slice(1),
+        region && region.charAt(0).toUpperCase() + region.slice(1),
       ].filter(Boolean)
 
-      return { title, media, subtitle: subtitles.join(' – ') }
+      return {
+        title,
+        subtitle: subtitles.join(' – '),
+        media,
+      }
     },
   },
 })

@@ -5,19 +5,16 @@ import { defineField, defineType } from 'sanity'
 export const post = defineType({
   name: 'post',
   title: 'Post',
-  icon: DocumentTextIcon,
   type: 'document',
+  icon: DocumentTextIcon,
   groups: [
     { name: 'content', title: 'Content', icon: ComposeIcon },
     { name: 'seo', title: 'SEO', icon: SearchIcon },
   ],
   fields: [
-    // ─────────────────────────────
-    // Post settings
-    // ─────────────────────────────
     defineField({
       name: 'postType',
-      title: 'Post type',
+      title: 'Post Type',
       type: 'string',
       options: {
         list: [
@@ -35,8 +32,8 @@ export const post = defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: Rule => Rule.required(),
       options: { search: { weight: 10 } },
+      validation: Rule => Rule.required(),
     }),
     defineField({
       group: 'seo',
@@ -48,42 +45,24 @@ export const post = defineType({
     }),
     defineField({
       group: 'content',
-      name: 'coverImage',
-      title: 'Cover Image',
-      type: 'imageWithAlt',
-      validation: Rule => Rule.required(),
-    }),
-    defineField({
-      group: 'content',
       name: 'date',
       title: 'Date',
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
     }),
-
-    // ─────────────────────────────
-    // Taxonomy
-    // ─────────────────────────────
-    defineField({
-      name: 'region',
-      title: 'Region',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Northern CA', value: 'north' },
-          { title: 'Central CA', value: 'central' },
-          { title: 'Southern CA', value: 'south' },
-        ],
-        layout: 'radio',
-        direction: 'vertical',
-      },
-      validation: Rule => Rule.required(),
-      hidden: ({ parent }) => parent?.postType !== 'tool',
-    }),
     defineField({
       group: 'content',
-      title: 'Pillar Category',
+      name: 'coverImage',
+      title: 'Cover Image',
+      type: 'imageWithAlt',
+      validation: Rule => Rule.required(),
+    }),
+
+    // Taxonomy
+    defineField({
+      group: 'content',
       name: 'category',
+      title: 'Pillar Category',
       type: 'reference',
       to: [{ type: 'category' }],
       options: { disableNew: true },
@@ -98,34 +77,39 @@ export const post = defineType({
       options: {
         filter: ({ document }: any) => {
           const categoryRef = document.category?._ref
-          if (!categoryRef) {
-            return {
-              filter: '_id == $empty',
-              params: { empty: '' },
-            }
-          }
-          return {
-            filter: 'parentCategory._ref == $categoryRef',
-            params: { categoryRef },
-          }
+          if (!categoryRef) return { filter: '_id == $empty', params: { empty: '' } }
+          return { filter: 'parentCategory._ref == $categoryRef', params: { categoryRef } }
         },
       },
       validation: Rule => Rule.required(),
     }),
     defineField({
       group: 'content',
-      title: 'Tags',
-      description: 'Tag the topics in the post.',
       name: 'tags',
+      title: 'Tags',
       type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'tag' }], options: { disableNew: true } }],
+      of: [{ type: 'reference', to: [{ type: 'tag' }], options: { disableNew: false } }],
       options: { layout: 'tags' },
       validation: Rule => Rule.max(4).required(),
     }),
+    defineField({
+      name: 'region',
+      title: 'Region',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Northern CA', value: 'north' },
+          { title: 'Central CA', value: 'central' },
+          { title: 'Southern CA', value: 'south' },
+        ],
+        layout: 'radio',
+        direction: 'vertical',
+      },
+      hidden: ({ parent }) => parent?.postType !== 'tool',
+      validation: Rule => Rule.required(),
+    }),
 
-    // ─────────────────────────────
-    // Body content
-    // ─────────────────────────────
+    // Authors
     defineField({
       group: 'content',
       name: 'authors',
@@ -135,30 +119,31 @@ export const post = defineType({
       options: { layout: 'grid' },
       validation: Rule => Rule.required(),
     }),
+
+    // Content
     defineField({
       group: 'content',
-      title: 'Excerpt',
       name: 'excerpt',
-      type: 'text',
+      title: 'Excerpt',
+      type: 'blockContentBasic',
+      validation: Rule => Rule.required(),
     }),
     defineField({
       group: 'content',
-      name: 'content',
-      title: 'Content',
+      name: 'body',
+      title: 'Body',
       type: 'blockContent',
+      validation: Rule => Rule.required(),
     }),
     defineField({
       group: 'content',
-      title: 'Notes',
-      description: 'Notes, references or credits.',
       name: 'notes',
+      title: 'Notes',
       type: 'array',
       of: [{ type: 'block' }],
     }),
 
-    // ─────────────────────────────
-    // Tool-specific Fields
-    // ─────────────────────────────
+    // Tool Asset
     defineField({
       group: 'content',
       name: 'asset',
@@ -167,9 +152,7 @@ export const post = defineType({
       hidden: ({ parent }) => parent?.postType !== 'tool',
     }),
 
-    // ─────────────────────────────
     // SEO
-    // ─────────────────────────────
     defineField({
       group: 'seo',
       name: 'metadata',
@@ -177,10 +160,6 @@ export const post = defineType({
       type: 'metadata',
     }),
   ],
-
-  // ─────────────────────────────
-  // Preview
-  // ─────────────────────────────
   preview: {
     select: {
       title: 'title',

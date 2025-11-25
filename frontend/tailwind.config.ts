@@ -9,20 +9,23 @@ export default {
       padding: {
         DEFAULT: '1rem',
         sm: '2rem',
-        lg: '4rem',
-        xl: '5rem',
-        '2xl': '6rem',
+        lg: '2rem',
+        xl: '2rem',
+        '2xl': '2rem',
       },
-      screens: {
-        DEFAULT: '100%',
-        sm: '640px',
-        md: '768px',
-        lg: '1024px',
-        xl: '1280px',
-        '2xl': '1440px',
-      },
+      // screens: {
+      //   DEFAULT: '100%',
+      //   sm: '640px',
+      //   md: '768px',
+      //   lg: '1024px',
+      //   xl: '1280px',
+      //   '2xl': '1440px',
+      // },
     },
     extend: {
+      screens: {
+        site: '1440px',
+      },
       borderColor: {
         DEFAULT: 'var(--color-border)',
       },
@@ -37,6 +40,7 @@ export default {
         background: {
           DEFAULT: 'var(--color-bg)',
           subtle: 'var(--color-bg-subtle)',
+          emphasis: 'var(--color-bg-emphasis)',
           overlay: 'var(--color-bg-overlay)',
         },
         foreground: {
@@ -88,6 +92,11 @@ export default {
           hover: 'var(--color-secondary-hover)',
           fg: 'var(--color-secondary-fg)',
         },
+        accent: {
+          DEFAULT: 'var(--color-secondary)',
+          hover: 'var(--color-secondary-hover)',
+          fg: 'var(--color-secondary-fg)',
+        },
         disabled: {
           DEFAULT: 'var(--color-disabled)',
           fg: 'var(--color-disabled-fg)',
@@ -102,6 +111,7 @@ export default {
         },
         // Focus Rings
         ring: {
+          DEFAULT: 'var(--color-border)',
           focus: 'var(--color-ring-focus)',
         },
         // Primary color palette
@@ -188,6 +198,10 @@ export default {
         sans: ['var(--font-helvetica-now)', 'sans-serif'],
         body: ['var(--font-helvetica-now)', 'sans-serif'],
         heading: ['var(--font-real-head)', 'sans-serif'],
+      },
+      lineHeight: {
+        heading: '1.125',
+        body: '1.414',
       },
       spacing: {
         reading: '680px',

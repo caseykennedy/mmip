@@ -134,9 +134,7 @@ export default async function Page({ params }: Props) {
             <div>
               <div className="mb-6 grid gap-6 border-b border-gray-100 pb-6">
                 <div className="flex max-w-3xl flex-col gap-6">
-                  <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-7xl">
-                    {post.title}
-                  </h2>
+                  <h1 className="">{post.title}</h1>
                 </div>
                 <div className="flex max-w-3xl items-center gap-4">
                   {post.authors && post.authors?.[0].firstName && post.authors?.[0].lastName && (
