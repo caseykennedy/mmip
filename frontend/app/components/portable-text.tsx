@@ -12,6 +12,8 @@ import { PortableText, type PortableTextBlock, type PortableTextComponents } fro
 
 import ResolvedLink from '@/app/components/resolved-link'
 
+import CoverImage from './cover-image'
+
 export default function CustomPortableText({
   className,
   value,
@@ -77,6 +79,12 @@ export default function CustomPortableText({
     marks: {
       link: ({ children, value: link }) => {
         return <ResolvedLink link={link}>{children}</ResolvedLink>
+      },
+    },
+    types: {
+      portableImage: ({ value }) => {
+        console.log('portable text image value', value)
+        return <CoverImage image={value} priority />
       },
     },
   }

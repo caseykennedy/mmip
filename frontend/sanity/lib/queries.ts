@@ -97,8 +97,9 @@ export const getPageQuery = defineQuery(`
 `)
 
 export const sitemapData = defineQuery(`
-  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {
+  *[_type == "page" || _type == "post" || _type == "service" && defined(slug.current)] | order(_type asc) {
     "slug": slug.current,
+    "categorySlug": category->slug.current,
     _type,
     _updatedAt,
   }
@@ -124,7 +125,7 @@ export const morePostsQuery = defineQuery(`
 
 export const postQuery = defineQuery(`
   *[_type == "post" && slug.current == $slug] [0] {
-    content[]{
+    body[]{
       ...,
       markDefs[]{
         ...,
@@ -137,7 +138,7 @@ export const postQuery = defineQuery(`
 
 export const getPostQuery = defineQuery(`
   *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {
-    content[]{
+    body[]{
       ...,
       markDefs[]{
         ...,

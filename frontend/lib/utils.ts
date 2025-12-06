@@ -1,6 +1,6 @@
 // ./lib/utils
-
 import clsx, { type ClassValue } from 'clsx'
+import type { PortableTextBlock } from 'next-sanity'
 import { twMerge } from 'tailwind-merge'
 
 export const getBaseUrl = () => {
@@ -107,4 +107,24 @@ export function isMacOs() {
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+/**
+ * Converts Sanity Portable Text blocks into a plain string.
+ * Strips out all marks, links, and formatting.
+ *
+ * @param blocks - PortableTextBlock[] | undefined | null
+ * @returns plain text string
+ */
+export function portableTextToString(blocks?: PortableTextBlock[] | null): string {
+  if (!blocks?.length) return ''
+
+  return blocks
+    .map(block => {
+      if (block._type !== 'block' || !block.children) return ''
+      return block.children.map(child => child.text || '').join('')
+    })
+    .join(' ')
+    .replace(/\s+/g, ' ') // collapse multiple spaces
+    .trim()
 }

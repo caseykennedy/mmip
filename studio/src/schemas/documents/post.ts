@@ -50,13 +50,6 @@ export const post = defineType({
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
     }),
-    defineField({
-      group: 'content',
-      name: 'coverImage',
-      title: 'Cover Image',
-      type: 'imageWithAlt',
-      validation: Rule => Rule.required(),
-    }),
 
     // Taxonomy
     defineField({
@@ -92,22 +85,6 @@ export const post = defineType({
       options: { layout: 'tags' },
       validation: Rule => Rule.max(4).required(),
     }),
-    defineField({
-      name: 'region',
-      title: 'Region',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Northern CA', value: 'north' },
-          { title: 'Central CA', value: 'central' },
-          { title: 'Southern CA', value: 'south' },
-        ],
-        layout: 'radio',
-        direction: 'vertical',
-      },
-      hidden: ({ parent }) => parent?.postType !== 'tool',
-      validation: Rule => Rule.required(),
-    }),
 
     // Authors
     defineField({
@@ -141,6 +118,14 @@ export const post = defineType({
       title: 'Notes',
       type: 'array',
       of: [{ type: 'block' }],
+    }),
+
+    defineField({
+      group: 'content',
+      name: 'coverImage',
+      title: 'Cover Image',
+      type: 'imageWithAlt',
+      validation: Rule => Rule.required(),
     }),
 
     // Tool Asset

@@ -57,17 +57,10 @@ export const service = defineType({
       name: 'tags',
       title: 'Tags',
       type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'tag' }], options: { disableNew: true } }],
+      of: [{ type: 'reference', to: [{ type: 'tag' }] }],
       options: { layout: 'tags' },
       description: 'Tag relevant topics for this service',
       validation: Rule => Rule.max(4).required(),
-    }),
-    defineField({
-      group: 'content',
-      name: 'featured',
-      title: 'Featured Service',
-      type: 'boolean',
-      initialValue: false,
     }),
     defineField({
       group: 'content',
