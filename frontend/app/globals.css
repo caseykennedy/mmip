@@ -7,17 +7,34 @@
   /* Utility Color Tokens         */
   /* ============================ */
 
+  /* Base colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
   /* Base neutrals */
-  --color-sand-50: #faf8f4;
-  --color-sand-100: #f1ede7;
-  --color-sand-200: #ede8dd;
-  --color-sand-300: #e5dfc9;
-  --color-sand-400: #d8cdb5;
-  --color-sand-500: #cdc0a9;
-  --color-sand-600: #bfb193;
-  --color-sand-700: #b3a98c;
-  --color-sand-800: #988f73;
-  --color-sand-900: #7d745f;
+  --color-sand-50: #fbf9f5;
+  --color-sand-100: #f6f2ec;
+  --color-sand-200: #e9e2d7;
+  --color-sand-300: #d7cdbc;
+  --color-sand-400: #b0a389;
+  --color-sand-500: #897f67;
+  --color-sand-600: #6c6453;
+  --color-sand-700: #554f42;
+  --color-sand-800: #353129;
+  --color-sand-900: #1f1c17;
+  --color-sand-950: #0d0b09;
+
+  --color-stone-50: #fafaf9;
+  --color-stone-100: #f5f5f4;
+  --color-stone-200: #e7e5e4;
+  --color-stone-300: #d6d3d1;
+  --color-stone-400: #a8a29e;
+  --color-stone-500: #78716c;
+  --color-stone-600: #57534e;
+  --color-stone-700: #44403c;
+  --color-stone-800: #292524;
+  --color-stone-900: #1c1917;
+  --color-stone-950: #0c0a09;
 
   --color-zinc-50: #f8f8fa;
   --color-zinc-100: #f3f3f6;
@@ -63,117 +80,129 @@
   --color-sage-800: #454d38;
   --color-sage-900: #2d3327;
 
-  --color-twilight-50: #f6f8fb;
-  --color-twilight-100: #e3eaf3;
-  --color-twilight-200: #c9d7e8;
-  --color-twilight-300: #bacade;
-  --color-twilight-400: #92a9cd;
-  --color-twilight-500: #7995b9;
-  --color-twilight-600: #5f7499;
-  --color-twilight-700: #4d668f;
-  --color-twilight-800: #354a6b;
-  --color-twilight-900: #1c335b;
+  --color-twilight-50: #f6f8fc;
+  --color-twilight-100: #e7edf6;
+  --color-twilight-200: #d3dceb;
+  --color-twilight-300: #b9c7db;
+  --color-twilight-400: #92a8c7;
+  --color-twilight-500: #728fb4;
+  --color-twilight-600: #58749b;
+  --color-twilight-700: #445d84;
+  --color-twilight-800: #324768;
+  --color-twilight-900: #1e2e4b;
+  --color-twilight-950: #111a2c;
 
   /* Feedback (pastels/muted) */
   --color-success-300: #bcd8c1;
   --color-success-400: #a9c4ae;
   --color-success-500: #96b19b;
-  --color-success-fg: #2f3e33;
+  --color-success-foreground: #2f3e33;
 
   --color-warning-300: #f4d2a8;
   --color-warning-400: #e3c29a;
   --color-warning-500: #d2b28b;
-  --color-warning-fg: #4b3a1c;
+  --color-warning-foreground: #4b3a1c;
 
   --color-error-300: #e7b0aa;
   --color-error-400: #d29f99;
   --color-error-500: #bd8d88;
-  --color-error-fg: #522524;
+  --color-error-foreground: #522524;
 
   --color-info-300: #b6d3e1;
   --color-info-400: #a4c1cf;
   --color-info-500: #91aebc;
-  --color-info-fg: #243944;
+  --color-info-foreground: #243944;
 }
 
 :root {
   /* ========================================================= */
   /* Foundation Colors (Backgrounds & Foregrounds)             */
   /* ========================================================= */
-  --color-bg: var(--color-sand-50);
-  --color-bg-subtle: var(--color-sand-100);
-  --color-bg-emphasis: var(--color-sand-100);
-  --color-bg-overlay: rgba(0, 0, 0, 0.85);
+  --background: var(--color-sand-50);
+  --background-subtle: var(--color-sand-100);
+  --background-emphasis: var(--color-sand-200);
+  --background-overlay: rgba(0, 0, 0, 0.85);
 
-  --color-fg: var(--color-zinc-900);
-  --color-fg-subtle: var(--color-zinc-700);
-  --color-fg-accent: var(--color-twilight-900);
-  --color-fg-muted: var(--color-zinc-600);
-
-  /* ========================================================= */
-  /* Surface Colors (Rich, earthy, interactive containers)     */
-  /* ========================================================= */
-  --color-surface: var(--color-sand-100);
-  --color-surface-fg: var(--color-fg);
-  --color-surface-hover: var(--color-sand-200);
-
-  --color-surface-green: var(--color-green-500);
-  --color-surface-green-fg: var(--color-white);
-  --color-surface-green-hover: var(--color-green-600);
+  --foreground: var(--color-twilight-950);
+  --foreground-heading: var(--color-twilight-900);
+  --foreground-accent: var(--color-gold-500);
+  --foreground-subtle: var(--color-zinc-700);
+  --foreground-muted: var(--color-zinc-600);
 
   /* ========================================================= */
-  /* Feedback Colors (Pastel/Muted for alerts & status)        */
+  /* Surface Colors     */
   /* ========================================================= */
-  --color-success: var(--color-success-300);
-  --color-success-hover: var(--color-success-400);
-  --color-success-active: var(--color-success-500);
-  --color-success-fg: var(--color-success-fg);
+  --surface: var(--color-sand-200);
+  --surface-hover: var(--color-sand-300);
+  --surface-foreground: var(--foreground);
 
-  --color-warning: var(--color-warning-300);
-  --color-warning-hover: var(--color-warning-400);
-  --color-warning-active: var(--color-warning-500);
-  --color-warning-fg: var(--color-warning-fg);
+  --popover: var(--color-sand-100);
+  --popover-foreground: var(--foreground);
 
-  --color-error: var(--color-error-300);
-  --color-error-hover: var(--color-error-400);
-  --color-error-active: var(--color-error-500);
-  --color-error-fg: var(--color-error-fg);
+  --card: var(--color-sand-100);
+  --card-hover: var(--color-sand-200);
+  --card-foreground: var(--foreground);
 
-  --color-info: var(--color-info-300);
-  --color-info-hover: var(--color-info-400);
-  --color-info-active: var(--color-info-500);
-  --color-info-fg: var(--color-info-fg);
+  /* ========================================================= */
+  /* Feedback Colors         */
+  /* ========================================================= */
+  --success: var(--color-success-300);
+  --success-hover: var(--color-success-400);
+  --success-active: var(--color-success-500);
+  --success-foreground: var(--color-success-foreground);
+
+  --warning: var(--color-warning-300);
+  --warning-hover: var(--color-warning-400);
+  --warning-active: var(--color-warning-500);
+  --warning-foreground: var(--color-warning-foreground);
+
+  --error: var(--color-error-300);
+  --error-hover: var(--color-error-400);
+  --error-active: var(--color-error-500);
+  --error-foreground: var(--color-error-foreground);
+
+  --info: var(--color-info-300);
+  --info-hover: var(--color-info-400);
+  --info-active: var(--color-info-500);
+  --info-foreground: var(--color-info-foreground);
 
   /* ========================================================= */
   /* Icon Colors                                               */
   /* ========================================================= */
-  --color-icon: var(--color-twilight-900);
+  --icon: var(--color-twilight-900);
 
   /* ========================================================= */
   /* Interactive Colors (States & Buttons)                     */
   /* ========================================================= */
-  --color-primary: var(--color-gold-500);
-  --color-primary-hover: var(--color-gold-700);
-  --color-primary-fg: var(--color-white);
+  --primary: var(--color-gold-500);
+  --primary-hover: var(--color-gold-700);
+  --primary-foreground: var(--color-white);
 
-  --color-secondary: var(--color-twilight-900);
-  --color-secondary-hover: var(--color-gray-darker);
-  --color-secondary-active: var(--color-gray-deep);
-  --color-secondary-fg: var(--color-white);
+  --secondary: var(--color-twilight-900);
+  --secondary-hover: var(--color-gray-darker);
+  --secondary-active: var(--color-gray-deep);
+  --secondary-foreground: var(--color-white);
 
-  --color-disabled: var(--color-zinc-300);
-  --color-disabled-fg: var(--color-zinc-500);
+  --accent: var(--color-sand-200);
+  --accent-foreground: var(--foreground);
+
+  --muted: var(--color-sand-200);
+  --muted-foreground: var(--foreground-muted);
+
+  --destructive: var(--color-error-500);
+  --destructive-foreground: var(--color-error-foreground);
 
   /* ========================================================= */
   /* Border & Divider Colors                                   */
   /* ========================================================= */
-  --color-border: var(--color-sand-300);
+  --border: var(--color-sand-200);
+  --border-strong: var(--color-sand-400);
 
   /* ========================================================= */
   /* Rings & Focus                                             */
   /* ========================================================= */
-  --color-ring-focus: var(--color-gold-500);
-  --color-ring-error: var(--color-ring-error-50a);
+  --ring-focus: var(--color-gold-500);
+  --ring-error: var(--color-ring-error-500);
 }
 
 @layer base {
@@ -203,7 +232,7 @@
   h4,
   h5,
   h6 {
-    @apply font-heading font-bold leading-normal text-foreground-accent;
+    @apply font-heading font-semibold leading-normal;
   }
 
   .display {

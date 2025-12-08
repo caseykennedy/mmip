@@ -40,7 +40,7 @@ export function linkResolver(link: ResolvedLinkType | undefined) {
     case 'page':
       return link.page ? (link.page.name === 'Home' ? '/' : `/${link.page.slug}`) : null
     case 'post':
-      return link.post ? `/posts/${link.post.slug}` : null
+      return link.post ? `/${link.category?.slug}/${link.post.slug}` : null
     case 'category':
       return link.category ? `/${link.category.slug}` : null
     default:

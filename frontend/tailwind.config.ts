@@ -27,7 +27,8 @@ export default {
         site: '1440px',
       },
       borderColor: {
-        DEFAULT: 'var(--color-border)',
+        DEFAULT: 'var(--border)',
+        strong: 'var(--border-strong)',
       },
       boxShadow: {
         layer: '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
@@ -36,83 +37,92 @@ export default {
         white: 'var(--color-white)',
         black: 'var(--color-black)',
 
+        destructive: 'var(--destructive)',
+        'destructive-foreground': 'var(--destructive-foreground)',
+
         // Foundation
         background: {
-          DEFAULT: 'var(--color-bg)',
-          subtle: 'var(--color-bg-subtle)',
-          emphasis: 'var(--color-bg-emphasis)',
-          overlay: 'var(--color-bg-overlay)',
+          DEFAULT: 'var(--background)',
+          subtle: 'var(--background-subtle)',
+          emphasis: 'var(--background-emphasis)',
+          overlay: 'var(--background-overlay)',
         },
         foreground: {
-          DEFAULT: 'var(--color-fg)',
-          subtle: 'var(--color-fg-subtle)',
-          accent: 'var(--color-fg-accent)',
-          muted: 'var(--color-fg-muted)',
+          DEFAULT: 'var(--foreground)',
+          heading: 'var(--foreground-heading)',
+          subtle: 'var(--foreground-subtle)',
+          accent: 'var(--foreground-accent)',
+          muted: 'var(--foreground-muted)',
         },
         // Surfaces
         surface: {
-          DEFAULT: 'var(--color-surface)',
-          hover: 'var(--color-surface-hover)',
-          fg: 'var(--color-surface-fg)',
+          DEFAULT: 'var(--surface)',
+          hover: 'var(--surface-hover)',
+          foreground: 'var(--surface-foreground)',
         },
-        // Surface colors
-        green: {
-          DEFAULT: 'var(--color-green-500)',
-          hover: 'var(--color-green-600)',
+        card: {
+          DEFAULT: 'var(--card)',
+          hover: 'var(--card-hover)',
+          foreground: 'var(--card-foreground)',
         },
-        // Feedback
-        success: {
-          DEFAULT: 'var(--color-success)',
-          hover: 'var(--color-success-hover)',
-          fg: 'var(--color-success-fg)',
-        },
-        warning: {
-          DEFAULT: 'var(--color-warning)',
-          hover: 'var(--color-warning-hover)',
-          fg: 'var(--color-warning-fg)',
-        },
-        error: {
-          DEFAULT: 'var(--color-error)',
-          hover: 'var(--color-error-hover)',
-          fg: 'var(--color-error-fg)',
-        },
-        info: {
-          DEFAULT: 'var(--color-info)',
-          hover: 'var(--color-info-hover)',
-          fg: 'var(--color-info-fg)',
+        // Popovers
+        popover: {
+          DEFAULT: 'var(--popover)',
+          foreground: 'var(--popover-foreground)',
         },
         // Interactive
         primary: {
-          DEFAULT: 'var(--color-primary)',
-          hover: 'var(--color-primary-hover)',
-          fg: 'var(--color-primary-fg)',
+          DEFAULT: 'var(--primary)',
+          hover: 'var(--primary-hover)',
+          foreground: 'var(--primary-foreground)',
         },
         secondary: {
-          DEFAULT: 'var(--color-secondary)',
-          hover: 'var(--color-secondary-hover)',
-          fg: 'var(--color-secondary-fg)',
+          DEFAULT: 'var(--secondary)',
+          hover: 'var(--secondary-hover)',
+          foreground: 'var(--secondary-foreground)',
         },
         accent: {
-          DEFAULT: 'var(--color-secondary)',
-          hover: 'var(--color-secondary-hover)',
-          fg: 'var(--color-secondary-fg)',
+          DEFAULT: 'var(--accent)',
+          hover: 'var(--accent-hover)',
+          foreground: 'var(--accent-foreground)',
         },
-        disabled: {
-          DEFAULT: 'var(--color-disabled)',
-          fg: 'var(--color-disabled-fg)',
+        muted: {
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
+        },
+        // Feedback
+        success: {
+          DEFAULT: 'var(--success)',
+          hover: 'var(--success-hover)',
+          foreground: 'var(--success-foreground)',
+        },
+        warning: {
+          DEFAULT: 'var(--warning)',
+          hover: 'var(--warning-hover)',
+          foreground: 'var(--warning-foreground)',
+        },
+        error: {
+          DEFAULT: 'var(--error)',
+          hover: 'var(--error-hover)',
+          foreground: 'var(--error-foreground)',
+        },
+        info: {
+          DEFAULT: 'var(--info)',
+          hover: 'var(--info-hover)',
+          foreground: 'var(--info-foreground)',
         },
         // Borders
         border: {
-          DEFAULT: 'var(--color-border)',
+          DEFAULT: 'var(--border)',
         },
         // Icons
         icon: {
-          DEFAULT: 'var(--color-icon)',
+          DEFAULT: 'var(--icon)',
         },
         // Focus Rings
         ring: {
-          DEFAULT: 'var(--color-border)',
-          focus: 'var(--color-ring-focus)',
+          DEFAULT: 'var(--border)',
+          focus: 'var(--ring-focus)',
         },
         // Primary color palette
         sand: {
@@ -127,6 +137,20 @@ export default {
           700: 'var(--color-sand-700)',
           800: 'var(--color-sand-800)',
           900: 'var(--color-sand-900)',
+        },
+        stone: {
+          DEFAULT: 'var(--color-stone-500)',
+          50: 'var(--color-stone-50)',
+          100: 'var(--color-stone-100)',
+          200: 'var(--color-stone-200)',
+          300: 'var(--color-stone-300)',
+          400: 'var(--color-stone-400)',
+          500: 'var(--color-stone-500)',
+          600: 'var(--color-stone-600)',
+          700: 'var(--color-stone-700)',
+          800: 'var(--color-stone-800)',
+          900: 'var(--color-stone-900)',
+          950: 'var(--color-stone-950)',
         },
         zinc: {
           DEFAULT: 'var(--color-zinc-500)',

@@ -72,7 +72,7 @@ export const home = defineType({
           to: [{ type: 'service' }],
         },
       ],
-      validation: Rule => Rule.min(6).max(6).required(),
+      validation: Rule => Rule.min(6).max(6),
       hidden: ({ parent }) => !parent?.showFeaturedServices,
     }),
 

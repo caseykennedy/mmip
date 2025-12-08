@@ -23,6 +23,7 @@ export default function CustomPortableText({
 }) {
   const components: PortableTextComponents = {
     block: {
+      normal: ({ children }) => <p className="text-base">{children}</p>,
       h1: ({ children, value }) => (
         // Add an anchor to the h1
         <h1 className="group relative">

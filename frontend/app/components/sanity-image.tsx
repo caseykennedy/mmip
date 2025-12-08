@@ -1,0 +1,48 @@
+import { Image, type ImageProps } from 'next-sanity/image'
+
+import { urlForImage } from '@/sanity/lib/utils'
+import type { SanityImage } from '@/types'
+
+import { stegaClean } from '@sanity/client/stega'
+
+interface Props extends Omit<ImageProps, 'src'> {
+  source: SanityImage
+}
+
+export default function SanityImage({
+  source,
+  alt = '',
+  fill,
+  sizes = '(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 500px',
+  quality = 80,
+  loading = 'lazy',
+  className,
+  ...props
+}: Props) {
+  if (!source) return null
+
+  const isSVG = source.extension === 'svg'
+  const width = source.metadata?.dimensions?.width || 500
+  const height = source.metadata?.dimensions?.height || 300
+  const hasLqip = Boolean(source.metadata && source.metadata.lqip)
+  const imageUrl = !isSVG
+    ? urlForImage(source)?.width(width).height(height).auto('format').url()
+    : source.url
+
+  return (
+    <Image
+      src={imageUrl ?? ''}
+      alt={stegaClean(alt)}
+      fill={fill}
+      width={!fill ? width : undefined}
+      height={!fill ? height : undefined}
+      sizes={!isSVG ? sizes : undefined}
+      quality={quality}
+      loading={loading}
+      placeholder={!isSVG && hasLqip ? 'blur' : undefined}
+      blurDataURL={!isSVG && hasLqip ? source.metadata?.lqip : undefined}
+      className={className}
+      {...props}
+    />
+  )
+}

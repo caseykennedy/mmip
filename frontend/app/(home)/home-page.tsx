@@ -1,35 +1,76 @@
-import { Suspense } from 'react'
+import PostCard from '@/app/components/card/post-card'
+import Categories from '@/app/components/categories'
+import SanityImage from '@/app/components/sanity-image'
+import Section from '@/app/components/section'
+import Topics from '@/app/components/topics'
+import { GetHomepageQueryResult } from '@/sanity.types'
 
-import Link from 'next/link'
-
-import GetStartedCode from '@/app/components/get-started-code'
-import { AllPosts } from '@/app/components/posts'
-
-// interface Props {}
-
-export default async function HomePage({}) {
+export default async function HomePage({ data }: { data: GetHomepageQueryResult }) {
+  const { hero, featuredPosts, featuredServices } = data ?? {}
   return (
     <>
-      <div className="relative bg-gradient-to-r from-red-200 from-0% via-white via-40%">
-        <div className="container">
-          <div className="py-32">
-            <div className="flex flex-col gap-4">
-              <h1 className="display">Together, we protect our people.</h1>
-              <p className="lead">
-                Resilient Relatives is an Native-led resource addressing the MMIP crisis—empowering
-                California Tribal communities to respond, advocate, and heal.
-              </p>
+      {hero && hero.image && (
+        <Section className="lg:py-28">
+          <div className="container">
+            <div className="flex flex-row items-center justify-between gap-32">
+              <div className="flex flex-col gap-4">
+                <h1 className="display text-foreground-heading">{hero.heading}</h1>
+                <p className="lead">{hero.subheading}</p>
+              </div>
+              <div className="shrink-0 grow">
+                <SanityImage source={hero.image} alt={hero.image.alt} className="w-64 max-w-full" />
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="border-t">
+        </Section>
+      )}
+      <Section>
         <div className="container">
-          <aside className="py-12 sm:py-20">
-            <Suspense>{await AllPosts()}</Suspense>
-          </aside>
+          <Categories />
         </div>
-      </div>
+      </Section>
+      {featuredPosts && featuredPosts.length > 0 && (
+        <Section>
+          <div className="container">
+            <h2 className="mb-6 text-2xl">Featured resources</h2>
+            <FeaturedPosts posts={featuredPosts} />
+          </div>
+        </Section>
+      )}
+      {featuredServices && featuredServices.length > 0 && (
+        <Section>
+          <div className="container">
+            <aside className="">{/* <FeaturedServices services={featuredServices} /> */}</aside>
+          </div>
+        </Section>
+      )}
+      <Section>
+        <div className="container">
+          <Topics />
+        </div>
+      </Section>
     </>
+  )
+}
+
+function FeaturedPosts({ posts }: { posts: NonNullable<GetHomepageQueryResult>['featuredPosts'] }) {
+  if (!posts || posts.length === 0) {
+    return null
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      {posts.map((post, index) => {
+        const isLast = index === posts.length - 1
+        return (
+          <PostCard
+            key={post._id}
+            post={post}
+            className={!isLast ? 'col-span-1' : 'col-span-2'}
+            orientation={!isLast ? 'vertical' : 'horizontal'}
+          />
+        )
+      })}
+    </div>
   )
 }

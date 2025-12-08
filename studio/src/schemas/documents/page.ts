@@ -54,7 +54,7 @@ export const page = defineType({
     }),
     // SEO
     defineField({
-      group: 'seo',
+      // group: 'seo',
       name: 'metadata',
       title: 'Metadata',
       type: 'metadata',

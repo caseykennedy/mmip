@@ -1,23 +1,11 @@
 import { defineQuery } from 'next-sanity'
 
-const postFields = /* groq */ `
-  _id,
-  "status": select(_originalId in path("drafts.**") => "draft", "published"),
-  postType,
-  "title": coalesce(title, "Untitled"),
-  "slug": slug.current,
-  excerpt,
-  coverImage,
-  "date": coalesce(date, _updatedAt),
-  region,
-  category->{name, "slug": slug.current, description},
-  topic->{name, "slug": slug.current, description},
-  "tags": tags->[]{name, "slug": slug.current, description},
-  excerpt[]{...},
-  notes[]{...},
-  authors[]->{firstName, lastName, picture},
+const imageFields = /* groq */ `
+  alt,
   asset,
-  metadata
+  "metadata": asset->metadata,
+  "url": asset->url,
+  "extension": asset->extension
 `
 
 const linkReference = /* groq */ `
@@ -36,7 +24,11 @@ const linkReference = /* groq */ `
     },
     category->{
       name,
-      "slug": slug.current
+      description,
+      "slug": slug.current,
+      image{
+        ${imageFields}
+      }
     }
   }
 `
@@ -45,6 +37,36 @@ const linkFields = /* groq */ `
   link {
     ${linkReference}
   }
+`
+
+const commonPostFields = /* groq */ `
+  _id,
+  "status": select(_originalId in path("drafts.**") => "draft", "published"),
+  postType,
+  "slug": slug.current,
+  "title": coalesce(title, "Untitled"),
+  excerpt,
+  coverImage{
+    ${imageFields}
+  },
+  "date": coalesce(date, _updatedAt),
+  category->{name, "slug": slug.current, description},
+  topic->{name, "slug": slug.current, description}
+`
+
+const postFields = /* groq */ `
+  ${commonPostFields},
+  body[]{
+    ...,
+    markDefs[]{
+      ...,
+      ${linkReference}
+    }
+  },
+  notes,
+  authors[]->{firstName, lastName, picture},
+  asset,
+  metadata
 `
 
 // Singletons
@@ -125,13 +147,6 @@ export const morePostsQuery = defineQuery(`
 
 export const postQuery = defineQuery(`
   *[_type == "post" && slug.current == $slug] [0] {
-    body[]{
-      ...,
-      markDefs[]{
-        ...,
-        ${linkReference}
-      }
-    },
     ${postFields}
   }
 `)
@@ -160,18 +175,19 @@ export const pagesSlugs = defineQuery(`
 `)
 
 // Categories
-
 const categoryFields = /* groq */ `
   _id,
   name,
   "slug": slug.current,
   description,
-  image,
+  image{
+    ${imageFields}
+  },
   order
 `
 
 export const allCategoriesQuery = defineQuery(`
-  *[_type == "category" && defined(slug.current)] {
+  *[_type == "category" && defined(slug.current)] | order(order asc) {
     ${categoryFields}
   }
 `)
@@ -179,5 +195,49 @@ export const allCategoriesQuery = defineQuery(`
 export const getCategoryQuery = defineQuery(`
   *[_type == 'category' && slug.current == $slug][0]{
     ${categoryFields}
+  }
+`)
+
+// Topics
+const topicFields = /* groq */ `
+  _id,
+  name,
+  "slug": slug.current,
+  description,
+  image{
+    ${imageFields}
+  },
+  order
+`
+
+export const allTopicsQuery = defineQuery(`
+  *[_type == "topic" && defined(slug.current)] | order(order asc) {
+    ${topicFields}
+  }
+`)
+
+export const getTopicQuery = defineQuery(`
+  *[_type == 'topic' && slug.current == $slug][0]{
+    ${topicFields}
+  }
+`)
+
+// Homepage
+export const getHomepageQuery = defineQuery(`
+  *[_type == "home"][0]{
+    hero{
+      heading,
+      subheading,
+      image{
+        ${imageFields}
+      }
+    },
+    featuredPosts[]->{
+      ${commonPostFields}
+    },
+    featuredServices[]->{
+      ...
+    },
+    seo
   }
 `)

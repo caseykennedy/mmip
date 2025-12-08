@@ -1,7 +1,14 @@
 import { draftMode } from 'next/headers'
 
+import {
+  AllCategoriesQueryResult,
+  AllTopicsQueryResult,
+  GetHomepageQueryResult,
+} from '@/sanity.types'
 import { isPreviewEnvironment } from '@/sanity/lib/api'
 import { sanityFetch } from '@/sanity/lib/live'
+
+import { allCategoriesQuery, allTopicsQuery, getHomepageQuery } from './queries'
 
 type FetchOptions<T> = {
   query: string
@@ -29,4 +36,34 @@ export async function fetchData<T>({
   })
 
   return data as T
+}
+
+// Fetch Homepage
+// _____________________________________________________________
+
+export function fetchHomeData() {
+  return fetchData<GetHomepageQueryResult>({
+    query: getHomepageQuery,
+    params: {},
+    tags: ['home'],
+  })
+}
+
+// Fetch taxonomies
+// _____________________________________________________________
+
+export function fetchCategories() {
+  return fetchData<AllCategoriesQueryResult>({
+    query: allCategoriesQuery,
+    params: {},
+    tags: ['category'],
+  })
+}
+
+export function fetchTopics() {
+  return fetchData<AllTopicsQueryResult>({
+    query: allTopicsQuery,
+    params: {},
+    tags: ['topic'],
+  })
 }

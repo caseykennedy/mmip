@@ -26,7 +26,7 @@ export default async function Navigation() {
               <>
                 <NavigationMenuTrigger>{menuLabel}</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[300px] gap-4">
+                  <ul className="grid w-[330px] gap-4">
                     {dropdownMenu.map((link, idx) => (
                       <li key={idx}>
                         <NavigationMenuLink asChild>
