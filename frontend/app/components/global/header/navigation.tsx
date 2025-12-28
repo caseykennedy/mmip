@@ -1,33 +1,32 @@
-import ResolvedLink from '@/app/components/resolved-link'
+import ResolvedLink from '@/app/components/shared/resolved-link'
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from '@/app/components/ui/navigation-menu'
-import { sanityFetch } from '@/sanity/lib/live'
-import { navigationQuery } from '@/sanity/lib/queries'
+import { fetchNavigation } from '@/sanity/lib/fetch'
 
 export default async function Navigation() {
-  const { data } = await sanityFetch({
-    query: navigationQuery,
-  })
-  console.log('navigation data', data)
+  const data = await fetchNavigation()
+
+  if (!data || !data.primaryNav || data.primaryNav.length === 0) {
+    return null
+  }
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        {data?.mainNav?.map(({ menuLabel, link, hasDropdown, dropdownMenu }, i) => (
+        {data?.primaryNav?.map(({ dropdownLabel, link, type, dropdownItems }, i) => (
           <NavigationMenuItem key={i}>
-            {hasDropdown && dropdownMenu ? (
+            {type === 'dropdown' && dropdownItems ? (
               <>
-                <NavigationMenuTrigger>{menuLabel}</NavigationMenuTrigger>
+                <NavigationMenuTrigger>{dropdownLabel}</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[330px] gap-4">
-                    {dropdownMenu.map((link, idx) => (
+                    {dropdownItems.map((link, idx) => (
                       <li key={idx}>
                         <NavigationMenuLink asChild>
                           <ResolvedLink link={link}>

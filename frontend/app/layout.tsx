@@ -3,15 +3,15 @@ import { draftMode } from 'next/headers'
 import { toPlainText, VisualEditing } from 'next-sanity'
 import { Toaster } from 'sonner'
 
-import DraftModeToast from '@/app/components/draft-mode-toast'
 import Footer from '@/app/components/global/footer'
 import Header from '@/app/components/global/header'
-import { BASE_URL, SITE_NAME } from '@/lib/constants'
+import DraftModeToast from '@/app/components/shared/draft-mode-toast'
+import { SITE_NAME } from '@/lib/constants'
 import { handleError } from '@/lib/handle-error'
 import { cn } from '@/lib/utils'
 import * as demo from '@/sanity/lib/demo'
-import { sanityFetch, SanityLive } from '@/sanity/lib/live'
-import { settingsQuery } from '@/sanity/lib/queries'
+import { fetchSettings } from '@/sanity/lib/fetch'
+import { SanityLive } from '@/sanity/lib/live'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 
 import { HelveticaNowFont, RealHeadFont } from './fonts'
@@ -20,11 +20,7 @@ import './globals.css'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { data: settings } = await sanityFetch({
-    query: settingsQuery,
-    // Metadata should never contain stega
-    stega: false,
-  })
+  const settings = await fetchSettings()
 
   const title = settings?.title || demo.title
   const description = settings?.description || demo.description
@@ -52,11 +48,11 @@ export async function generateMetadata(): Promise<Metadata> {
     generator: 'Next.js',
     applicationName: SITE_NAME,
     publisher: SITE_NAME,
-    manifest: `${BASE_URL}/manifest.webmanifest`,
+    manifest: `/manifest.webmanifest`,
     openGraph: {
       title: title,
       description: toPlainText(description),
-      url: BASE_URL,
+      url: '/',
       siteName: SITE_NAME,
       images: ogImage ? [ogImage] : [],
       locale: 'en_US',
@@ -91,7 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       )}
     >
       <body>
-        <section className="min-h-screen pt-24">
+        <section className="min-h-screen pt-20">
           {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
           <Toaster />
           {isDraftMode && (

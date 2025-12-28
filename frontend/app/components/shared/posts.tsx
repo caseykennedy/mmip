@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import pluralize from 'pluralize-esm'
 
-import DateComponent from '@/app/components/date'
-import OnBoarding from '@/app/components/onboarding'
+import DateComponent from '@/app/components/shared/date'
+import OnBoarding from '@/app/components/shared/onboarding'
 import type { AllPostsQueryResult } from '@/sanity.types'
 import { sanityFetch } from '@/sanity/lib/live'
 import { allPostsQuery, getPostsByTypeQuery, morePostsQuery } from '@/sanity/lib/queries'

@@ -3,12 +3,30 @@ import { draftMode } from 'next/headers'
 import {
   AllCategoriesQueryResult,
   AllTopicsQueryResult,
+  GetCategoryWithAllPostsQueryResult,
   GetHomepageQueryResult,
+  GetPostQueryResult,
+  GetPostsByTypeQueryResult,
+  GetTopicWithAllPostsQueryResult,
+  MorePostsQueryResult,
+  NavigationQueryResult,
+  SettingsQueryResult,
 } from '@/sanity.types'
 import { isPreviewEnvironment } from '@/sanity/lib/api'
 import { sanityFetch } from '@/sanity/lib/live'
 
-import { allCategoriesQuery, allTopicsQuery, getHomepageQuery } from './queries'
+import {
+  allCategoriesQuery,
+  allTopicsQuery,
+  getCategoryWithAllPostsQuery,
+  getHomepageQuery,
+  getPostQuery,
+  getPostsByTypeQuery,
+  getTopicWithAllPostsQuery,
+  morePostsQuery,
+  navigationQuery,
+  settingsQuery,
+} from './queries'
 
 type FetchOptions<T> = {
   query: string
@@ -38,6 +56,28 @@ export async function fetchData<T>({
   return data as T
 }
 
+// Fetch Settings
+// _____________________________________________________________
+
+export function fetchSettings() {
+  return fetchData<SettingsQueryResult>({
+    query: settingsQuery,
+    params: {},
+    tags: ['settings'],
+  })
+}
+
+// Fetch Navigation
+// _____________________________________________________________
+
+export function fetchNavigation() {
+  return fetchData<NavigationQueryResult>({
+    query: navigationQuery,
+    params: {},
+    tags: ['navigation'],
+  })
+}
+
 // Fetch Homepage
 // _____________________________________________________________
 
@@ -52,6 +92,7 @@ export function fetchHomeData() {
 // Fetch taxonomies
 // _____________________________________________________________
 
+// Categories
 export function fetchCategories() {
   return fetchData<AllCategoriesQueryResult>({
     query: allCategoriesQuery,
@@ -60,10 +101,54 @@ export function fetchCategories() {
   })
 }
 
+export function fetchCategoryWithAllPosts(slug: string) {
+  return fetchData<GetCategoryWithAllPostsQueryResult>({
+    query: getCategoryWithAllPostsQuery,
+    params: { slug },
+    tags: ['category'],
+  })
+}
+
+// Topics
 export function fetchTopics() {
   return fetchData<AllTopicsQueryResult>({
     query: allTopicsQuery,
     params: {},
     tags: ['topic'],
+  })
+}
+
+export function fetchTopicWithAllPosts(slug: string) {
+  return fetchData<GetTopicWithAllPostsQueryResult>({
+    query: getTopicWithAllPostsQuery,
+    params: { slug },
+    tags: ['topic'],
+  })
+}
+
+// Fetch posts
+// _____________________________________________________________
+
+export function fetchPost(slug: string, categorySlug?: string) {
+  return fetchData<GetPostQueryResult>({
+    query: getPostQuery,
+    params: { slug, categorySlug },
+    tags: ['post'],
+  })
+}
+
+export function fetchPostsByType(postType: string) {
+  return fetchData<GetPostsByTypeQueryResult>({
+    query: getPostsByTypeQuery,
+    params: { postType },
+    tags: ['post-types'],
+  })
+}
+
+export function fetchMorePosts(skip: string, limit?: number) {
+  return fetchData<MorePostsQueryResult>({
+    query: morePostsQuery,
+    params: { skip, limit },
+    tags: ['post'],
   })
 }

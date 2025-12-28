@@ -1,9 +1,8 @@
 import Link from 'next/link'
 
+import SanityImage from '@/app/components/shared/sanity-image'
 import Tile from '@/app/components/ui/tile'
 import { fetchTopics } from '@/sanity/lib/fetch'
-
-import SanityImage from './sanity-image'
 
 export default async function Topics() {
   const data = await fetchTopics()

@@ -1,9 +1,8 @@
 // Post type constants
 export const POST_TYPE = {
-  ARTICLE: 'article',
-  GUIDE: 'guide',
-  TOOL: 'tool',
-  SERVICE: 'service',
+  articles: 'article',
+  guides: 'guide',
+  tools: 'tool',
 } as const
 export type PostTypeShape = (typeof POST_TYPE)[keyof typeof POST_TYPE]
 

@@ -1,4 +1,4 @@
-import { MenuIcon, LinkIcon } from '@sanity/icons'
+import { MenuIcon } from '@sanity/icons'
 import { defineType, defineField, defineArrayMember } from 'sanity'
 
 export const navigation = defineType({
@@ -8,69 +8,16 @@ export const navigation = defineType({
   icon: MenuIcon,
   fields: [
     defineField({
-      name: 'mainNav',
-      title: 'Main Navigation',
+      name: 'primaryNav',
+      title: 'Primary Navigation',
       type: 'array',
       of: [
         defineArrayMember({
-          name: 'item',
-          type: 'object',
-          icon: LinkIcon,
-          fields: [
-            defineField({
-              name: 'link',
-              title: 'Link',
-              type: 'link',
-              hidden: ({ parent }) => parent?.hasDropdown,
-            }),
-            defineField({
-              name: 'hasDropdown',
-              title: 'Has dropdown',
-              type: 'boolean',
-            }),
-            defineField({
-              name: 'menuLabel',
-              title: 'Dropdown Menu Label',
-              type: 'string',
-              hidden: ({ parent }) => !(parent as any)?.hasDropdown,
-              validation: Rule =>
-                Rule.custom((value, context) => {
-                  const parent = context.parent as any
-                  if (parent?.hasDropdown && !value) {
-                    return 'Menu Group Label is required when hasDropdown is true'
-                  }
-                  return true
-                }),
-            }),
-            defineField({
-              name: 'dropdownMenu',
-              title: 'Dropdown Menu',
-              type: 'array',
-              of: [
-                defineArrayMember({
-                  name: 'link',
-                  type: 'link',
-                }),
-              ],
-              hidden: ({ parent }) => !parent?.hasDropdown,
-            }),
-          ],
-          preview: {
-            select: {
-              link: 'link',
-              hasDropdown: 'hasDropdown',
-              menuLabel: 'menuLabel',
-            },
-            prepare(selection) {
-              const { link, hasDropdown, menuLabel } = selection
-              return {
-                title: hasDropdown ? `${menuLabel}` : `${link?.label || 'No label'}`,
-                media: hasDropdown ? MenuIcon : undefined,
-              }
-            },
-          },
+          type: 'navItem',
         }),
       ],
+      validation: Rule =>
+        Rule.max(8).warning('Consider keeping primary navigation items under 8 for better UX'),
     }),
     defineField({
       name: 'footerNav',
@@ -85,14 +32,13 @@ export const navigation = defineType({
   ],
   preview: {
     select: {
-      mainNav: 'mainNav',
+      primaryNav: 'primaryNav',
       footerNav: 'footerNav',
     },
-    prepare(selection) {
-      const { mainNav, footerNav } = selection
+    prepare({ primaryNav, footerNav }) {
       return {
-        title: 'Navigation',
-        subtitle: `${mainNav?.length || 0} main nav items, ${footerNav?.length || 0} footer nav items`,
+        title: 'Site Navigation',
+        subtitle: `${primaryNav?.length || 0} primary items, ${footerNav?.length || 0} footer items`,
       }
     },
   },

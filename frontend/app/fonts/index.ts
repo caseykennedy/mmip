@@ -1,4 +1,5 @@
 import localFont from 'next/font/local'
+// Secular one
 
 export const HelveticaNowFont = localFont({
   src: [

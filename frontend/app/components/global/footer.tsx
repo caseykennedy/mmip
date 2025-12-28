@@ -1,11 +1,121 @@
-export default function Footer() {
+import Image from 'next/image'
+import Link from 'next/link'
+
+import ResolvedLink from '@/app/components/shared/resolved-link'
+import CommunityBgImg from '@/public/images/community-bg.png'
+import CommunityEagleImg from '@/public/images/community-eagle.png'
+import LogoMark from '@/public/logo-mark.svg'
+import { sanityFetch } from '@/sanity/lib/live'
+import { navigationQuery } from '@/sanity/lib/queries'
+
+export default async function Footer() {
+  const { data } = await sanityFetch({
+    query: navigationQuery,
+  })
+
+  // More robust data selection
+  const resourcesDropdown = data?.primaryNav?.find(
+    nav => nav.type === 'dropdown' && nav.dropdownLabel?.toLowerCase().includes('resource'),
+  )
+
+  const aboutLink = data?.primaryNav?.find(
+    nav => nav.type === 'link' && nav.link?.label?.toLowerCase() === 'about',
+  )
+
   return (
-    <footer className="bg-background-subtle">
-      <div className="container">
-        <div className="flex flex-col items-center py-28 lg:flex-row">
-          <h3 className="">Footer</h3>
+    <footer className="bg-background">
+      <BuiltBy />
+      <div className="container relative z-10">
+        <div className="rounded-t-2xl bg-background-subtle">
+          <div className="flex flex-col gap-16 px-8 py-12">
+            <div className="flex flex-col items-start justify-between gap-24 md:flex-row">
+              <div className="flex">
+                <Link
+                  className="flex flex-1 items-center gap-3"
+                  href="/"
+                  aria-label="Resilient Relatives Home"
+                >
+                  <Image src={LogoMark} alt="Resilient Relatives logo" className="size-12" />
+                  <span className="text-lg font-medium leading-none">
+                    Resilient
+                    <br />
+                    Relatives
+                  </span>
+                </Link>
+              </div>
+
+              <nav className="grid flex-1 grid-cols-3 gap-8">
+                {/* Resources Section */}
+                {resourcesDropdown?.dropdownItems && (
+                  <div className="flex flex-col gap-4">
+                    <div className="font-bold">{resourcesDropdown.dropdownLabel}</div>
+                    <ul className="flex flex-col gap-4">
+                      {resourcesDropdown.dropdownItems.map((link, idx) => (
+                        <li key={idx}>
+                          <ResolvedLink link={link}>{link.label}</ResolvedLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Company Section */}
+                {aboutLink?.link && (
+                  <div className="flex flex-col gap-4">
+                    <div className="font-bold">Company</div>
+                    <ul>
+                      <li>
+                        <ResolvedLink link={aboutLink.link}>{aboutLink.link.label}</ResolvedLink>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+                {/* Connect Section */}
+                <div className="flex flex-col gap-4">
+                  <div className="font-bold">Connect</div>
+                  <ul>
+                    <li>
+                      <a href="mailto:contact@resilientrelatives.com">Email us</a>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+
+            <hr />
+
+            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+              <p className="text-sm text-gray-500">
+                &copy; {new Date().getFullYear()} Resilient Relatives. All rights reserved.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
+  )
+}
+
+function BuiltBy() {
+  return (
+    <div className="relative">
+      <div className="absolute inset-x-0 z-0 mx-auto max-w-[1640px]">
+        <Image
+          src={CommunityBgImg}
+          alt="Community background"
+          className="min-h-[500px] object-cover"
+        />
+      </div>
+      <div className="container relative z-10 flex flex-col items-center gap-4 py-16 md:py-20 lg:py-24 xl:py-28">
+        <div className="w-[207px]">
+          <Image src={CommunityEagleImg} alt="Community eagle" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <h2 className="text-center text-3xl">Built by and for Native communities.</h2>
+          <p className="text-center">For families, advocates, and future generations.</p>
+        </div>
+      </div>
+    </div>
   )
 }

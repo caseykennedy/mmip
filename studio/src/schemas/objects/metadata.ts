@@ -24,7 +24,7 @@ export const metadata = defineType({
       validation: Rule => Rule.max(160).warning('Try to keep under 160 characters'),
     }),
     defineField({
-      name: 'openGraphImage',
+      name: 'ogImage',
       title: 'Open Graph Image',
       type: 'image',
       description: 'Used when sharing on social media platforms like Facebook or X (Twitter)',

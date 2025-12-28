@@ -1,6 +1,6 @@
 import { Image } from 'next-sanity/image'
 
-import DateComponent from '@/app/components/date'
+import DateComponent from '@/app/components/shared/date'
 import { urlForImage } from '@/sanity/lib/utils'
 
 type Props = {
@@ -18,13 +18,13 @@ export default function Avatar({ person, date }: Props) {
   return (
     <div className="flex items-center">
       {picture?.asset?._ref ? (
-        <div className="mr-4 h-9 w-9">
+        <div className="mr-4 size-9">
           <Image
             alt={picture?.alt || ''}
             className="h-full rounded-full object-cover"
-            height={48}
-            width={48}
-            src={urlForImage(picture)?.height(96).width(96).fit('crop').url() as string}
+            height={54}
+            width={54}
+            src={urlForImage(picture)?.height(108).width(108).fit('crop').url() as string}
           />
         </div>
       ) : (
@@ -36,7 +36,7 @@ export default function Avatar({ person, date }: Props) {
             {firstName} {lastName}
           </div>
         )}
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-foreground-subtle">
           <DateComponent dateString={date} />
         </div>
       </div>

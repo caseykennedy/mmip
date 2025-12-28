@@ -128,3 +128,9 @@ export function portableTextToString(blocks?: PortableTextBlock[] | null): strin
     .replace(/\s+/g, ' ') // collapse multiple spaces
     .trim()
 }
+
+// Format file size from bytes to human-readable string
+export const formatFileSize = (sizeInBytes: number) => {
+  const sizeInMB = sizeInBytes / (1024 * 1024)
+  return sizeInMB < 1 ? `${(sizeInBytes / 1024).toFixed(0)} KB` : `${sizeInMB.toFixed(1)} MB`
+}

@@ -10,20 +10,24 @@
 
 import { PortableText, type PortableTextBlock, type PortableTextComponents } from 'next-sanity'
 
-import ResolvedLink from '@/app/components/resolved-link'
-
-import CoverImage from './cover-image'
+import PortableImage from '@/app/components/shared/portable-image'
+import ResolvedLink from '@/app/components/shared/resolved-link'
+import { cn } from '@/lib/utils'
+import type { SanityImage } from '@/types'
 
 export default function CustomPortableText({
   className,
+  paragraphClassName,
   value,
 }: {
   className?: string
+  paragraphClassName?: string
   value: PortableTextBlock[]
 }) {
   const components: PortableTextComponents = {
     block: {
-      normal: ({ children }) => <p className="text-base">{children}</p>,
+      normal: ({ children }) => <p className={cn('text-base', paragraphClassName)}>{children}</p>,
+      lead: ({ children }) => <p className="text-lg">{children}</p>,
       h1: ({ children, value }) => (
         // Add an anchor to the h1
         <h1 className="group relative">
@@ -52,7 +56,7 @@ export default function CustomPortableText({
       h2: ({ children, value }) => {
         // Add an anchor to the h2
         return (
-          <h2 className="group relative">
+          <h2 className="group relative" id={value?._key}>
             {children}
             <a
               href={`#${value?._key}`}
@@ -76,6 +80,33 @@ export default function CustomPortableText({
           </h2>
         )
       },
+      h3: ({ children, value }) => {
+        // Add an anchor to the h2
+        return (
+          <h3 className="group relative" id={value?._key}>
+            {children}
+            <a
+              href={`#${value?._key}`}
+              className="absolute inset-y-0 left-0 -ml-6 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="size-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                />
+              </svg>
+            </a>
+          </h3>
+        )
+      },
     },
     marks: {
       link: ({ children, value: link }) => {
@@ -83,9 +114,8 @@ export default function CustomPortableText({
       },
     },
     types: {
-      portableImage: ({ value }) => {
-        console.log('portable text image value', value)
-        return <CoverImage image={value} priority />
+      portableImage: ({ value }: { value: SanityImage }) => {
+        return <PortableImage image={value} />
       },
     },
   }

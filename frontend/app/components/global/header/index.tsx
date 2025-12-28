@@ -10,7 +10,7 @@ import Navigation from './navigation'
 
 export default function Header() {
   return (
-    <header className="fixed inset-0 z-50 flex h-20 items-center bg-background">
+    <header className="fixed inset-0 z-50 flex h-20 items-center border-b bg-background">
       <div className="container">
         <div className="flex items-center justify-between gap-5">
           <Link
@@ -29,7 +29,7 @@ export default function Header() {
           <Navigation />
 
           <div className="flex flex-1 justify-end">
-            <Button asChild variant="outline" size="icon">
+            <Button asChild variant="outline" size="icon" className="size-[50px]">
               <Link href="/get-started">
                 <PiMagnifyingGlassBold className="size-5" />
               </Link>

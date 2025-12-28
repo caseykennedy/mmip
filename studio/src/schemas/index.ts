@@ -16,6 +16,7 @@ import { settings } from './singletons/settings'
 import { tag } from './documents/tag'
 import { topic } from './documents/topic'
 import { blockContentBasic } from './objects/block-content-basic'
+import { navItem } from './objects/nav-item'
 
 // Export an array of all the schema types.  This is used in the Sanity Studio configuration. https://www.sanity.io/docs/schema-types
 
@@ -41,4 +42,5 @@ export const schemaTypes = [
   infoSection,
   link,
   metadata,
+  navItem,
 ]

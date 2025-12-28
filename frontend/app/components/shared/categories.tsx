@@ -2,10 +2,9 @@ import { RiArrowRightLine } from 'react-icons/ri'
 
 import Link from 'next/link'
 
+import SanityImage from '@/app/components/shared/sanity-image'
 import Tile from '@/app/components/ui/tile'
 import { fetchCategories } from '@/sanity/lib/fetch'
-
-import SanityImage from './sanity-image'
 
 import { stegaClean } from '@sanity/client/stega'
 
@@ -36,7 +35,7 @@ export default async function Categories() {
                 )}
                 <div className="flex flex-row items-center justify-between">
                   <p className="text-xl font-medium">{cat.name}</p>
-                  <div className="bg-muted flex size-10 items-center justify-center rounded-full transition-colors group-hover:bg-secondary">
+                  <div className="flex size-10 items-center justify-center rounded-full bg-muted transition-colors group-hover:bg-secondary">
                     <RiArrowRightLine className="size-5 text-white" />
                   </div>
                 </div>

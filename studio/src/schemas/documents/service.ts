@@ -1,6 +1,7 @@
 import { DocumentTextIcon, ComposeIcon, SearchIcon } from '@sanity/icons'
 import { de } from 'date-fns/locale'
 import { defineField, defineType } from 'sanity'
+import { region } from '../fields/region'
 
 export const service = defineType({
   name: 'service',
@@ -28,21 +29,7 @@ export const service = defineType({
       options: { source: 'name', maxLength: 96 },
       validation: Rule => Rule.required(),
     }),
-    defineField({
-      name: 'region',
-      title: 'Region',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Northern CA', value: 'north' },
-          { title: 'Central CA', value: 'central' },
-          { title: 'Southern CA', value: 'south' },
-        ],
-        layout: 'radio',
-        direction: 'vertical',
-      },
-      validation: Rule => Rule.required(),
-    }),
+    region,
     defineField({
       group: 'content',
       name: 'serviceType',

@@ -11,11 +11,11 @@ interface Props extends Omit<ImageProps, 'src'> {
 
 export default function SanityImage({
   source,
-  alt = '',
+  alt = 'alt text',
   fill,
   sizes = '(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 500px',
   quality = 80,
-  loading = 'lazy',
+  loading,
   className,
   ...props
 }: Props) {
@@ -29,7 +29,7 @@ export default function SanityImage({
     ? urlForImage(source)?.width(width).height(height).auto('format').url()
     : source.url
 
-  return (
+  const img = source?.asset?._ref ? (
     <Image
       src={imageUrl ?? ''}
       alt={stegaClean(alt)}
@@ -44,5 +44,9 @@ export default function SanityImage({
       className={className}
       {...props}
     />
+  ) : (
+    <div className="aspect-video rounded border bg-sand-200" />
   )
+
+  return <div className="relative">{img}</div>
 }

@@ -174,7 +174,7 @@
   /* ========================================================= */
   /* Interactive Colors (States & Buttons)                     */
   /* ========================================================= */
-  --primary: var(--color-gold-500);
+  --primary: var(--color-gold-600);
   --primary-hover: var(--color-gold-700);
   --primary-foreground: var(--color-white);
 
@@ -232,7 +232,7 @@
   h4,
   h5,
   h6 {
-    @apply font-heading font-semibold leading-normal;
+    @apply font-heading font-medium leading-normal scroll-mt-36;
   }
 
   .display {
@@ -240,7 +240,7 @@
   }
 
   h1 {
-    @apply text-4xl md:text-7xl;
+    @apply text-4xl md:text-5xl;
   }
 
   .lead {

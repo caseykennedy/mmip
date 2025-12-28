@@ -1,6 +1,7 @@
 import { DocumentTextIcon, ComposeIcon, SearchIcon } from '@sanity/icons'
 import { format, parseISO } from 'date-fns'
 import { defineField, defineType } from 'sanity'
+import { region } from '../fields/region'
 
 export const post = defineType({
   name: 'post',
@@ -51,6 +52,8 @@ export const post = defineType({
       initialValue: () => new Date().toISOString(),
     }),
 
+    region,
+
     // Taxonomy
     defineField({
       group: 'content',
@@ -83,7 +86,7 @@ export const post = defineType({
       type: 'array',
       of: [{ type: 'reference', to: [{ type: 'tag' }], options: { disableNew: false } }],
       options: { layout: 'tags' },
-      validation: Rule => Rule.max(4).required(),
+      validation: Rule => Rule.max(3).required(),
     }),
 
     // Authors
@@ -95,6 +98,15 @@ export const post = defineType({
       of: [{ type: 'reference', to: [{ type: 'person' }] }],
       options: { layout: 'grid' },
       validation: Rule => Rule.required(),
+    }),
+
+    // Tool Asset
+    defineField({
+      group: 'content',
+      name: 'toolFile',
+      title: 'Downloadable asset',
+      type: 'file',
+      hidden: ({ parent }) => parent?.postType !== 'tool',
     }),
 
     // Content
@@ -125,16 +137,7 @@ export const post = defineType({
       name: 'coverImage',
       title: 'Cover Image',
       type: 'imageWithAlt',
-      validation: Rule => Rule.required(),
-    }),
-
-    // Tool Asset
-    defineField({
-      group: 'content',
-      name: 'asset',
-      title: 'Downloadable Asset',
-      type: 'file',
-      hidden: ({ parent }) => parent?.postType !== 'tool',
+      // validation: Rule => Rule.required(),
     }),
 
     // SEO

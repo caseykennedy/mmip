@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { SanityDocument } from 'next-sanity'
 import { useOptimistic } from 'next-sanity/hooks'
 
-import BlockRenderer from '@/app/components/block-renderer'
+import BlockRenderer from '@/app/components/shared/block-renderer'
 import { GetPageQueryResult } from '@/sanity.types'
 import { studioUrl } from '@/sanity/lib/api'
 import { dataAttr } from '@/sanity/lib/utils'

@@ -51,7 +51,8 @@ const commonPostFields = /* groq */ `
   },
   "date": coalesce(date, _updatedAt),
   category->{name, "slug": slug.current, description},
-  topic->{name, "slug": slug.current, description}
+  topic->{name, "slug": slug.current, description},
+  region
 `
 
 const postFields = /* groq */ `
@@ -63,9 +64,24 @@ const postFields = /* groq */ `
       ${linkReference}
     }
   },
+  "headings": body[_type == "block" && style in ["h2", "h3"]]{
+    _key,
+    "level": style,
+    "text": pt::text(@)
+  },
   notes,
   authors[]->{firstName, lastName, picture},
-  asset,
+  toolFile{
+    _type,
+    asset->{
+      extension,
+      mimeType,
+      originalFilename,
+      size,
+      url
+    },
+    media
+  },
   metadata
 `
 
@@ -74,15 +90,15 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]`)
 
 export const navigationQuery = defineQuery(`
   *[_type == "navigation"][0]{
-    mainNav[]{
+    primaryNav[]{
       _key,
       _type,
+      type,
       link{
         ${linkReference}
       },
-      hasDropdown,
-      menuLabel,
-      dropdownMenu[]{
+      dropdownLabel,
+      dropdownItems[]{
         ${linkReference}
       }
     },
@@ -100,6 +116,7 @@ export const getPageQuery = defineQuery(`
     slug,
     heading,
     subheading,
+    metadata,
     "pageBuilder": pageBuilder[]{
       ...,
       _type == "callToAction" => {
@@ -198,6 +215,19 @@ export const getCategoryQuery = defineQuery(`
   }
 `)
 
+export const getCategoryWithAllPostsQuery = defineQuery(`
+  *[_type == 'category' && slug.current == $slug][0]{
+    ${categoryFields},
+    "posts": *[_type == "post" && category._ref == ^._id] | order(date desc, _updatedAt desc) {
+      ${commonPostFields}
+    },
+    "availableTopics": array::unique(*[_type == "post" && category._ref == ^._id && defined(topic)].topic->{
+      name,
+      "slug": slug.current
+    })
+  }
+`)
+
 // Topics
 const topicFields = /* groq */ `
   _id,
@@ -219,6 +249,19 @@ export const allTopicsQuery = defineQuery(`
 export const getTopicQuery = defineQuery(`
   *[_type == 'topic' && slug.current == $slug][0]{
     ${topicFields}
+  }
+`)
+
+export const getTopicWithAllPostsQuery = defineQuery(`
+  *[_type == 'topic' && slug.current == $slug][0]{
+    ${topicFields},
+    "posts": *[_type == "post" && topic._ref == ^._id] | order(date desc, _updatedAt desc) {
+      ${commonPostFields}
+    },
+    "availableTopics": array::unique(*[_type == "post" && category._ref == ^._id && defined(topic)].topic->{
+      name,
+      "slug": slug.current
+    })
   }
 `)
 

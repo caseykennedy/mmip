@@ -1,8 +1,8 @@
-import PostCard from '@/app/components/card/post-card'
-import Categories from '@/app/components/categories'
-import SanityImage from '@/app/components/sanity-image'
-import Section from '@/app/components/section'
-import Topics from '@/app/components/topics'
+import PostCard from '@/app/components/shared/card/post-card'
+import Categories from '@/app/components/shared/categories'
+import SanityImage from '@/app/components/shared/sanity-image'
+import Section from '@/app/components/shared/section'
+import Topics from '@/app/components/shared/topics'
 import { GetHomepageQueryResult } from '@/sanity.types'
 
 export default async function HomePage({ data }: { data: GetHomepageQueryResult }) {
@@ -10,14 +10,14 @@ export default async function HomePage({ data }: { data: GetHomepageQueryResult 
   return (
     <>
       {hero && hero.image && (
-        <Section className="lg:py-28">
+        <Section className="border-b bg-sand-50 lg:py-28">
           <div className="container">
             <div className="flex flex-row items-center justify-between gap-32">
-              <div className="flex flex-col gap-4">
+              <div className="flex max-w-3xl flex-col gap-4">
                 <h1 className="display text-foreground-heading">{hero.heading}</h1>
                 <p className="lead">{hero.subheading}</p>
               </div>
-              <div className="shrink-0 grow">
+              <div className="shrink-0">
                 <SanityImage source={hero.image} alt={hero.image.alt} className="w-64 max-w-full" />
               </div>
             </div>
