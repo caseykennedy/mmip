@@ -68,32 +68,27 @@ function SearchResults() {
       <Section className="border-t">
         <div className="container">
           {hasResults ? (
-            <div className="grid grid-cols-7">
-              <div className="col-span-4 flex flex-col gap-4 md:col-span-5 md:col-start-2">
-                <p className="text-sm text-foreground-muted">
-                  {isLoading && page === 0
-                    ? 'Loading...'
-                    : showingAllPosts
-                      ? `Showing ${results.length} of ${totalResults} posts`
-                      : `Showing ${results.length} of ${totalResults} results for "${query}"`}
-                </p>
+            <div className="flex flex-col items-center gap-8">
+              <p className="text-center text-sm text-foreground-muted">
+                {isLoading && page === 0
+                  ? 'Loading...'
+                  : showingAllPosts
+                    ? `Showing ${results.length} of ${totalResults} posts`
+                    : `Showing ${results.length} of ${totalResults} results for "${query}"`}
+              </p>
+              <div className="col-span-4 grid grid-cols-3 gap-6 md:col-span-5 md:col-start-2">
                 {results.map(result => {
                   return <SearchCard key={result.objectID} post={result} />
                 })}
-                {/* Load More Button */}
-                {hasMore && (
-                  <div className="flex justify-center">
-                    <Button
-                      onClick={handleLoadMore}
-                      disabled={isLoading}
-                      variant="outline"
-                      size="lg"
-                    >
-                      {isLoading ? 'Loading...' : 'Load More Results'}
-                    </Button>
-                  </div>
-                )}
               </div>
+              {/* Load More Button */}
+              {hasMore && (
+                <div className="flex justify-center">
+                  <Button onClick={handleLoadMore} disabled={isLoading} variant="outline" size="lg">
+                    {isLoading ? 'Loading...' : 'Load More Results'}
+                  </Button>
+                </div>
+              )}
             </div>
           ) : isLoading && page === 0 ? (
             <div className="py-12 text-center">

@@ -21,7 +21,7 @@ export const CARD_THEME: Record<string, string> = {
   default: 'bg-card border-border hover:border-border-hover',
 }
 
-export default function SearchCard({ className, orientation = 'horizontal', post }: PostCardData) {
+export default function SearchCard({ className, orientation = 'vertical', post }: PostCardData) {
   const isHorizontal = orientation === 'horizontal'
   const themeClasses = CARD_THEME[post.postType ?? 'default']
 
@@ -32,7 +32,7 @@ export default function SearchCard({ className, orientation = 'horizontal', post
       href={`/${post.category.slug}/${post.slug}`}
       className={cn(
         'flex flex-1 flex-col gap-6 rounded-lg border p-4 transition-colors',
-        { 'items-start md:flex-row': isHorizontal },
+        { 'items-center md:flex-row': isHorizontal },
         themeClasses,
         className,
       )}

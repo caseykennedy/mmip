@@ -56,7 +56,12 @@ export default function PostCard({ className, orientation = 'vertical', post }: 
           </Badge>
         </div>
         <h4 className="max-w-[34ch] font-sans text-xl font-medium">{post.title}</h4>
-        {post.excerpt && <CustomPortableText value={post.excerpt as PortableTextBlock[]} />}
+        {post.excerpt && (
+          <CustomPortableText
+            paragraphClassName="line-clamp-3"
+            value={post.excerpt as PortableTextBlock[]}
+          />
+        )}
       </div>
     </Link>
   )
