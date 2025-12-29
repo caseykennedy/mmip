@@ -103,11 +103,6 @@ export default function SearchComponent() {
                           {result.postType}
                         </Badge>
                       )}
-                      {result.type === 'category' && (
-                        <Badge variant="secondary" className="text-xs">
-                          Category
-                        </Badge>
-                      )}
                     </div>
                     {result.excerpt && (
                       <p className="line-clamp-2 text-sm text-gray-600">{result.excerpt}</p>
