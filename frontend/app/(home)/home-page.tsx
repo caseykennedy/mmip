@@ -1,5 +1,6 @@
 import PostCard from '@/app/components/shared/card/post-card'
 import Categories from '@/app/components/shared/categories'
+import HeroSearch from '@/app/components/shared/hero-search'
 import SanityImage from '@/app/components/shared/sanity-image'
 import Section from '@/app/components/shared/section'
 import Topics from '@/app/components/shared/topics'
@@ -9,17 +10,28 @@ export default async function HomePage({ data }: { data: GetHomepageQueryResult 
   const { hero, featuredPosts, featuredServices } = data ?? {}
   return (
     <>
-      {hero && hero.image && (
+      {hero && (
         <Section className="border-b bg-sand-50 lg:py-28">
           <div className="container">
             <div className="flex flex-row items-center justify-between gap-32">
-              <div className="flex max-w-3xl flex-col gap-4">
-                <h1 className="display text-foreground-heading">{hero.heading}</h1>
-                <p className="lead">{hero.subheading}</p>
+              <div className="flex max-w-3xl flex-col gap-16">
+                <div className="flex flex-col gap-6">
+                  <h1 className="display text-foreground-heading">{hero.heading}</h1>
+                  <p className="lead">{hero.subheading}</p>
+                </div>
+                <div>
+                  <HeroSearch />
+                </div>
               </div>
-              <div className="shrink-0">
-                <SanityImage source={hero.image} alt={hero.image.alt} className="w-64 max-w-full" />
-              </div>
+              {hero.image && (
+                <div className="shrink-0">
+                  <SanityImage
+                    source={hero.image}
+                    alt={hero.image.alt}
+                    className="w-64 max-w-full"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </Section>

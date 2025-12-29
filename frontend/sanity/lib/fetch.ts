@@ -2,6 +2,7 @@ import { draftMode } from 'next/headers'
 
 import {
   AllCategoriesQueryResult,
+  AllPostsQueryResult,
   AllTopicsQueryResult,
   GetCategoryWithAllPostsQueryResult,
   GetHomepageQueryResult,
@@ -17,6 +18,7 @@ import { sanityFetch } from '@/sanity/lib/live'
 
 import {
   allCategoriesQuery,
+  allPostsQuery,
   allTopicsQuery,
   getCategoryWithAllPostsQuery,
   getHomepageQuery,
@@ -128,6 +130,14 @@ export function fetchTopicWithAllPosts(slug: string) {
 
 // Fetch posts
 // _____________________________________________________________
+
+export function fetchAllPosts() {
+  return fetchData<AllPostsQueryResult>({
+    query: allPostsQuery,
+    params: {},
+    tags: ['post'],
+  })
+}
 
 export function fetchPost(slug: string, categorySlug?: string) {
   return fetchData<GetPostQueryResult>({

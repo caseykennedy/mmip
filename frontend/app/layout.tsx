@@ -5,6 +5,7 @@ import { Toaster } from 'sonner'
 
 import Footer from '@/app/components/global/footer'
 import Header from '@/app/components/global/header'
+import CommandPalette from '@/app/components/shared/command-palette'
 import DraftModeToast from '@/app/components/shared/draft-mode-toast'
 import { SITE_NAME } from '@/lib/constants'
 import { handleError } from '@/lib/handle-error'
@@ -103,6 +104,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main className="">{children}</main>
           <Footer />
         </section>
+        <CommandPalette />
         <SpeedInsights />
       </body>
     </html>

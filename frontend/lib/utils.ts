@@ -3,6 +3,8 @@ import clsx, { type ClassValue } from 'clsx'
 import type { PortableTextBlock } from 'next-sanity'
 import { twMerge } from 'tailwind-merge'
 
+import { BlockContentBasic } from '@/sanity.types'
+
 export const getBaseUrl = () => {
   return process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
 }
