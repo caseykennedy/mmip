@@ -90,14 +90,12 @@ export default function SearchComponent() {
                   <div className="min-w-0 flex-1">
                     <div className="mb-1 flex items-center gap-2">
                       <Image
-                        src={result.coverImage || '/default-image.png'}
-                        alt={result.title || result.name || 'Image'}
+                        src={result.coverImage.url || '/default-image.png'}
+                        alt={result.title || 'Image'}
                         width={100}
                         height={80}
                       />
-                      <h3 className="truncate font-medium text-gray-900">
-                        {result.title || result.name}
-                      </h3>
+                      <h3 className="truncate font-medium text-gray-900">{result.title}</h3>
                       {result.postType && (
                         <Badge variant={result.postType as any} className="text-xs">
                           {result.postType}
@@ -107,8 +105,8 @@ export default function SearchComponent() {
                     {result.excerpt && (
                       <p className="line-clamp-2 text-sm text-gray-600">{result.excerpt}</p>
                     )}
-                    {result.categoryName && (
-                      <p className="mt-1 text-xs text-gray-500">in {result.categoryName}</p>
+                    {result.category.name && (
+                      <p className="mt-1 text-xs text-gray-500">in {result.category.name}</p>
                     )}
                   </div>
                 </Link>

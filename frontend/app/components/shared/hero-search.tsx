@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LuSearch } from 'react-icons/lu'
 
 import { useRouter } from 'next/navigation'
@@ -66,9 +66,9 @@ export default function HeroSearch({ onSearch, initialValue = '' }: HeroSearchPr
           value={query}
           onChange={handleInputChange}
           placeholder="Search articles, guides, and tools..."
-          className="h-16 pl-12 md:text-lg"
+          className="h-14 pl-12 md:text-lg"
         />
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+        <div className="absolute right-2 top-1/2 -translate-y-1/2">
           <Button type="submit">Search</Button>
         </div>
       </div>

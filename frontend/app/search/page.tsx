@@ -20,7 +20,7 @@ function SearchResults() {
   // Only set initial query from URL params on mount
   useEffect(() => {
     setQuery(initialQuery)
-  }, [])
+  }, [initialQuery])
 
   // Handle instant search from hero input - make it stable
   const handleSearch = useCallback((searchQuery: string) => {

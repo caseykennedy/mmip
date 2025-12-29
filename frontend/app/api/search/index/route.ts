@@ -38,15 +38,19 @@ export async function POST(request: NextRequest) {
           slug: post.slug,
           excerpt: portableTextToString(post.excerpt as PortableTextBlock[]),
           postType: post.postType,
-          categoryName: post.category?.name,
-          categorySlug: post.category?.slug,
-          topicName: post.topic?.name,
-          topicSlug: post.topic?.slug,
+          category: {
+            name: post.category.name,
+            slug: post.category.slug,
+          },
+          topic: {
+            name: post.topic.name,
+            slug: post.topic.slug,
+          },
           region: post.region,
           date: post.date,
           url: `/${post.category?.slug}/${post.slug}`,
           type: 'post',
-          coverImage: post.coverImage?.url || null,
+          coverImage: post.coverImage,
         }))
 
         const postResult = await client.saveObjects({

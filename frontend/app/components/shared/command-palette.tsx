@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LuBookOpen, LuFileText, LuSearch, LuWrench } from 'react-icons/lu'
 
 import { useRouter } from 'next/navigation'
@@ -83,9 +83,9 @@ export default function CommandPalette() {
                           </Badge>
                         )}
                       </div>
-                      {result.categoryName && (
+                      {result.category.name && (
                         <div className="text-xs text-muted-foreground">
-                          in {result.categoryName}
+                          in {result.category.name}
                         </div>
                       )}
                     </div>

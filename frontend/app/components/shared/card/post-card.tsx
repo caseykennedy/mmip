@@ -21,11 +21,12 @@ export const CARD_THEME: Record<string, string> = {
   guide: 'bg-terracota-100 border-terracota-200 hover:border-terracota-500',
   tool: 'bg-twilight-100 border-twilight-200 hover:border-twilight-500',
   service: 'bg-gold-100 border-gold-200 hover:border-gold-500',
+  default: 'bg-card border-border hover:border-border-hover',
 }
 
 export default function PostCard({ className, orientation = 'vertical', post }: PostCardData) {
   const isHorizontal = orientation === 'horizontal'
-  const themeClasses = CARD_THEME[post.postType] ?? 'bg-card border-border text-foreground'
+  const themeClasses = CARD_THEME[post.postType ?? 'default']
 
   return (
     <Link
@@ -37,15 +38,13 @@ export default function PostCard({ className, orientation = 'vertical', post }: 
         className,
       )}
     >
-      {post.coverImage && post.coverImage.alt && (
-        <div className={cn({ 'flex-1': isHorizontal })}>
-          <SanityImage
-            source={post.coverImage}
-            alt={post.coverImage.alt}
-            className="aspect-video w-full rounded-lg"
-          />
-        </div>
-      )}
+      <div className={cn({ 'flex-1': isHorizontal })}>
+        <SanityImage
+          source={post.coverImage}
+          alt={post.coverImage?.alt}
+          className="aspect-video w-full rounded-md"
+        />
+      </div>
 
       <div className={cn('flex flex-col gap-2', { 'flex-1': isHorizontal })}>
         <div className="mb-1 flex flex-row items-center gap-1">

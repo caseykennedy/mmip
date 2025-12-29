@@ -1,23 +1,27 @@
 import { useEffect, useState } from 'react'
 
 import { INDEXES, searchClient } from '@/lib/algolia'
+import { SanityImage } from '@/types'
 
 export interface SearchResult {
   objectID: string
   title?: string
-  name?: string
   slug: string
   excerpt?: string
   postType?: 'article' | 'guide' | 'tool'
-  categoryName?: string
-  categorySlug?: string
-  topicName?: string
-  topicSlug?: string
+  category: {
+    name: string
+    slug: string
+  }
+  topic: {
+    name: string
+    slug: string
+  }
   region?: string
   date?: string
   url: string
   type: 'post' | 'service'
-  coverImage?: string | null
+  coverImage: SanityImage
 }
 
 const attributesToRetrieve = [
@@ -25,10 +29,8 @@ const attributesToRetrieve = [
   'slug',
   'excerpt',
   'postType',
-  'categoryName',
-  'categorySlug',
-  'topicName',
-  'topicSlug',
+  'category',
+  'topic',
   'region',
   'date',
   'url',
@@ -144,7 +146,7 @@ export function useSearchWithPagination(query: string, page: number = 0) {
     // No debouncing for empty query, slight debounce for searches
     const debounceTimer = setTimeout(searchAlgolia, query.trim() ? 300 : 0)
     return () => clearTimeout(debounceTimer)
-  }, [currentQuery, query, page]) // Removed currentQuery from dependencies!
+  }, [currentQuery, query, page]) // Fixed dependencies
 
   return { results, isLoading, error, hasMore, totalResults }
 }
