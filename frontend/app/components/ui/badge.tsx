@@ -18,9 +18,9 @@ export const badgeVariants = cva(
           '[a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 border-transparent bg-destructive text-white',
         outline: 'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
         // Post type variants
-        article: 'border-sage-500 bg-sage-500 text-sage-900',
+        article: 'border-twilight-500 bg-twilight-500 text-twilight-900',
         guide: 'border-terracota-500 bg-terracota-500 text-terracota-900',
-        tool: 'border-twilight-500 bg-twilight-500 text-twilight-900',
+        tool: 'border-sage-500 bg-sage-500 text-sage-900',
         service: 'border-gold-500 bg-gold-500 text-gold-900',
       },
     },

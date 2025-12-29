@@ -30,7 +30,7 @@ export default function Header() {
 
           <div className="flex flex-1 justify-end">
             <Button asChild variant="outline" size="icon" className="size-[50px]">
-              <Link href="/get-started">
+              <Link href="/search" aria-label="Search">
                 <PiMagnifyingGlassBold className="size-5" />
               </Link>
             </Button>

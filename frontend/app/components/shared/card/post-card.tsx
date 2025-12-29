@@ -4,6 +4,7 @@ import { PortableTextBlock } from 'next-sanity'
 import CustomPortableText from '@/app/components/shared/portable-text'
 import SanityImage from '@/app/components/shared/sanity-image'
 import { Badge } from '@/app/components/ui/badge'
+import { CARD_THEME } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { AllPostsQueryResult } from '@/sanity.types'
 
@@ -14,14 +15,6 @@ type PostCardData = {
     AllPostsQueryResult[0],
     'title' | 'excerpt' | 'coverImage' | 'category' | 'topic' | 'postType' | 'slug'
   >
-}
-
-export const CARD_THEME: Record<string, string> = {
-  article: 'bg-sage-100 border-sage-200 hover:border-sage-500',
-  guide: 'bg-terracota-100 border-terracota-200 hover:border-terracota-500',
-  tool: 'bg-twilight-100 border-twilight-200 hover:border-twilight-500',
-  service: 'bg-gold-100 border-gold-200 hover:border-gold-500',
-  default: 'bg-card border-border hover:border-border-hover',
 }
 
 export default function PostCard({ className, orientation = 'vertical', post }: PostCardData) {

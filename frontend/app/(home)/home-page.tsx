@@ -14,10 +14,10 @@ export default async function HomePage({ data }: { data: GetHomepageQueryResult 
         <Section className="border-b bg-sand-50 lg:py-28">
           <div className="container">
             <div className="flex flex-row items-center justify-between gap-32">
-              <div className="flex max-w-3xl flex-col gap-16">
+              <div className="flex flex-col gap-16">
                 <div className="flex flex-col gap-6">
-                  <h1 className="display text-foreground-heading">{hero.heading}</h1>
-                  <p className="lead">{hero.subheading}</p>
+                  <h1 className="display max-w-[16ch] text-foreground-heading">{hero.heading}</h1>
+                  <p className="lead max-w-[50ch]">{hero.subheading}</p>
                 </div>
                 <div>
                   <HeroSearch />
