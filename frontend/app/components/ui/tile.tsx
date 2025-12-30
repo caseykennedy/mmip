@@ -10,7 +10,7 @@ export default function Tile({
   return (
     <div
       className={cn(
-        'hover:border-strong bg-card rounded-lg border p-6 transition-colors',
+        'rounded-xl border bg-card p-6 transition-colors hover:border-strong',
         className,
       )}
     >

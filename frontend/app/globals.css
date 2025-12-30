@@ -13,6 +13,7 @@
 
   /* Base neutrals */
   --color-sand-50: #fbf9f5;
+  --color-sand-75: hsl(40, 43%, 95%);
   --color-sand-100: #f6f2ec;
   --color-sand-200: #e9e2d7;
   --color-sand-300: #d7cdbc;
@@ -143,6 +144,8 @@
   --card-hover: var(--color-sand-200);
   --card-foreground: var(--foreground);
 
+  --input: var(--color-sand-50);
+
   /* ========================================================= */
   /* Feedback Colors         */
   /* ========================================================= */
@@ -197,6 +200,7 @@
   /* ========================================================= */
   --border: var(--color-sand-200);
   --border-strong: var(--color-sand-400);
+  --border-input: var(--color-sand-300);
 
   /* ========================================================= */
   /* Rings & Focus                                             */

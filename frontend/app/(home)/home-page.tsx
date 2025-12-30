@@ -11,7 +11,7 @@ export default async function HomePage({ data }: { data: GetHomepageQueryResult 
   return (
     <>
       {hero && (
-        <Section className="border-b bg-sand-50 lg:py-28">
+        <Section className="border-b lg:py-28">
           <div className="container">
             <div className="flex flex-row items-center justify-between gap-32">
               <div className="flex flex-col gap-16">
@@ -71,7 +71,7 @@ function FeaturedPosts({ posts }: { posts: NonNullable<GetHomepageQueryResult>['
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-6">
       {posts.map((post, index) => {
         const isLast = index === posts.length - 1
         return (

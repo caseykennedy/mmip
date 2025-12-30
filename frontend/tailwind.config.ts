@@ -2,7 +2,7 @@ import type { Config } from 'tailwindcss'
 import typography from '@tailwindcss/typography'
 
 export default {
-  content: ['./app/**/*.{ts,tsx}', './sanity/**/*.{ts,tsx}'],
+  content: ['./app/**/*.{ts,tsx}', './sanity/**/*.{ts,tsx}', './lib/**/*.{ts,tsx}'],
   theme: {
     container: {
       center: true,
@@ -29,6 +29,7 @@ export default {
       borderColor: {
         DEFAULT: 'var(--border)',
         strong: 'var(--border-strong)',
+        input: 'var(--border-input)',
       },
       boxShadow: {
         layer: '0 35px 60px -15px rgba(0, 0, 0, 0.3)',

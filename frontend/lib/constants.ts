@@ -19,5 +19,5 @@ export const CARD_THEME: Record<string, string> = {
   guide: 'bg-terracota-100 border-terracota-200 hover:border-terracota-500',
   tool: 'bg-sage-100 border-sage-200 hover:border-sage-500',
   service: 'bg-gold-100 border-gold-200 hover:border-gold-500',
-  default: 'bg-card border-border hover:border-border-hover',
+  default: 'bg-card border hover:border-hover',
 }

@@ -5,10 +5,10 @@ import { SanityImage } from '@/types'
 
 export interface SearchResult {
   objectID: string
-  title?: string
+  title: string
   slug: string
-  excerpt?: string
-  postType?: 'article' | 'guide' | 'tool'
+  excerpt: string
+  postType: 'article' | 'guide' | 'tool'
   category: {
     name: string
     slug: string
@@ -17,8 +17,8 @@ export interface SearchResult {
     name: string
     slug: string
   }
-  region?: string
-  date?: string
+  region: string
+  date: string
   url: string
   type: 'post' | 'service'
   coverImage: SanityImage

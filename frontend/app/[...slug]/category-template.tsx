@@ -125,8 +125,7 @@ export default function CategoryTemplate({
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col justify-between md:flex-row md:items-center">
-            <p className="text-sm text-foreground-muted">Looking for something more specific?</p>
+          <div className="flex flex-col justify-end md:flex-row md:items-center">
             <div className="flex flex-wrap items-center justify-end gap-4">
               {/* Region Filter */}
               <Select value={selectedRegion} onValueChange={handleRegionChange}>

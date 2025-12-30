@@ -54,7 +54,7 @@ function SearchResults() {
 
   return (
     <>
-      <Section className="bg-sand-50">
+      <Section className="bg-sand-75">
         <div className="container">
           <div className="flex flex-col items-center gap-8 text-center">
             <h1 className="text-3xl">Search</h1>
