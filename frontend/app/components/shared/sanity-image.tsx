@@ -6,7 +6,7 @@ import type { SanityImage } from '@/types'
 import { stegaClean } from '@sanity/client/stega'
 
 interface Props extends Omit<ImageProps, 'src'> {
-  source: SanityImage
+  source: SanityImage | null
 }
 
 export default function SanityImage({
