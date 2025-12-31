@@ -35,7 +35,7 @@ export default function PostCard({ className, orientation = 'vertical', post }: 
         <div className={cn({ 'flex-1': isHorizontal })}>
           <SanityImage
             source={post.coverImage}
-            alt={post.coverImage?.alt || 'Post cover image'}
+            alt={post.coverImage?.alt || post.title}
             className="aspect-video w-full rounded-lg"
           />
         </div>

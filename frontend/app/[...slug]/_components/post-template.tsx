@@ -26,7 +26,6 @@ export const CARD_THEME: Record<string, string> = {
 }
 
 export default async function PostTemplate({ post }: { post: NonNullable<GetPostQueryResult> }) {
-  const themeClasses = CARD_THEME[post.postType] ?? 'bg-card border-border text-foreground'
   return (
     <>
       <Section className="border-b bg-sand-50 lg:py-24">

@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
@@ -22,7 +22,7 @@ import type { AllServicesQueryResult } from '@/sanity.types'
 //     'Browse verified services for MMIP support—from emergency response and legal advocacy to healing, shelter, and youth programs—offered by Tribes, inter-tribal partners, and vetted providers across California.',
 // }
 
-export default function ServicesTemplate({ data }: { data: AllServicesQueryResult }) {
+function ServicesContent({ data }: { data: AllServicesQueryResult }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -204,5 +204,13 @@ export default function ServicesTemplate({ data }: { data: AllServicesQueryResul
         </div>
       </Section>
     </>
+  )
+}
+
+export default function ServicesTemplate({ data }: { data: AllServicesQueryResult }) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ServicesContent data={data} />
+    </Suspense>
   )
 }
