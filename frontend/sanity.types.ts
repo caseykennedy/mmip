@@ -215,6 +215,12 @@ export type Service = {
   name: string
   slug: Slug
   region: 'north' | 'central' | 'south'
+  category: {
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: 'category'
+  }
   serviceType: {
     _ref: string
     _type: 'reference'
@@ -400,7 +406,7 @@ export type Post = {
     _type: 'block'
     _key: string
   }>
-  coverImage: {
+  coverImage?: {
     asset?: {
       _ref: string
       _type: 'reference'
@@ -1191,6 +1197,119 @@ export type GetPageQueryResult = {
       }
   > | null
 } | null
+// Variable: getHomepageQuery
+// Query: *[_type == "home"][0]{    hero{      heading,      subheading,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    },    featuredPosts[]->{        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region    },    featuredServices[]->{      ...    },    seo  }
+export type GetHomepageQueryResult = {
+  hero: {
+    heading: string
+    subheading: string | null
+    image: {
+      alt: string
+      asset: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      } | null
+      metadata: SanityImageMetadata | null
+      url: string | null
+      extension: string | null
+    } | null
+  } | null
+  featuredPosts: Array<{
+    _id: string
+    status: 'draft' | 'published'
+    postType: 'article' | 'guide' | 'tool'
+    slug: string
+    title: string
+    excerpt: BlockContentBasic
+    coverImage: {
+      alt: string
+      asset: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      } | null
+      metadata: SanityImageMetadata | null
+      url: string | null
+      extension: string | null
+    } | null
+    date: string
+    category: {
+      name: string
+      slug: string
+      description: string | null
+    }
+    topic: {
+      name: string
+      slug: string
+      description: string | null
+    }
+    region: 'central' | 'north' | 'south'
+  }>
+  featuredServices: Array<{
+    _id: string
+    _type: 'service'
+    _createdAt: string
+    _updatedAt: string
+    _rev: string
+    name: string
+    slug: Slug
+    region: 'central' | 'north' | 'south'
+    category: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'category'
+    }
+    serviceType: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'serviceType'
+    }
+    tags: Array<{
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      _key: string
+      [internalGroqTypeReferenceTo]?: 'tag'
+    }>
+    coverImage: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt: string
+      _type: 'imageWithAlt'
+    }
+    shortDescription: BlockContentBasic
+    description: BlockContent
+    notes?: BlockContent
+    contactInfo?: {
+      address?: string
+      city?: string
+      state?: string
+      zip?: string
+      phone?: string
+      email?: string
+      website?: string
+    }
+    hours?: {
+      days?: string
+      open?: string
+      close?: string
+    }
+    metadata?: Metadata
+  }> | null
+  seo: Metadata | null
+} | null
 // Variable: sitemapData
 // Query: *[_type == "page" || _type == "post" || _type == "service" && defined(slug.current)] | order(_type asc) {    "slug": slug.current,    "categorySlug": category->slug.current,    _type,    _updatedAt,  }
 export type SitemapDataResult = Array<
@@ -1208,7 +1327,7 @@ export type SitemapDataResult = Array<
     }
   | {
       slug: string
-      categorySlug: null
+      categorySlug: string
       _type: 'service'
       _updatedAt: string
     }
@@ -1233,7 +1352,7 @@ export type AllPostsQueryResult = Array<{
     metadata: SanityImageMetadata | null
     url: string | null
     extension: string | null
-  }
+  } | null
   date: string
   category: {
     name: string
@@ -1382,7 +1501,7 @@ export type GetPostsByTypeQueryResult = Array<{
     metadata: SanityImageMetadata | null
     url: string | null
     extension: string | null
-  }
+  } | null
   date: string
   category: {
     name: string
@@ -1531,7 +1650,7 @@ export type MorePostsQueryResult = Array<{
     metadata: SanityImageMetadata | null
     url: string | null
     extension: string | null
-  }
+  } | null
   date: string
   category: {
     name: string
@@ -1680,7 +1799,7 @@ export type PostQueryResult = {
     metadata: SanityImageMetadata | null
     url: string | null
     extension: string | null
-  }
+  } | null
   date: string
   category: {
     name: string
@@ -1892,7 +2011,7 @@ export type GetPostQueryResult = {
     metadata: SanityImageMetadata | null
     url: string | null
     extension: string | null
-  }
+  } | null
   date: string
   category: {
     name: string
@@ -2048,7 +2167,7 @@ export type GetCategoryWithAllPostsQueryResult = {
       metadata: SanityImageMetadata | null
       url: string | null
       extension: string | null
-    }
+    } | null
     date: string
     category: {
       name: string
@@ -2147,7 +2266,7 @@ export type GetTopicWithAllPostsQueryResult = {
       metadata: SanityImageMetadata | null
       url: string | null
       extension: string | null
-    }
+    } | null
     date: string
     category: {
       name: string
@@ -2166,112 +2285,87 @@ export type GetTopicWithAllPostsQueryResult = {
     slug: string
   }>
 } | null
-// Variable: getHomepageQuery
-// Query: *[_type == "home"][0]{    hero{      heading,      subheading,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    },    featuredPosts[]->{        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region    },    featuredServices[]->{      ...    },    seo  }
-export type GetHomepageQueryResult = {
-  hero: {
-    heading: string
-    subheading: string | null
-    image: {
-      alt: string
-      asset: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-      } | null
-      metadata: SanityImageMetadata | null
-      url: string | null
-      extension: string | null
-    } | null
-  } | null
-  featuredPosts: Array<{
-    _id: string
-    status: 'draft' | 'published'
-    postType: 'article' | 'guide' | 'tool'
-    slug: string
-    title: string
-    excerpt: BlockContentBasic
-    coverImage: {
-      alt: string
-      asset: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-      } | null
-      metadata: SanityImageMetadata | null
-      url: string | null
-      extension: string | null
-    }
-    date: string
-    category: {
-      name: string
-      slug: string
-      description: string | null
-    }
-    topic: {
-      name: string
-      slug: string
-      description: string | null
-    }
-    region: 'central' | 'north' | 'south'
-  }>
-  featuredServices: Array<{
-    _id: string
-    _type: 'service'
-    _createdAt: string
-    _updatedAt: string
-    _rev: string
+// Variable: allServicesQuery
+// Query: *[_type == "service" && defined(slug.current)] | order(name asc) {      _id,  _type,  _updatedAt,  category->{    name,    "slug": slug.current  },  contactInfo,  name,  region,  serviceType->{    name,    "slug": slug.current  },  shortDescription,  "slug": slug.current  }
+export type AllServicesQueryResult = Array<{
+  _id: string
+  _type: 'service'
+  _updatedAt: string
+  category: {
     name: string
-    slug: Slug
-    region: 'central' | 'north' | 'south'
-    serviceType: {
+    slug: string
+  }
+  contactInfo: {
+    address?: string
+    city?: string
+    state?: string
+    zip?: string
+    phone?: string
+    email?: string
+    website?: string
+  } | null
+  name: string
+  region: 'central' | 'north' | 'south'
+  serviceType: {
+    name: string
+    slug: string
+  }
+  shortDescription: BlockContentBasic
+  slug: string
+}>
+// Variable: getServiceQuery
+// Query: *[_type == "service" && slug.current == $slug && category->slug.current == $categorySlug][0] {        _id,  _type,  _updatedAt,  category->{    name,    "slug": slug.current  },  contactInfo,  name,  region,  serviceType->{    name,    "slug": slug.current  },  shortDescription,  "slug": slug.current,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  description,  hours,  metadata,  tags  }
+export type GetServiceQueryResult = {
+  _id: string
+  _type: 'service'
+  _updatedAt: string
+  category: {
+    name: string
+    slug: string
+  }
+  contactInfo: {
+    address?: string
+    city?: string
+    state?: string
+    zip?: string
+    phone?: string
+    email?: string
+    website?: string
+  } | null
+  name: string
+  region: 'central' | 'north' | 'south'
+  serviceType: {
+    name: string
+    slug: string
+  }
+  shortDescription: BlockContentBasic
+  slug: string
+  coverImage: {
+    alt: string
+    asset: {
       _ref: string
       _type: 'reference'
       _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'serviceType'
-    }
-    tags: Array<{
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      _key: string
-      [internalGroqTypeReferenceTo]?: 'tag'
-    }>
-    coverImage: {
-      asset?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-      }
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      alt: string
-      _type: 'imageWithAlt'
-    }
-    shortDescription: BlockContentBasic
-    description: BlockContent
-    notes?: BlockContent
-    contactInfo?: {
-      address?: string
-      city?: string
-      state?: string
-      zip?: string
-      phone?: string
-      email?: string
-      website?: string
-    }
-    hours?: {
-      days?: string
-      open?: string
-      close?: string
-    }
-    metadata?: Metadata
-  }> | null
-  seo: Metadata | null
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    } | null
+    metadata: SanityImageMetadata | null
+    url: string | null
+    extension: string | null
+  }
+  description: BlockContent
+  hours: {
+    days?: string
+    open?: string
+    close?: string
+  } | null
+  metadata: Metadata | null
+  tags: Array<{
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    _key: string
+    [internalGroqTypeReferenceTo]?: 'tag'
+  }>
 } | null
 
 // Query TypeMap
@@ -2281,6 +2375,7 @@ declare module '@sanity/client' {
     '*[_type == "settings"][0]': SettingsQueryResult
     '\n  *[_type == "navigation"][0]{\n    primaryNav[]{\n      _key,\n      _type,\n      type,\n      link{\n        \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n      },\n      dropdownLabel,\n      dropdownItems[]{\n        \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n      }\n    },\n    footerNav[]{\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  }\n': NavigationQueryResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    metadata,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        \n  link {\n    \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n  }\n,\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
+    '\n  *[_type == "home"][0]{\n    hero{\n      heading,\n      subheading,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    },\n    featuredPosts[]->{\n      \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n\n    },\n    featuredServices[]->{\n      ...\n    },\n    seo\n  }\n': GetHomepageQueryResult
     '\n  *[_type == "page" || _type == "post" || _type == "service" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    "categorySlug": category->slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
     '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  notes,\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  metadata\n\n  }\n': AllPostsQueryResult
     '\n  *[_type == "post" && postType == $postType] | order(date desc, _updatedAt desc) {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  notes,\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  metadata\n\n  }\n': GetPostsByTypeQueryResult
@@ -2295,6 +2390,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "topic" && defined(slug.current)] | order(order asc) {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n\n  }\n': AllTopicsQueryResult
     '\n  *[_type == \'topic\' && slug.current == $slug][0]{\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n\n  }\n': GetTopicQueryResult
     '\n  *[_type == \'topic\' && slug.current == $slug][0]{\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n,\n    "posts": *[_type == "post" && topic._ref == ^._id] | order(date desc, _updatedAt desc) {\n      \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n\n    },\n    "availableTopics": array::unique(*[_type == "post" && category._ref == ^._id && defined(topic)].topic->{\n      name,\n      "slug": slug.current\n    })\n  }\n': GetTopicWithAllPostsQueryResult
-    '\n  *[_type == "home"][0]{\n    hero{\n      heading,\n      subheading,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    },\n    featuredPosts[]->{\n      \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n\n    },\n    featuredServices[]->{\n      ...\n    },\n    seo\n  }\n': GetHomepageQueryResult
+    '\n  *[_type == "service" && defined(slug.current)] | order(name asc) {\n    \n  _id,\n  _type,\n  _updatedAt,\n  category->{\n    name,\n    "slug": slug.current\n  },\n  contactInfo,\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  shortDescription,\n  "slug": slug.current\n\n  }\n': AllServicesQueryResult
+    '\n  *[_type == "service" && slug.current == $slug && category->slug.current == $categorySlug][0] {\n    \n  \n  _id,\n  _type,\n  _updatedAt,\n  category->{\n    name,\n    "slug": slug.current\n  },\n  contactInfo,\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  shortDescription,\n  "slug": slug.current\n,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  description,\n  hours,\n  metadata,\n  tags\n\n  }\n': GetServiceQueryResult
   }
 }

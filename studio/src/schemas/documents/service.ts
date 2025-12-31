@@ -29,7 +29,18 @@ export const service = defineType({
       options: { source: 'name', maxLength: 96 },
       validation: Rule => Rule.required(),
     }),
+
     region,
+
+    defineField({
+      group: 'content',
+      name: 'category',
+      title: 'Pillar Category',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      options: { disableNew: true },
+      validation: Rule => Rule.required(),
+    }),
     defineField({
       group: 'content',
       name: 'serviceType',

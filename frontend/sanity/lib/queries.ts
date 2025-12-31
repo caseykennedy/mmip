@@ -135,6 +135,28 @@ export const getPageQuery = defineQuery(`
   }
 `)
 
+// Homepage
+export const getHomepageQuery = defineQuery(`
+  *[_type == "home"][0]{
+    hero{
+      heading,
+      subheading,
+      image{
+        ${imageFields}
+      }
+    },
+    featuredPosts[]->{
+      ${commonPostFields}
+    },
+    featuredServices[]->{
+      ...
+    },
+    seo
+  }
+`)
+
+// Sitemap
+
 export const sitemapData = defineQuery(`
   *[_type == "page" || _type == "post" || _type == "service" && defined(slug.current)] | order(_type asc) {
     "slug": slug.current,
@@ -143,6 +165,8 @@ export const sitemapData = defineQuery(`
     _updatedAt,
   }
 `)
+
+// Posts
 
 export const allPostsQuery = defineQuery(`
   *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {
@@ -265,22 +289,45 @@ export const getTopicWithAllPostsQuery = defineQuery(`
   }
 `)
 
-// Homepage
-export const getHomepageQuery = defineQuery(`
-  *[_type == "home"][0]{
-    hero{
-      heading,
-      subheading,
-      image{
-        ${imageFields}
-      }
-    },
-    featuredPosts[]->{
-      ${commonPostFields}
-    },
-    featuredServices[]->{
-      ...
-    },
-    seo
+// Services
+const commonServiceFields = /* groq */ `
+  _id,
+  _type,
+  _updatedAt,
+  category->{
+    name,
+    "slug": slug.current
+  },
+  contactInfo,
+  name,
+  region,
+  serviceType->{
+    name,
+    "slug": slug.current
+  },
+  shortDescription,
+  "slug": slug.current
+`
+
+const serviceFields = /* groq */ `
+  ${commonServiceFields},
+  coverImage{
+    ${imageFields}
+  },
+  description,
+  hours,
+  metadata,
+  tags
+`
+
+export const allServicesQuery = defineQuery(`
+  *[_type == "service" && defined(slug.current)] | order(name asc) {
+    ${commonServiceFields}
+  }
+`)
+
+export const getServiceQuery = defineQuery(`
+  *[_type == "service" && slug.current == $slug && category->slug.current == $categorySlug][0] {
+    ${serviceFields}
   }
 `)

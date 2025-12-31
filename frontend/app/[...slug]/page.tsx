@@ -8,9 +8,9 @@ import type { GetPageQueryResult } from '@/sanity.types'
 import { fetchSettings } from '@/sanity/lib/fetch'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 
-import CategoryTemplate from './category-template'
-import PostTemplate from './post-template'
-import PostTypeTemplate from './post-type-template'
+import CategoryTemplate from './_components/category-template'
+import PostTemplate from './_components/post-template'
+import PostTypeTemplate from './_components/post-type-template'
 
 type Props = {
   params: Promise<{ slug: string[] }>

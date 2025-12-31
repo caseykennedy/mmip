@@ -15,9 +15,9 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:30
 
 // Card themes
 export const CARD_THEME: Record<string, string> = {
-  article: 'bg-twilight-100 border-twilight-200 hover:border-twilight-500',
-  guide: 'bg-terracota-100 border-terracota-200 hover:border-terracota-500',
-  tool: 'bg-sage-100 border-sage-200 hover:border-sage-500',
-  service: 'bg-gold-100 border-gold-200 hover:border-gold-500',
+  article: 'bg-twilight-50 border-twilight-200 hover:border-twilight-500',
+  guide: 'bg-terracota-50 border-terracota-200 hover:border-terracota-500',
+  tool: 'bg-sage-50 border-sage-200 hover:border-sage-500',
+  service: 'bg-gold-50 border-gold-200 hover:border-gold-500',
   default: 'bg-card border hover:border-hover',
 }

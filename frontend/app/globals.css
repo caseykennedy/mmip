@@ -8,111 +8,111 @@
   /* ============================ */
 
   /* Base colors */
-  --color-white: #ffffff;
-  --color-black: #000000;
+  --color-white: 1 0 0; /* oklch(1 0 0) */
+  --color-black: 0 0 0; /* oklch(0 0 0) */
 
   /* Base neutrals */
-  --color-sand-50: #fbf9f5;
-  --color-sand-75: hsl(40, 43%, 95%);
-  --color-sand-100: #f6f2ec;
-  --color-sand-200: #e9e2d7;
-  --color-sand-300: #d7cdbc;
-  --color-sand-400: #b0a389;
-  --color-sand-500: #897f67;
-  --color-sand-600: #6c6453;
-  --color-sand-700: #554f42;
-  --color-sand-800: #353129;
-  --color-sand-900: #1f1c17;
-  --color-sand-950: #0d0b09;
+  --color-sand-50: 0.98 0.008 70; /* oklch(0.98 0.008 70) */
+  --color-sand-75: 0.96 0.011 70; /* oklch(0.96 0.01 70) */
+  --color-sand-100: 0.95 0.015 70; /* oklch(0.95 0.015 70) */
+  --color-sand-200: 0.9 0.02 70; /* oklch(0.9 0.02 70) */
+  --color-sand-300: 0.83 0.03 70; /* oklch(0.83 0.03 70) */
+  --color-sand-400: 0.68 0.03 70; /* oklch(0.68 0.03 70) */
+  --color-sand-500: 0.55 0.022 70; /* oklch(0.55 0.022 70) */
+  --color-sand-600: 0.45 0.022 70; /* oklch(0.45 0.022 70) */
+  --color-sand-700: 0.36 0.022 70; /* oklch(0.36 0.022 70) */
+  --color-sand-800: 0.23 0.015 70; /* oklch(0.23 0.015 70) */
+  --color-sand-900: 0.14 0.015 70; /* oklch(0.14 0.015 70) */
+  --color-sand-950: 0.07 0.008 70; /* oklch(0.07 0.008 70) */
 
-  --color-stone-50: #fafaf9;
-  --color-stone-100: #f5f5f4;
-  --color-stone-200: #e7e5e4;
-  --color-stone-300: #d6d3d1;
-  --color-stone-400: #a8a29e;
-  --color-stone-500: #78716c;
-  --color-stone-600: #57534e;
-  --color-stone-700: #44403c;
-  --color-stone-800: #292524;
-  --color-stone-900: #1c1917;
-  --color-stone-950: #0c0a09;
+  --color-stone-50: 0.98 0.004 85; /* oklch(0.98 0.004 85) */
+  --color-stone-100: 0.96 0.006 85; /* oklch(0.96 0.006 85) */
+  --color-stone-200: 0.9 0.01 85; /* oklch(0.9 0.01 85) */
+  --color-stone-300: 0.84 0.015 85; /* oklch(0.84 0.015 85) */
+  --color-stone-400: 0.66 0.015 85; /* oklch(0.66 0.015 85) */
+  --color-stone-500: 0.49 0.015 85; /* oklch(0.49 0.015 85) */
+  --color-stone-600: 0.37 0.015 85; /* oklch(0.37 0.015 85) */
+  --color-stone-700: 0.29 0.015 85; /* oklch(0.29 0.015 85) */
+  --color-stone-800: 0.18 0.01 85; /* oklch(0.18 0.01 85) */
+  --color-stone-900: 0.12 0.01 85; /* oklch(0.12 0.01 85) */
+  --color-stone-950: 0.06 0.005 85; /* oklch(0.06 0.005 85) */
 
-  --color-zinc-50: #f8f8fa;
-  --color-zinc-100: #f3f3f6;
-  --color-zinc-200: #e2e3e8;
-  --color-zinc-300: #c9cad1;
-  --color-zinc-400: #9b9ca6;
-  --color-zinc-500: #6f707b;
-  --color-zinc-600: #53545f;
-  --color-zinc-700: #3c3d46;
-  --color-zinc-800: #2a2b32;
-  --color-zinc-900: #191a1f;
+  --color-zinc-50: 0.97 0.005 260; /* oklch(0.97 0.005 260) */
+  --color-zinc-100: 0.95 0.008 260; /* oklch(0.95 0.008 260) */
+  --color-zinc-200: 0.89 0.012 260; /* oklch(0.89 0.012 260) */
+  --color-zinc-300: 0.8 0.015 260; /* oklch(0.8 0.015 260) */
+  --color-zinc-400: 0.64 0.015 260; /* oklch(0.64 0.015 260) */
+  --color-zinc-500: 0.46 0.015 260; /* oklch(0.46 0.015 260) */
+  --color-zinc-600: 0.35 0.015 260; /* oklch(0.35 0.015 260) */
+  --color-zinc-700: 0.26 0.015 260; /* oklch(0.26 0.015 260) */
+  --color-zinc-800: 0.18 0.01 260; /* oklch(0.18 0.01 260) */
+  --color-zinc-900: 0.11 0.01 260; /* oklch(0.11 0.01 260) */
 
-  --color-terracota-50: #fdf5f4;
-  --color-terracota-100: #f6eae8;
-  --color-terracota-200: #f1d2cd;
-  --color-terracota-300: #efb6ae;
-  --color-terracota-400: #d98478;
-  --color-terracota-500: #a2574b;
-  --color-terracota-600: #874238;
-  --color-terracota-700: #6b2f27;
-  --color-terracota-800: #53211f;
-  --color-terracota-900: #3a120f;
+  --color-terracota-50: 0.96 0.015 25; /* oklch(0.96 0.015 25) */
+  --color-terracota-100: 0.93 0.025 25; /* oklch(0.93 0.025 25) */
+  --color-terracota-200: 0.87 0.05 25; /* oklch(0.87 0.05 25) */
+  --color-terracota-300: 0.78 0.07 25; /* oklch(0.78 0.07 25) */
+  --color-terracota-400: 0.65 0.09 25; /* oklch(0.65 0.09 25) */
+  --color-terracota-500: 0.45 0.1 25; /* oklch(0.45 0.1 25) */
+  --color-terracota-600: 0.37 0.08 25; /* oklch(0.37 0.08 25) */
+  --color-terracota-700: 0.28 0.06 25; /* oklch(0.28 0.06 25) */
+  --color-terracota-800: 0.2 0.03 25; /* oklch(0.2 0.03 25) */
+  --color-terracota-900: 0.12 0.02 25; /* oklch(0.12 0.02 25) */
 
-  --color-gold-50: #fff8e7;
-  --color-gold-100: #ffedc4;
-  --color-gold-200: #f9dc9a;
-  --color-gold-300: #ebc37d;
-  --color-gold-400: #dfa94e;
-  --color-gold-500: #ce8c00;
-  --color-gold-600: #b57800;
-  --color-gold-700: #996200;
-  --color-gold-800: #744801;
-  --color-gold-900: #4a2d00;
+  --color-gold-50: 0.98 0.04 83; /* oklch(0.98 0.04 83) */
+  --color-gold-100: 0.94 0.08 83; /* oklch(0.94 0.08 83) */
+  --color-gold-200: 0.88 0.1 83; /* oklch(0.88 0.1 83) */
+  --color-gold-300: 0.8 0.12 83; /* oklch(0.8 0.12 83) */
+  --color-gold-400: 0.72 0.13 83; /* oklch(0.72 0.13 83) */
+  --color-gold-500: 0.62 0.17 83; /* oklch(0.62 0.17 83) */
+  --color-gold-600: 0.54 0.15 83; /* oklch(0.54 0.15 83) */
+  --color-gold-700: 0.45 0.13 83; /* oklch(0.45 0.13 83) */
+  --color-gold-800: 0.34 0.1 83; /* oklch(0.34 0.1 83) */
+  --color-gold-900: 0.28 0.09 83; /* oklch(0.28 0.09 83) */
 
-  --color-sage-50: #f7faf5;
-  --color-sage-100: #e3ede4;
-  --color-sage-200: #c9dcc9;
-  --color-sage-300: #adc1aa;
-  --color-sage-400: #8f9d84;
-  --color-sage-500: #788968;
-  --color-sage-600: #616f52;
-  --color-sage-700: #5c6649;
-  --color-sage-800: #454d38;
-  --color-sage-900: #2d3327;
+  --color-sage-50: 0.96 0.015 135; /* oklch(0.96 0.015 135) */
+  --color-sage-100: 0.92 0.025 135; /* oklch(0.92 0.025 135) */
+  --color-sage-200: 0.84 0.035 135; /* oklch(0.84 0.035 135) */
+  --color-sage-300: 0.74 0.03 135; /* oklch(0.74 0.03 135) */
+  --color-sage-400: 0.62 0.025 135; /* oklch(0.62 0.025 135) */
+  --color-sage-500: 0.54 0.029 135; /* oklch(0.54 0.029 135) */
+  --color-sage-600: 0.44 0.025 135; /* oklch(0.44 0.025 135) */
+  --color-sage-700: 0.41 0.025 135; /* oklch(0.41 0.025 135) */
+  --color-sage-800: 0.31 0.02 135; /* oklch(0.31 0.02 135) */
+  --color-sage-900: 0.21 0.015 135; /* oklch(0.21 0.015 135) */
 
-  --color-twilight-50: #f6f8fc;
-  --color-twilight-100: #e7edf6;
-  --color-twilight-200: #d3dceb;
-  --color-twilight-300: #b9c7db;
-  --color-twilight-400: #92a8c7;
-  --color-twilight-500: #728fb4;
-  --color-twilight-600: #58749b;
-  --color-twilight-700: #445d84;
-  --color-twilight-800: #324768;
-  --color-twilight-900: #1e2e4b;
-  --color-twilight-950: #111a2c;
+  --color-twilight-50: 0.96 0.01 225; /* oklch(0.96 0.01 225) */
+  --color-twilight-100: 0.92 0.025 225; /* oklch(0.92 0.025 225) */
+  --color-twilight-200: 0.86 0.035 225; /* oklch(0.86 0.035 225) */
+  --color-twilight-300: 0.78 0.04 225; /* oklch(0.78 0.04 225) */
+  --color-twilight-400: 0.67 0.04 225; /* oklch(0.67 0.04 225) */
+  --color-twilight-500: 0.60 0.045 225; /* oklch(0.60 0.045 225) */
+  --color-twilight-600: 0.48 0.045 225; /* oklch(0.48 0.045 225) */
+  --color-twilight-700: 0.39 0.045 225; /* oklch(0.39 0.045 225) */
+  --color-twilight-800: 0.29 0.045 225; /* oklch(0.29 0.045 225) */
+  --color-twilight-900: 0.19 0.025 225; /* oklch(0.19 0.025 225) */
+  --color-twilight-950: 0.11 0.02 225; /* oklch(0.11 0.02 225) */
 
   /* Feedback (pastels/muted) */
-  --color-success-300: #bcd8c1;
-  --color-success-400: #a9c4ae;
-  --color-success-500: #96b19b;
-  --color-success-foreground: #2f3e33;
+  --color-success-300: 0.84 0.04 145; /* oklch(0.84 0.04 145) */
+  --color-success-400: 0.78 0.04 145; /* oklch(0.78 0.04 145) */
+  --color-success-500: 0.72 0.04 145; /* oklch(0.72 0.04 145) */
+  --color-success-foreground: 0.25 0.03 145; /* oklch(0.25 0.03 145) */
 
-  --color-warning-300: #f4d2a8;
-  --color-warning-400: #e3c29a;
-  --color-warning-500: #d2b28b;
-  --color-warning-foreground: #4b3a1c;
+  --color-warning-300: 0.85 0.06 75; /* oklch(0.85 0.06 75) */
+  --color-warning-400: 0.8 0.06 75; /* oklch(0.8 0.06 75) */
+  --color-warning-500: 0.74 0.06 75; /* oklch(0.74 0.06 75) */
+  --color-warning-foreground: 0.26 0.04 75; /* oklch(0.26 0.04 75) */
 
-  --color-error-300: #e7b0aa;
-  --color-error-400: #d29f99;
-  --color-error-500: #bd8d88;
-  --color-error-foreground: #522524;
+  --color-error-300: 0.77 0.05 25; /* oklch(0.77 0.05 25) */
+  --color-error-400: 0.7 0.04 25; /* oklch(0.7 0.04 25) */
+  --color-error-500: 0.63 0.04 25; /* oklch(0.63 0.04 25) */
+  --color-error-foreground: 0.19 0.03 25; /* oklch(0.19 0.03 25) */
 
-  --color-info-300: #b6d3e1;
-  --color-info-400: #a4c1cf;
-  --color-info-500: #91aebc;
-  --color-info-foreground: #243944;
+  --color-info-300: 0.82 0.03 210; /* oklch(0.82 0.03 210) */
+  --color-info-400: 0.76 0.03 210; /* oklch(0.76 0.03 210) */
+  --color-info-500: 0.7 0.03 210; /* oklch(0.7 0.03 210) */
+  --color-info-foreground: 0.24 0.02 210; /* oklch(0.24 0.02 210) */
 }
 
 :root {
@@ -140,7 +140,7 @@
   --popover: var(--color-sand-100);
   --popover-foreground: var(--foreground);
 
-  --card: var(--color-sand-100);
+  --card: var(--color-sand-75);
   --card-hover: var(--color-sand-200);
   --card-foreground: var(--foreground);
 
@@ -177,8 +177,8 @@
   /* ========================================================= */
   /* Interactive Colors (States & Buttons)                     */
   /* ========================================================= */
-  --primary: var(--color-gold-600);
-  --primary-hover: var(--color-gold-700);
+  --primary: var(--color-gold-500);
+  --primary-hover: var(--color-gold-600);
   --primary-foreground: var(--color-white);
 
   --secondary: var(--color-twilight-900);
@@ -236,7 +236,7 @@
   h4,
   h5,
   h6 {
-    @apply font-heading font-medium leading-normal scroll-mt-36;
+    @apply scroll-mt-36 font-heading font-medium leading-normal;
   }
 
   .display {

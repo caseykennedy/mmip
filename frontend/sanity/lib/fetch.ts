@@ -3,11 +3,13 @@ import { draftMode } from 'next/headers'
 import {
   AllCategoriesQueryResult,
   AllPostsQueryResult,
+  AllServicesQueryResult,
   AllTopicsQueryResult,
   GetCategoryWithAllPostsQueryResult,
   GetHomepageQueryResult,
   GetPostQueryResult,
   GetPostsByTypeQueryResult,
+  GetServiceQueryResult,
   GetTopicWithAllPostsQueryResult,
   MorePostsQueryResult,
   NavigationQueryResult,
@@ -19,11 +21,13 @@ import { sanityFetch } from '@/sanity/lib/live'
 import {
   allCategoriesQuery,
   allPostsQuery,
+  allServicesQuery,
   allTopicsQuery,
   getCategoryWithAllPostsQuery,
   getHomepageQuery,
   getPostQuery,
   getPostsByTypeQuery,
+  getServiceQuery,
   getTopicWithAllPostsQuery,
   morePostsQuery,
   navigationQuery,
@@ -160,5 +164,24 @@ export function fetchMorePosts(skip: string, limit?: number) {
     query: morePostsQuery,
     params: { skip, limit },
     tags: ['post'],
+  })
+}
+
+// Fetch services
+// _____________________________________________________________
+
+export function fetchAllServices() {
+  return fetchData<AllServicesQueryResult>({
+    query: allServicesQuery,
+    params: {},
+    tags: ['service'],
+  })
+}
+
+export function fetchService(slug: string, categorySlug?: string) {
+  return fetchData<GetServiceQueryResult>({
+    query: getServiceQuery,
+    params: { slug, categorySlug },
+    tags: ['service'],
   })
 }

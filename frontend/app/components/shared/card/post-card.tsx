@@ -1,19 +1,18 @@
 import Link from 'next/link'
 import { PortableTextBlock } from 'next-sanity'
-import pluralize from 'pluralize-esm'
 
 import CustomPortableText from '@/app/components/shared/portable-text'
 import SanityImage from '@/app/components/shared/sanity-image'
 import { Badge } from '@/app/components/ui/badge'
 import { CARD_THEME } from '@/lib/constants'
 import { cn } from '@/lib/utils'
-import { AllPostsQueryResult } from '@/sanity.types'
+import { GetPostQueryResult } from '@/sanity.types'
 
 type PostCardData = {
   className?: string
   orientation?: 'horizontal' | 'vertical'
   post: Pick<
-    AllPostsQueryResult[0],
+    NonNullable<GetPostQueryResult>,
     'title' | 'excerpt' | 'coverImage' | 'category' | 'topic' | 'postType' | 'slug'
   >
 }
