@@ -49,12 +49,6 @@ export function useSearch(query: string): {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!query.trim()) {
-      setResults([])
-      setIsLoading(false)
-      return
-    }
-
     const searchAlgolia = async () => {
       setIsLoading(true)
       setError(null)
@@ -63,7 +57,7 @@ export function useSearch(query: string): {
         const response = await searchClient.searchSingleIndex({
           indexName: INDEXES.posts,
           searchParams: {
-            query: query.trim(),
+            query: query.trim(), // Empty query will return recent posts
             hitsPerPage: 3, // Fewer results for command palette
             attributesToRetrieve,
           },
@@ -80,8 +74,14 @@ export function useSearch(query: string): {
       }
     }
 
-    const debounceTimer = setTimeout(searchAlgolia, 300)
-    return () => clearTimeout(debounceTimer)
+    // If no query, search immediately for recent posts
+    // If there's a query, debounce the search
+    if (!query.trim()) {
+      searchAlgolia()
+    } else {
+      const debounceTimer = setTimeout(searchAlgolia, 300)
+      return () => clearTimeout(debounceTimer)
+    }
   }, [query])
 
   return { results, isLoading, error }

@@ -4,6 +4,7 @@ import HeroSearch from '@/app/components/shared/hero-search'
 import SanityImage from '@/app/components/shared/sanity-image'
 import Section from '@/app/components/shared/section'
 import Topics from '@/app/components/shared/topics'
+import { cn } from '@/lib/utils'
 import { GetHomepageQueryResult } from '@/sanity.types'
 
 export default async function HomePage({ data }: { data: GetHomepageQueryResult }) {
@@ -13,7 +14,7 @@ export default async function HomePage({ data }: { data: GetHomepageQueryResult 
       {hero && (
         <Section className="border-b lg:py-28">
           <div className="container">
-            <div className="flex flex-row items-center justify-between gap-32">
+            <div className="flex flex-col items-center justify-between gap-32 md:flex-row">
               <div className="flex flex-col gap-16">
                 <div className="flex flex-col gap-6">
                   <h1 className="display max-w-[16ch] text-foreground-heading">{hero.heading}</h1>
@@ -71,14 +72,14 @@ function FeaturedPosts({ posts }: { posts: NonNullable<GetHomepageQueryResult>['
   }
 
   return (
-    <div className="grid grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {posts.map((post, index) => {
         const isLast = index === posts.length - 1
         return (
           <PostCard
             key={post._id}
             post={post}
-            className={!isLast ? 'col-span-1' : 'col-span-2'}
+            className={cn('col-span-1', { 'md:col-span-2': isLast })}
             orientation={!isLast ? 'vertical' : 'horizontal'}
           />
         )

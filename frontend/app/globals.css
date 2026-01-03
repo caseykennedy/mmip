@@ -137,7 +137,7 @@
   --surface-hover: var(--color-sand-300);
   --surface-foreground: var(--foreground);
 
-  --popover: var(--color-sand-100);
+  --popover: var(--color-sand-50);
   --popover-foreground: var(--foreground);
 
   --card: var(--color-sand-75);

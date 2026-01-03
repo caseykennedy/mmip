@@ -1,7 +1,8 @@
+// filepath: /Users/caseykennedy/sites/cahuilla-mmip/frontend/app/components/shared/command-palette.tsx
 'use client'
 
 import { useState } from 'react'
-import { LuBookOpen, LuFileText, LuSearch, LuWrench } from 'react-icons/lu'
+import { LuSearch } from 'react-icons/lu'
 
 import { useRouter } from 'next/navigation'
 
@@ -18,11 +19,7 @@ import {
 import { useCommandPalette } from '@/lib/hooks/use-command-palette'
 import { useSearch } from '@/lib/hooks/use-search'
 
-const ICON_MAP = {
-  article: LuFileText,
-  guide: LuBookOpen,
-  tool: LuWrench,
-}
+import SanityImage from './sanity-image'
 
 export default function CommandPalette() {
   const [query, setQuery] = useState('')
@@ -43,7 +40,7 @@ export default function CommandPalette() {
   }
 
   return (
-    <CommandDialog open={isOpen} onOpenChange={setIsOpen}>
+    <CommandDialog open={isOpen} onOpenChange={setIsOpen} shouldFilter={false}>
       <CommandInput
         placeholder="Search articles, guides, tools..."
         value={query}
@@ -51,7 +48,7 @@ export default function CommandPalette() {
       />
       <CommandList>
         {isLoading && (
-          <div className="p-4 text-center text-sm text-muted-foreground">Searching...</div>
+          <div className="p-8 text-center text-sm text-muted-foreground">Searching...</div>
         )}
 
         {!isLoading && query && results.length === 0 && (
@@ -60,28 +57,33 @@ export default function CommandPalette() {
 
         {results.length > 0 && (
           <>
-            <CommandGroup heading="Results">
+            <CommandGroup heading={query ? 'Results' : 'Recents'}>
               {results.map(result => {
-                const Icon = result.postType
-                  ? ICON_MAP[result.postType as keyof typeof ICON_MAP]
-                  : LuFileText
-
                 return (
                   <CommandItem
                     key={result.objectID}
                     value={result.title}
                     onSelect={() => handleSelect(result.url)}
-                    className="flex items-start gap-3 p-3"
+                    className="flex items-start gap-4 p-4"
                   >
-                    <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                    <div>
+                      <SanityImage
+                        source={result.coverImage}
+                        alt={result.coverImage?.alt}
+                        className="aspect-video w-full max-w-32 rounded-lg"
+                      />
+                    </div>
                     <div className="min-w-0 flex-1">
-                      <div className="mb-1 flex items-center gap-2">
-                        <span className="truncate font-medium">{result.title}</span>
-                        {result.postType && (
-                          <Badge variant={result.postType as any} className="text-xs">
-                            {result.postType}
-                          </Badge>
-                        )}
+                      <div className="mb-1 flex flex-row items-center gap-1">
+                        {/* <Badge variant={result.postType} className="bg-transparent">
+                          {result.topic.name}
+                        </Badge> */}
+                      </div>
+                      <div className="mb-1 flex items-start justify-between gap-2">
+                        <span className="text-base font-medium">{result.title}</span>
+                        <Badge variant={result.postType} className="capitalize text-white">
+                          {result.postType}
+                        </Badge>
                       </div>
                       {result.category.name && (
                         <div className="text-xs text-muted-foreground">

@@ -32,7 +32,7 @@ export default function PostCard({ className, orientation = 'vertical', post }: 
           themeClasses,
         )}
       >
-        <div className={cn({ 'flex-1': isHorizontal })}>
+        <div className={cn('w-full', { 'md:flex-1': isHorizontal })}>
           <SanityImage
             source={post.coverImage}
             alt={post.coverImage?.alt || post.title}
@@ -40,7 +40,7 @@ export default function PostCard({ className, orientation = 'vertical', post }: 
           />
         </div>
 
-        <div className={cn('flex flex-col gap-2', { 'flex-1': isHorizontal })}>
+        <div className={cn('@container flex w-full flex-col gap-2', { 'md:flex-1': isHorizontal })}>
           <div className="mb-1 flex flex-row items-center gap-1">
             <Badge variant={post.postType} className="capitalize text-white">
               {post.postType}
@@ -49,7 +49,7 @@ export default function PostCard({ className, orientation = 'vertical', post }: 
               {post.topic.name}
             </Badge>
           </div>
-          <h4 className="max-w-[34ch] font-sans text-xl font-medium">{post.title}</h4>
+          <h4 className="@md:text-2xl max-w-[34ch] font-sans text-xl font-medium">{post.title}</h4>
           {post.excerpt && (
             <CustomPortableText
               paragraphClassName="line-clamp-3"

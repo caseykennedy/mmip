@@ -45,7 +45,7 @@ export default function SearchCard({ className, orientation = 'vertical', post }
             <Badge variant={post.postType} className="capitalize text-white">
               {post.postType}
             </Badge>
-            <Badge variant={post.postType} className="bg-transparent">
+            <Badge variant={post.postType} className="truncate bg-transparent">
               {post.topic.name}
             </Badge>
           </div>
