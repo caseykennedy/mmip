@@ -178,10 +178,10 @@ export function fetchAllServices() {
   })
 }
 
-export function fetchService(slug: string, categorySlug?: string) {
+export function fetchService(slug: string) {
   return fetchData<GetServiceQueryResult>({
     query: getServiceQuery,
-    params: { slug, categorySlug },
+    params: { slug },
     tags: ['service'],
   })
 }

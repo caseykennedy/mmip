@@ -327,7 +327,7 @@ export const allServicesQuery = defineQuery(`
 `)
 
 export const getServiceQuery = defineQuery(`
-  *[_type == "service" && slug.current == $slug && category->slug.current == $categorySlug][0] {
+  *[_type == "service" && slug.current == $slug][0] {
     ${serviceFields}
   }
 `)

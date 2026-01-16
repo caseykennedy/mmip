@@ -20,7 +20,7 @@ type ServiceCardData = {
 export default function ServiceCard({ className, service }: ServiceCardData) {
   return (
     <article className={cn('flex w-full flex-1', className)}>
-      <Link aria-label={service.name} href={`/${service.category?.slug}/${service.slug}`}>
+      <Link aria-label={service.name} href={`/services/${service.slug}`}>
         <Tile className={cn('flex flex-col gap-8', className)}>
           <div className="flex grow flex-col gap-2">
             <h3 className="font-sans text-lg font-medium">{service.name}</h3>
