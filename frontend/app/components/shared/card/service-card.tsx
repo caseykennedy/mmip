@@ -1,4 +1,4 @@
-import { LuMapPin, LuPin } from 'react-icons/lu'
+import { LuMapPin } from 'react-icons/lu'
 
 import Link from 'next/link'
 import { PortableTextBlock } from 'next-sanity'
@@ -13,7 +13,7 @@ type ServiceCardData = {
   className?: string
   service: Pick<
     NonNullable<GetServiceQueryResult>,
-    'name' | 'shortDescription' | 'category' | 'serviceType' | 'slug' | 'contactInfo'
+    'name' | 'shortDescription' | 'serviceType' | 'slug' | 'contactInfo'
   >
 }
 
