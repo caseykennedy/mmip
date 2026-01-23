@@ -34,13 +34,12 @@ export default function ServiceTemplate({
 function ServiceHeader({
   name,
   shortDescription,
-  category,
   serviceType,
   region,
   coverImage,
 }: Pick<
   NonNullable<GetServiceQueryResult>,
-  'name' | 'shortDescription' | 'category' | 'serviceType' | 'region' | 'coverImage'
+  'name' | 'shortDescription' | 'serviceType' | 'region' | 'coverImage'
 >) {
   return (
     <div className="flex flex-col gap-16 md:flex-row md:items-center">
@@ -49,11 +48,6 @@ function ServiceHeader({
           <Link href="/services">
             <Badge variant="service" className="capitalize text-white">
               Service
-            </Badge>
-          </Link>
-          <Link href={`/${category.slug}`}>
-            <Badge variant="service" className="bg-transparent">
-              {category.name}
             </Badge>
           </Link>
           <Badge variant="service" className="bg-transparent">
