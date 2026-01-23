@@ -121,10 +121,8 @@ function ServicesContent({ data }: { data: AllServicesQueryResult }) {
         <div className="container flex flex-col gap-16">
           {/* Header */}
           <div className="flex flex-col gap-6">
-            {/* <h1 className="text-4xl text-foreground-heading">{data.name}</h1>
-            {data.description && (
-              <p className="max-w-reading text-lg text-foreground-subtle">{data.description}</p>
-            )} */}
+            <h1 className="text-4xl text-foreground-heading">Services</h1>
+            <p className="max-w-reading text-lg text-foreground-subtle">Services</p>
           </div>
 
           {/* Filters */}

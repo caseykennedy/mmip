@@ -40,6 +40,7 @@ export const post = defineType({
       group: 'seo',
       name: 'slug',
       title: 'Slug',
+      description: 'The URL slug for this post. Try to keep it short and descriptive.',
       type: 'slug',
       options: { source: 'title', maxLength: 96 },
       validation: Rule => Rule.required(),
@@ -79,15 +80,16 @@ export const post = defineType({
       },
       validation: Rule => Rule.required(),
     }),
-    defineField({
-      group: 'content',
-      name: 'tags',
-      title: 'Tags',
-      type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'tag' }], options: { disableNew: false } }],
-      options: { layout: 'tags' },
-      validation: Rule => Rule.max(3).required(),
-    }),
+
+    // defineField({
+    //   group: 'content',
+    //   name: 'tags',
+    //   title: 'Tags',
+    //   type: 'array',
+    //   of: [{ type: 'reference', to: [{ type: 'tag' }], options: { disableNew: false } }],
+    //   options: { layout: 'tags' },
+    //   validation: Rule => Rule.max(3).required(),
+    // }),
 
     // Authors
     defineField({
@@ -109,6 +111,14 @@ export const post = defineType({
       hidden: ({ parent }) => parent?.postType !== 'tool',
     }),
 
+    defineField({
+      group: 'content',
+      name: 'externalLink',
+      title: 'External link',
+      type: 'url',
+      hidden: ({ parent }) => parent?.postType === 'article',
+    }),
+
     // Content
     defineField({
       group: 'content',
@@ -124,18 +134,12 @@ export const post = defineType({
       type: 'blockContent',
       validation: Rule => Rule.required(),
     }),
-    defineField({
-      group: 'content',
-      name: 'notes',
-      title: 'Notes',
-      type: 'array',
-      of: [{ type: 'block' }],
-    }),
 
     defineField({
       group: 'content',
       name: 'coverImage',
       title: 'Cover Image',
+      description: 'Image should be 900x600px for best results.',
       type: 'imageWithAlt',
       // validation: Rule => Rule.required(),
     }),

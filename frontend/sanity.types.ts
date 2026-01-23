@@ -215,25 +215,12 @@ export type Service = {
   name: string
   slug: Slug
   region: 'north' | 'central' | 'south'
-  category: {
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    [internalGroqTypeReferenceTo]?: 'category'
-  }
   serviceType: {
     _ref: string
     _type: 'reference'
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: 'serviceType'
   }
-  tags: Array<{
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    _key: string
-    [internalGroqTypeReferenceTo]?: 'tag'
-  }>
   coverImage: {
     asset?: {
       _ref: string
@@ -249,7 +236,6 @@ export type Service = {
   }
   shortDescription: BlockContentBasic
   description: BlockContent
-  notes?: BlockContent
   contactInfo?: {
     address?: string
     city?: string
@@ -362,13 +348,6 @@ export type Post = {
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: 'topic'
   }
-  tags: Array<{
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    _key: string
-    [internalGroqTypeReferenceTo]?: 'tag'
-  }>
   authors: Array<{
     _ref: string
     _type: 'reference'
@@ -386,26 +365,9 @@ export type Post = {
     media?: unknown
     _type: 'file'
   }
+  externalLink?: string
   excerpt: BlockContentBasic
   body: BlockContent
-  notes?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
   coverImage?: {
     asset?: {
       _ref: string
@@ -1257,25 +1219,12 @@ export type GetHomepageQueryResult = {
     name: string
     slug: Slug
     region: 'central' | 'north' | 'south'
-    category: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'category'
-    }
     serviceType: {
       _ref: string
       _type: 'reference'
       _weak?: boolean
       [internalGroqTypeReferenceTo]?: 'serviceType'
     }
-    tags: Array<{
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      _key: string
-      [internalGroqTypeReferenceTo]?: 'tag'
-    }>
     coverImage: {
       asset?: {
         _ref: string
@@ -1291,7 +1240,6 @@ export type GetHomepageQueryResult = {
     }
     shortDescription: BlockContentBasic
     description: BlockContent
-    notes?: BlockContent
     contactInfo?: {
       address?: string
       city?: string
@@ -1327,13 +1275,13 @@ export type SitemapDataResult = Array<
     }
   | {
       slug: string
-      categorySlug: string
+      categorySlug: null
       _type: 'service'
       _updatedAt: string
     }
 >
 // Variable: allPostsQuery
-// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  notes,  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  metadata  }
+// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  externalLink,  metadata  }
 export type AllPostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
@@ -1433,24 +1381,6 @@ export type AllPostsQueryResult = Array<{
     level: 'blockquote' | 'h2' | 'h3' | 'h4' | 'lead' | 'normal' | 'small' | null
     text: string
   }>
-  notes: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
   authors: Array<{
     firstName: string
     lastName: string
@@ -1479,10 +1409,11 @@ export type AllPostsQueryResult = Array<{
     } | null
     media: unknown | null
   } | null
+  externalLink: string | null
   metadata: Metadata | null
 }>
 // Variable: getPostsByTypeQuery
-// Query: *[_type == "post" && postType == $postType] | order(date desc, _updatedAt desc) {        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  notes,  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  metadata  }
+// Query: *[_type == "post" && postType == $postType] | order(date desc, _updatedAt desc) {        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  externalLink,  metadata  }
 export type GetPostsByTypeQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
@@ -1582,24 +1513,6 @@ export type GetPostsByTypeQueryResult = Array<{
     level: 'blockquote' | 'h2' | 'h3' | 'h4' | 'lead' | 'normal' | 'small' | null
     text: string
   }>
-  notes: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
   authors: Array<{
     firstName: string
     lastName: string
@@ -1628,10 +1541,11 @@ export type GetPostsByTypeQueryResult = Array<{
     } | null
     media: unknown | null
   } | null
+  externalLink: string | null
   metadata: Metadata | null
 }>
 // Variable: morePostsQuery
-// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  notes,  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  metadata  }
+// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  externalLink,  metadata  }
 export type MorePostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
@@ -1731,24 +1645,6 @@ export type MorePostsQueryResult = Array<{
     level: 'blockquote' | 'h2' | 'h3' | 'h4' | 'lead' | 'normal' | 'small' | null
     text: string
   }>
-  notes: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
   authors: Array<{
     firstName: string
     lastName: string
@@ -1777,10 +1673,11 @@ export type MorePostsQueryResult = Array<{
     } | null
     media: unknown | null
   } | null
+  externalLink: string | null
   metadata: Metadata | null
 }>
 // Variable: postQuery
-// Query: *[_type == "post" && slug.current == $slug] [0] {        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  notes,  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  metadata  }
+// Query: *[_type == "post" && slug.current == $slug] [0] {        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  externalLink,  metadata  }
 export type PostQueryResult = {
   _id: string
   status: 'draft' | 'published'
@@ -1880,24 +1777,6 @@ export type PostQueryResult = {
     level: 'blockquote' | 'h2' | 'h3' | 'h4' | 'lead' | 'normal' | 'small' | null
     text: string
   }>
-  notes: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
   authors: Array<{
     firstName: string
     lastName: string
@@ -1926,10 +1805,11 @@ export type PostQueryResult = {
     } | null
     media: unknown | null
   } | null
+  externalLink: string | null
   metadata: Metadata | null
 } | null
 // Variable: getPostQuery
-// Query: *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {    body[]{      ...,      markDefs[]{        ...,          _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }      }    },        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  notes,  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  metadata  }
+// Query: *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {    body[]{      ...,      markDefs[]{        ...,          _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }      }    },        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  postType,  "slug": slug.current,  "title": coalesce(title, "Untitled"),  excerpt,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  "date": coalesce(date, _updatedAt),  category->{name, "slug": slug.current, description},  topic->{name, "slug": slug.current, description},  region,  body[]{    ...,    markDefs[]{      ...,        _type == "link" => {    _type,    linkType,    label,    openInNewTab,    page->{      name,      "slug": slug.current    },    post->{      title,      "slug": slug.current    },    category->{      name,      description,      "slug": slug.current,      image{          alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension      }    }  }    }  },  "headings": body[_type == "block" && style in ["h2", "h3"]]{    _key,    "level": style,    "text": pt::text(@)  },  authors[]->{firstName, lastName, picture},  toolFile{    _type,    asset->{      extension,      mimeType,      originalFilename,      size,      url    },    media  },  externalLink,  metadata  }
 export type GetPostQueryResult = {
   body: Array<
     | {
@@ -2029,24 +1909,6 @@ export type GetPostQueryResult = {
     level: 'blockquote' | 'h2' | 'h3' | 'h4' | 'lead' | 'normal' | 'small' | null
     text: string
   }>
-  notes: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
   authors: Array<{
     firstName: string
     lastName: string
@@ -2075,6 +1937,7 @@ export type GetPostQueryResult = {
     } | null
     media: unknown | null
   } | null
+  externalLink: string | null
   metadata: Metadata | null
 } | null
 // Variable: postPagesSlugs
@@ -2286,15 +2149,11 @@ export type GetTopicWithAllPostsQueryResult = {
   }>
 } | null
 // Variable: allServicesQuery
-// Query: *[_type == "service" && defined(slug.current)] | order(name asc) {      _id,  _type,  _updatedAt,  category->{    name,    "slug": slug.current  },  contactInfo,  name,  region,  serviceType->{    name,    "slug": slug.current  },  shortDescription,  "slug": slug.current  }
+// Query: *[_type == "service" && defined(slug.current)] | order(name asc) {      _id,  _type,  _updatedAt,  contactInfo,  name,  region,  serviceType->{    name,    "slug": slug.current  },  "slug": slug.current,  shortDescription  }
 export type AllServicesQueryResult = Array<{
   _id: string
   _type: 'service'
   _updatedAt: string
-  category: {
-    name: string
-    slug: string
-  }
   contactInfo: {
     address?: string
     city?: string
@@ -2310,19 +2169,15 @@ export type AllServicesQueryResult = Array<{
     name: string
     slug: string
   }
-  shortDescription: BlockContentBasic
   slug: string
+  shortDescription: BlockContentBasic
 }>
 // Variable: getServiceQuery
-// Query: *[_type == "service" && slug.current == $slug && category->slug.current == $categorySlug][0] {        _id,  _type,  _updatedAt,  category->{    name,    "slug": slug.current  },  contactInfo,  name,  region,  serviceType->{    name,    "slug": slug.current  },  shortDescription,  "slug": slug.current,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  description,  hours,  metadata,  tags  }
+// Query: *[_type == "service" && slug.current == $slug][0] {        _id,  _type,  _updatedAt,  contactInfo,  name,  region,  serviceType->{    name,    "slug": slug.current  },  "slug": slug.current,  shortDescription,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  description,  hours,  metadata  }
 export type GetServiceQueryResult = {
   _id: string
   _type: 'service'
   _updatedAt: string
-  category: {
-    name: string
-    slug: string
-  }
   contactInfo: {
     address?: string
     city?: string
@@ -2338,8 +2193,8 @@ export type GetServiceQueryResult = {
     name: string
     slug: string
   }
-  shortDescription: BlockContentBasic
   slug: string
+  shortDescription: BlockContentBasic
   coverImage: {
     alt: string
     asset: {
@@ -2359,13 +2214,6 @@ export type GetServiceQueryResult = {
     close?: string
   } | null
   metadata: Metadata | null
-  tags: Array<{
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    _key: string
-    [internalGroqTypeReferenceTo]?: 'tag'
-  }>
 } | null
 
 // Query TypeMap
@@ -2377,11 +2225,11 @@ declare module '@sanity/client' {
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    metadata,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        \n  link {\n    \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n  }\n,\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
     '\n  *[_type == "home"][0]{\n    hero{\n      heading,\n      subheading,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    },\n    featuredPosts[]->{\n      \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n\n    },\n    featuredServices[]->{\n      ...\n    },\n    seo\n  }\n': GetHomepageQueryResult
     '\n  *[_type == "page" || _type == "post" || _type == "service" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    "categorySlug": category->slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
-    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  notes,\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  metadata\n\n  }\n': AllPostsQueryResult
-    '\n  *[_type == "post" && postType == $postType] | order(date desc, _updatedAt desc) {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  notes,\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  metadata\n\n  }\n': GetPostsByTypeQueryResult
-    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  notes,\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  metadata\n\n  }\n': MorePostsQueryResult
-    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  notes,\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  metadata\n\n  }\n': PostQueryResult
-    '\n  *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {\n    body[]{\n      ...,\n      markDefs[]{\n        ...,\n        \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n      }\n    },\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  notes,\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  metadata\n\n  }\n': GetPostQueryResult
+    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  externalLink,\n  metadata\n\n  }\n': AllPostsQueryResult
+    '\n  *[_type == "post" && postType == $postType] | order(date desc, _updatedAt desc) {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  externalLink,\n  metadata\n\n  }\n': GetPostsByTypeQueryResult
+    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  externalLink,\n  metadata\n\n  }\n': MorePostsQueryResult
+    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  externalLink,\n  metadata\n\n  }\n': PostQueryResult
+    '\n  *[_type == "post" && slug.current == $slug && category->slug.current == $categorySlug][0] {\n    body[]{\n      ...,\n      markDefs[]{\n        ...,\n        \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n      }\n    },\n    \n  \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n,\n  body[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    _type,\n    linkType,\n    label,\n    openInNewTab,\n    page->{\n      name,\n      "slug": slug.current\n    },\n    post->{\n      title,\n      "slug": slug.current\n    },\n    category->{\n      name,\n      description,\n      "slug": slug.current,\n      image{\n        \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n      }\n    }\n  }\n\n    }\n  },\n  "headings": body[_type == "block" && style in ["h2", "h3"]]{\n    _key,\n    "level": style,\n    "text": pt::text(@)\n  },\n  authors[]->{firstName, lastName, picture},\n  toolFile{\n    _type,\n    asset->{\n      extension,\n      mimeType,\n      originalFilename,\n      size,\n      url\n    },\n    media\n  },\n  externalLink,\n  metadata\n\n  }\n': GetPostQueryResult
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult
     '\n  *[_type == "category" && defined(slug.current)] | order(order asc) {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n\n  }\n': AllCategoriesQueryResult
@@ -2390,7 +2238,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "topic" && defined(slug.current)] | order(order asc) {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n\n  }\n': AllTopicsQueryResult
     '\n  *[_type == \'topic\' && slug.current == $slug][0]{\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n\n  }\n': GetTopicQueryResult
     '\n  *[_type == \'topic\' && slug.current == $slug][0]{\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n,\n    "posts": *[_type == "post" && topic._ref == ^._id] | order(date desc, _updatedAt desc) {\n      \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n\n    },\n    "availableTopics": array::unique(*[_type == "post" && category._ref == ^._id && defined(topic)].topic->{\n      name,\n      "slug": slug.current\n    })\n  }\n': GetTopicWithAllPostsQueryResult
-    '\n  *[_type == "service" && defined(slug.current)] | order(name asc) {\n    \n  _id,\n  _type,\n  _updatedAt,\n  category->{\n    name,\n    "slug": slug.current\n  },\n  contactInfo,\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  shortDescription,\n  "slug": slug.current\n\n  }\n': AllServicesQueryResult
-    '\n  *[_type == "service" && slug.current == $slug && category->slug.current == $categorySlug][0] {\n    \n  \n  _id,\n  _type,\n  _updatedAt,\n  category->{\n    name,\n    "slug": slug.current\n  },\n  contactInfo,\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  shortDescription,\n  "slug": slug.current\n,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  description,\n  hours,\n  metadata,\n  tags\n\n  }\n': GetServiceQueryResult
+    '\n  *[_type == "service" && defined(slug.current)] | order(name asc) {\n    \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  "slug": slug.current,\n  shortDescription\n\n  }\n': AllServicesQueryResult
+    '\n  *[_type == "service" && slug.current == $slug][0] {\n    \n  \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  "slug": slug.current,\n  shortDescription\n,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  description,\n  hours,\n  metadata\n\n  }\n': GetServiceQueryResult
   }
 }

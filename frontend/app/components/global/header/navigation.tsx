@@ -31,7 +31,7 @@ export default async function Navigation() {
                         <NavigationMenuLink asChild>
                           <ResolvedLink link={link}>
                             <div className="font-medium">{link.label}</div>
-                            <div className="">Browse all components in the library.</div>
+                            {/* <div className="">Browse all components in the library.</div> */}
                           </ResolvedLink>
                         </NavigationMenuLink>
                       </li>

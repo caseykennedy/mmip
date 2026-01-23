@@ -25,6 +25,7 @@ export const service = defineType({
       group: 'seo',
       name: 'slug',
       title: 'Slug',
+      description: 'The URL slug for this post. Try to keep it short and descriptive.',
       type: 'slug',
       options: { source: 'name', maxLength: 96 },
       validation: Rule => Rule.required(),
@@ -32,15 +33,6 @@ export const service = defineType({
 
     region,
 
-    defineField({
-      group: 'content',
-      name: 'category',
-      title: 'Pillar Category',
-      type: 'reference',
-      to: [{ type: 'category' }],
-      options: { disableNew: true },
-      validation: Rule => Rule.required(),
-    }),
     defineField({
       group: 'content',
       name: 'serviceType',
@@ -52,18 +44,9 @@ export const service = defineType({
     }),
     defineField({
       group: 'content',
-      name: 'tags',
-      title: 'Tags',
-      type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'tag' }] }],
-      options: { layout: 'tags' },
-      description: 'Tag relevant topics for this service',
-      validation: Rule => Rule.max(4).required(),
-    }),
-    defineField({
-      group: 'content',
       name: 'coverImage',
       title: 'Cover Image',
+      description: 'Image should be 900x600px for best results.',
       type: 'imageWithAlt',
       validation: Rule => Rule.required(),
     }),
@@ -82,12 +65,6 @@ export const service = defineType({
       type: 'blockContent',
       validation: Rule => Rule.required(),
       options: { search: { weight: 5 } },
-    }),
-    defineField({
-      group: 'content',
-      name: 'notes',
-      title: 'Notes',
-      type: 'blockContent',
     }),
     defineField({
       group: 'content',

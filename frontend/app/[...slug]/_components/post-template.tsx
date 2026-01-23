@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { LuDownload } from 'react-icons/lu'
+import { LuDownload, LuExternalLink } from 'react-icons/lu'
 
 import Link from 'next/link'
 import { PortableTextBlock } from 'next-sanity'
@@ -73,9 +73,9 @@ function PostHeader({
               {postType}
             </Badge>
           </Link>
-          <Link href={`/${category.slug}`}>
+          <Link href={`/${topic.slug}`}>
             <Badge variant={postType} className="bg-transparent">
-              {category.name}
+              {topic.name}
             </Badge>
           </Link>
           {/* <Badge variant={postType} className="bg-transparent">
@@ -105,20 +105,34 @@ function PostBody({
   headings,
   postType,
   toolFile,
-}: Pick<NonNullable<GetPostQueryResult>, 'body' | 'headings' | 'postType' | 'toolFile'>) {
-  console.log('PostBody toolFile:', toolFile?.asset?.size)
+  externalLink,
+}: Pick<
+  NonNullable<GetPostQueryResult>,
+  'body' | 'headings' | 'postType' | 'toolFile' | 'externalLink'
+>) {
+  console.log('externalLink:', externalLink)
   return (
     <div className="flex flex-col gap-16 md:flex-row">
       <aside className="flex-1">
         <div className="flex max-w-80 flex-col gap-6 md:sticky md:top-36 lg:top-40">
           {postType === 'tool' && toolFile !== null && (
-            <div>
-              <Button className="w-full">
+            <a href={toolFile.asset?.url ?? ''} target="_blank" rel="noopener noreferrer">
+              <Button className="flex w-full items-center justify-between gap-2">
+                <span>
+                  Download
+                  {toolFile.asset?.mimeType === 'application/pdf' ? ' PDF' : 'File'}
+                </span>
                 <LuDownload />
-                Download File
-                {toolFile.asset?.mimeType === 'application/pdf' ? ' (PDF)' : ''}
               </Button>
-            </div>
+            </a>
+          )}
+          {(postType === 'tool' || postType === 'guide') && externalLink !== null && (
+            <a href={externalLink ?? ''} target="_blank" rel="noopener noreferrer">
+              <Button className="flex w-full items-center justify-between gap-2">
+                Visit website
+                <LuExternalLink />
+              </Button>
+            </a>
           )}
           <TableOfContents headings={headings} />
         </div>

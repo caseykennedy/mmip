@@ -69,7 +69,6 @@ const postFields = /* groq */ `
     "level": style,
     "text": pt::text(@)
   },
-  notes,
   authors[]->{firstName, lastName, picture},
   toolFile{
     _type,
@@ -82,6 +81,7 @@ const postFields = /* groq */ `
     },
     media
   },
+  externalLink,
   metadata
 `
 
@@ -294,10 +294,6 @@ const commonServiceFields = /* groq */ `
   _id,
   _type,
   _updatedAt,
-  category->{
-    name,
-    "slug": slug.current
-  },
   contactInfo,
   name,
   region,
@@ -305,8 +301,8 @@ const commonServiceFields = /* groq */ `
     name,
     "slug": slug.current
   },
-  shortDescription,
-  "slug": slug.current
+  "slug": slug.current,
+  shortDescription
 `
 
 const serviceFields = /* groq */ `
@@ -316,8 +312,7 @@ const serviceFields = /* groq */ `
   },
   description,
   hours,
-  metadata,
-  tags
+  metadata
 `
 
 export const allServicesQuery = defineQuery(`
