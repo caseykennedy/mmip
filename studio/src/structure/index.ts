@@ -64,6 +64,16 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
             ]),
         ),
 
+      // Tribes group
+      S.listItem()
+        .title('Tribes')
+        .icon(FolderIcon)
+        .child(
+          S.list()
+            .title('Tribes')
+            .items([S.documentTypeListItem('tribe').title('Tribes')]),
+        ),
+
       S.divider(),
 
       // All other types, except disabled and those already in Resources

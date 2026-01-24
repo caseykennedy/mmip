@@ -21,6 +21,7 @@ export const badgeVariants = cva(
         guide: 'border-terracota-500 bg-terracota-500 text-terracota-900',
         tool: 'border-sage-500 bg-sage-500 text-sage-900',
         service: 'border-gold-500 bg-gold-500 text-gold-900',
+        tribe: 'border-blue-500 bg-blue-500 text-blue-900',
       },
     },
     defaultVariants: {

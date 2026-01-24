@@ -326,3 +326,36 @@ export const getServiceQuery = defineQuery(`
     ${serviceFields}
   }
 `)
+
+// Tribes
+const commonTribeFields = /* groq */ `
+  _id,
+  _type,
+  _updatedAt,
+  contactInfo,
+  name,
+  region,
+  "slug": slug.current,
+  shortDescription
+`
+
+const tribeFields = /* groq */ `
+  ${commonTribeFields},
+  coverImage{
+    ${imageFields}
+  },
+  description,
+  metadata
+`
+
+export const allTribesQuery = defineQuery(`
+  *[_type == "tribe" && defined(slug.current)] | order(name asc) {
+    ${commonTribeFields}
+  }
+`)
+
+export const getTribeQuery = defineQuery(`
+  *[_type == "tribe" && slug.current == $slug][0] {
+    ${tribeFields}
+  }
+`)

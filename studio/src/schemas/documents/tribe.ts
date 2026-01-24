@@ -2,9 +2,9 @@ import { DocumentTextIcon, ComposeIcon, SearchIcon } from '@sanity/icons'
 import { defineField, defineType } from 'sanity'
 import { region } from '../fields/region'
 
-export const service = defineType({
-  name: 'service',
-  title: 'Service',
+export const tribe = defineType({
+  name: 'tribe',
+  title: 'Tribe',
   type: 'document',
   icon: DocumentTextIcon,
   groups: [
@@ -32,15 +32,6 @@ export const service = defineType({
 
     region,
 
-    defineField({
-      group: 'content',
-      name: 'serviceType',
-      title: 'Service Type',
-      type: 'reference',
-      to: [{ type: 'serviceType' }],
-      options: { disableNew: true },
-      validation: Rule => Rule.required(),
-    }),
     defineField({
       group: 'content',
       name: 'coverImage',
@@ -80,32 +71,32 @@ export const service = defineType({
         defineField({ name: 'website', title: 'Website', type: 'url' }),
       ],
     }),
-    defineField({
-      group: 'content',
-      name: 'hours',
-      title: 'Operating Hours',
-      type: 'object',
-      fields: [
-        defineField({
-          name: 'days',
-          title: 'Days',
-          type: 'string',
-          description: 'Monday – Friday',
-        }),
-        defineField({
-          name: 'open',
-          title: 'Open Time',
-          type: 'string',
-          description: '9:00 AM',
-        }),
-        defineField({
-          name: 'close',
-          title: 'Close Time',
-          type: 'string',
-          description: '5:00 PM',
-        }),
-      ],
-    }),
+    // defineField({
+    //   group: 'content',
+    //   name: 'hours',
+    //   title: 'Operating Hours',
+    //   type: 'object',
+    //   fields: [
+    //     defineField({
+    //       name: 'days',
+    //       title: 'Days',
+    //       type: 'string',
+    //       description: 'Monday – Friday',
+    //     }),
+    //     defineField({
+    //       name: 'open',
+    //       title: 'Open Time',
+    //       type: 'string',
+    //       description: '9:00 AM',
+    //     }),
+    //     defineField({
+    //       name: 'close',
+    //       title: 'Close Time',
+    //       type: 'string',
+    //       description: '5:00 PM',
+    //     }),
+    //   ],
+    // }),
     defineField({
       group: 'seo',
       name: 'metadata',

@@ -5,12 +5,15 @@ import {
   AllPostsQueryResult,
   AllServicesQueryResult,
   AllTopicsQueryResult,
+  AllTribesQueryResult,
   GetCategoryWithAllPostsQueryResult,
   GetHomepageQueryResult,
+  GetPageQueryResult,
   GetPostQueryResult,
   GetPostsByTypeQueryResult,
   GetServiceQueryResult,
   GetTopicWithAllPostsQueryResult,
+  GetTribeQueryResult,
   MorePostsQueryResult,
   NavigationQueryResult,
   SettingsQueryResult,
@@ -23,12 +26,15 @@ import {
   allPostsQuery,
   allServicesQuery,
   allTopicsQuery,
+  allTribesQuery,
   getCategoryWithAllPostsQuery,
   getHomepageQuery,
+  getPageQuery,
   getPostQuery,
   getPostsByTypeQuery,
   getServiceQuery,
   getTopicWithAllPostsQuery,
+  getTribeQuery,
   morePostsQuery,
   navigationQuery,
   settingsQuery,
@@ -92,6 +98,17 @@ export function fetchHomeData() {
     query: getHomepageQuery,
     params: {},
     tags: ['home'],
+  })
+}
+
+// Fetch page
+// _____________________________________________________________
+
+export function fetchPage(slug: string) {
+  return fetchData<GetPageQueryResult>({
+    query: getPageQuery,
+    params: { slug },
+    tags: ['page'],
   })
 }
 
@@ -183,5 +200,24 @@ export function fetchService(slug: string) {
     query: getServiceQuery,
     params: { slug },
     tags: ['service'],
+  })
+}
+
+// Fetch tribes
+// _____________________________________________________________
+
+export function fetchAllTribes() {
+  return fetchData<AllTribesQueryResult>({
+    query: allTribesQuery,
+    params: {},
+    tags: ['tribe'],
+  })
+}
+
+export function fetchTribe(slug: string) {
+  return fetchData<GetTribeQueryResult>({
+    query: getTribeQuery,
+    params: { slug },
+    tags: ['tribe'],
   })
 }

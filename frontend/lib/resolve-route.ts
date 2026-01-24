@@ -12,6 +12,7 @@ import type {
 import {
   fetchCategories,
   fetchCategoryWithAllPosts,
+  fetchPage,
   fetchPost,
   fetchPostsByType,
   fetchTopics,
@@ -76,10 +77,10 @@ export async function resolveRoute(slugParts: string[]): Promise<ResolvedRoute> 
   const [categoriesResult, topicsResults, firstPageResult] = await Promise.all([
     fetchCategories(),
     fetchTopics(),
-    slugParts.length === 1
-      ? sanityFetch({ query: getPageQuery, params: { slug: slugParts[0] } })
-      : Promise.resolve({ data: null }),
+    slugParts.length === 1 ? fetchPage(slugParts[0]) : Promise.resolve(null),
   ])
+
+  console.log('firstPageResult:', firstPageResult)
 
   const categories = categoriesResult || []
   const categorySlugs = categories.map(c => c.slug)
@@ -142,8 +143,8 @@ export async function resolveRoute(slugParts: string[]): Promise<ResolvedRoute> 
     }
 
     // Is page?
-    if (firstPageResult.data?._id) {
-      const page = firstPageResult.data
+    if (firstPageResult?._id) {
+      const page = firstPageResult
       return {
         type: 'page',
         data: page,
