@@ -2,15 +2,19 @@ import { algoliasearch } from 'algoliasearch'
 import { NextRequest, NextResponse } from 'next/server'
 import { PortableTextBlock } from 'next-sanity'
 
+import { INDEXES } from '@/lib/algolia'
 import { portableTextToString } from '@/lib/utils'
-import { fetchAllPosts } from '@/sanity/lib/fetch'
+import { fetchAllPosts, fetchAllServices, fetchAllTribes } from '@/sanity/lib/fetch'
 
 const client = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
   process.env.ALGOLIA_ADMIN_API_KEY!,
 )
 
-const POSTS_INDEX = 'posts'
+/**
+ * API Route to handle indexing content into Algolia.
+ * This route can be triggered via webhooks from Sanity or manually.
+ */
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,11 +58,73 @@ export async function POST(request: NextRequest) {
         }))
 
         const postResult = await client.saveObjects({
-          indexName: POSTS_INDEX,
+          indexName: INDEXES.posts,
           objects: postsForIndex,
         })
 
-        results.push({ index: POSTS_INDEX, count: postsForIndex.length, result: postResult })
+        results.push({ index: INDEXES.posts, count: postsForIndex.length, result: postResult })
+      }
+    }
+
+    // Index services
+    if (indexType === 'all' || indexType === 'services') {
+      const services = await fetchAllServices()
+
+      if (services?.length) {
+        const servicesForIndex = services.map(service => ({
+          objectID: service._id,
+          title: service.name,
+          name: service.name,
+          slug: service.slug,
+          shortDescription: portableTextToString(service.shortDescription as PortableTextBlock[]),
+          serviceType: {
+            name: service.serviceType?.name,
+            slug: service.serviceType?.slug,
+          },
+          region: service.region,
+          contactInfo: service.contactInfo,
+          url: `/services/${service.slug}`,
+          type: 'service',
+          coverImage: service.coverImage,
+        }))
+
+        const serviceResult = await client.saveObjects({
+          indexName: INDEXES.services,
+          objects: servicesForIndex,
+        })
+
+        results.push({
+          index: INDEXES.services,
+          count: servicesForIndex.length,
+          result: serviceResult,
+        })
+      }
+    }
+
+    // Index tribes
+    if (indexType === 'all' || indexType === 'tribes') {
+      const tribes = await fetchAllTribes()
+
+      if (tribes?.length) {
+        const tribesForIndex = tribes.map(tribe => ({
+          objectID: tribe._id,
+          title: tribe.name,
+          name: tribe.name,
+          slug: tribe.slug,
+          shortDescription: portableTextToString(tribe.shortDescription as PortableTextBlock[]),
+          region: tribe.region,
+          contactInfo: tribe.contactInfo,
+          url: `/tribes/${tribe.slug}`,
+          type: 'tribe',
+          coverImage: tribe.coverImage,
+        }))
+
+        const tribeResult = await client.saveObjects({
+          indexName: INDEXES.tribes,
+          objects: tribesForIndex,
+        })
+
+        results.push({ index: INDEXES.tribes, count: tribesForIndex.length, result: tribeResult })
       }
     }
 

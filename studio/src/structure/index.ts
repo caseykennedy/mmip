@@ -13,6 +13,7 @@ const DISABLED_TYPES = [
   'tag',
   'service',
   'serviceType',
+  'tribe',
 ]
 
 export const structure: StructureResolver = (S: StructureBuilder) =>

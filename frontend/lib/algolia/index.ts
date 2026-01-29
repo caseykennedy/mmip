@@ -7,4 +7,6 @@ export const searchClient = algoliasearch(
 
 export const INDEXES = {
   posts: 'posts',
+  services: 'services',
+  tribes: 'tribes',
 } as const

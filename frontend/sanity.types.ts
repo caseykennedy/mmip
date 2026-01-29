@@ -2186,7 +2186,7 @@ export type GetTopicWithAllPostsQueryResult = {
   }>
 } | null
 // Variable: allServicesQuery
-// Query: *[_type == "service" && defined(slug.current)] | order(name asc) {      _id,  _type,  _updatedAt,  contactInfo,  name,  region,  serviceType->{    name,    "slug": slug.current  },  "slug": slug.current,  shortDescription  }
+// Query: *[_type == "service" && defined(slug.current)] | order(name asc) {      _id,  _type,  _updatedAt,  contactInfo,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  name,  region,  serviceType->{    name,    "slug": slug.current  },  "slug": slug.current,  shortDescription  }
 export type AllServicesQueryResult = Array<{
   _id: string
   _type: 'service'
@@ -2200,6 +2200,18 @@ export type AllServicesQueryResult = Array<{
     email?: string
     website?: string
   } | null
+  coverImage: {
+    alt: string
+    asset: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    } | null
+    metadata: SanityImageMetadata | null
+    url: string | null
+    extension: string | null
+  }
   name: string
   region: 'central' | 'north' | 'south'
   serviceType: {
@@ -2210,7 +2222,7 @@ export type AllServicesQueryResult = Array<{
   shortDescription: BlockContentBasic
 }>
 // Variable: getServiceQuery
-// Query: *[_type == "service" && slug.current == $slug][0] {        _id,  _type,  _updatedAt,  contactInfo,  name,  region,  serviceType->{    name,    "slug": slug.current  },  "slug": slug.current,  shortDescription,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  description,  hours,  metadata  }
+// Query: *[_type == "service" && slug.current == $slug][0] {        _id,  _type,  _updatedAt,  contactInfo,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  name,  region,  serviceType->{    name,    "slug": slug.current  },  "slug": slug.current,  shortDescription,  description,  hours,  metadata  }
 export type GetServiceQueryResult = {
   _id: string
   _type: 'service'
@@ -2224,14 +2236,6 @@ export type GetServiceQueryResult = {
     email?: string
     website?: string
   } | null
-  name: string
-  region: 'central' | 'north' | 'south'
-  serviceType: {
-    name: string
-    slug: string
-  }
-  slug: string
-  shortDescription: BlockContentBasic
   coverImage: {
     alt: string
     asset: {
@@ -2244,6 +2248,14 @@ export type GetServiceQueryResult = {
     url: string | null
     extension: string | null
   }
+  name: string
+  region: 'central' | 'north' | 'south'
+  serviceType: {
+    name: string
+    slug: string
+  }
+  slug: string
+  shortDescription: BlockContentBasic
   description: BlockContent
   hours: {
     days?: string
@@ -2253,7 +2265,7 @@ export type GetServiceQueryResult = {
   metadata: Metadata | null
 } | null
 // Variable: allTribesQuery
-// Query: *[_type == "tribe" && defined(slug.current)] | order(name asc) {      _id,  _type,  _updatedAt,  contactInfo,  name,  region,  "slug": slug.current,  shortDescription  }
+// Query: *[_type == "tribe" && defined(slug.current)] | order(name asc) {      _id,  _type,  _updatedAt,  contactInfo,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  name,  region,  "slug": slug.current,  shortDescription  }
 export type AllTribesQueryResult = Array<{
   _id: string
   _type: 'tribe'
@@ -2267,13 +2279,25 @@ export type AllTribesQueryResult = Array<{
     email?: string
     website?: string
   } | null
+  coverImage: {
+    alt: string
+    asset: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    } | null
+    metadata: SanityImageMetadata | null
+    url: string | null
+    extension: string | null
+  }
   name: string
   region: 'central' | 'north' | 'south'
   slug: string
   shortDescription: BlockContentBasic
 }>
 // Variable: getTribeQuery
-// Query: *[_type == "tribe" && slug.current == $slug][0] {        _id,  _type,  _updatedAt,  contactInfo,  name,  region,  "slug": slug.current,  shortDescription,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  description,  metadata  }
+// Query: *[_type == "tribe" && slug.current == $slug][0] {        _id,  _type,  _updatedAt,  contactInfo,  coverImage{      alt,  asset,  "metadata": asset->metadata,  "url": asset->url,  "extension": asset->extension  },  name,  region,  "slug": slug.current,  shortDescription,  description,  metadata  }
 export type GetTribeQueryResult = {
   _id: string
   _type: 'tribe'
@@ -2287,10 +2311,6 @@ export type GetTribeQueryResult = {
     email?: string
     website?: string
   } | null
-  name: string
-  region: 'central' | 'north' | 'south'
-  slug: string
-  shortDescription: BlockContentBasic
   coverImage: {
     alt: string
     asset: {
@@ -2303,6 +2323,10 @@ export type GetTribeQueryResult = {
     url: string | null
     extension: string | null
   }
+  name: string
+  region: 'central' | 'north' | 'south'
+  slug: string
+  shortDescription: BlockContentBasic
   description: BlockContent
   metadata: Metadata | null
 } | null
@@ -2329,9 +2353,9 @@ declare module '@sanity/client' {
     '\n  *[_type == "topic" && defined(slug.current)] | order(order asc) {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n\n  }\n': AllTopicsQueryResult
     '\n  *[_type == \'topic\' && slug.current == $slug][0]{\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n\n  }\n': GetTopicQueryResult
     '\n  *[_type == \'topic\' && slug.current == $slug][0]{\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  image{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  order\n,\n    "posts": *[_type == "post" && topic._ref == ^._id] | order(date desc, _updatedAt desc) {\n      \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  postType,\n  "slug": slug.current,\n  "title": coalesce(title, "Untitled"),\n  excerpt,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  "date": coalesce(date, _updatedAt),\n  category->{name, "slug": slug.current, description},\n  topic->{name, "slug": slug.current, description},\n  region\n\n    },\n    "availableTopics": array::unique(*[_type == "post" && category._ref == ^._id && defined(topic)].topic->{\n      name,\n      "slug": slug.current\n    })\n  }\n': GetTopicWithAllPostsQueryResult
-    '\n  *[_type == "service" && defined(slug.current)] | order(name asc) {\n    \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  "slug": slug.current,\n  shortDescription\n\n  }\n': AllServicesQueryResult
-    '\n  *[_type == "service" && slug.current == $slug][0] {\n    \n  \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  "slug": slug.current,\n  shortDescription\n,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  description,\n  hours,\n  metadata\n\n  }\n': GetServiceQueryResult
-    '\n  *[_type == "tribe" && defined(slug.current)] | order(name asc) {\n    \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  name,\n  region,\n  "slug": slug.current,\n  shortDescription\n\n  }\n': AllTribesQueryResult
-    '\n  *[_type == "tribe" && slug.current == $slug][0] {\n    \n  \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  name,\n  region,\n  "slug": slug.current,\n  shortDescription\n,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  description,\n  metadata\n\n  }\n': GetTribeQueryResult
+    '\n  *[_type == "service" && defined(slug.current)] | order(name asc) {\n    \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  "slug": slug.current,\n  shortDescription\n\n  }\n': AllServicesQueryResult
+    '\n  *[_type == "service" && slug.current == $slug][0] {\n    \n  \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  name,\n  region,\n  serviceType->{\n    name,\n    "slug": slug.current\n  },\n  "slug": slug.current,\n  shortDescription\n,\n  description,\n  hours,\n  metadata\n\n  }\n': GetServiceQueryResult
+    '\n  *[_type == "tribe" && defined(slug.current)] | order(name asc) {\n    \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  name,\n  region,\n  "slug": slug.current,\n  shortDescription\n\n  }\n': AllTribesQueryResult
+    '\n  *[_type == "tribe" && slug.current == $slug][0] {\n    \n  \n  _id,\n  _type,\n  _updatedAt,\n  contactInfo,\n  coverImage{\n    \n  alt,\n  asset,\n  "metadata": asset->metadata,\n  "url": asset->url,\n  "extension": asset->extension\n\n  },\n  name,\n  region,\n  "slug": slug.current,\n  shortDescription\n,\n  description,\n  metadata\n\n  }\n': GetTribeQueryResult
   }
 }

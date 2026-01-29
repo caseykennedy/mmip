@@ -295,6 +295,9 @@ const commonServiceFields = /* groq */ `
   _type,
   _updatedAt,
   contactInfo,
+  coverImage{
+    ${imageFields}
+  },
   name,
   region,
   serviceType->{
@@ -307,9 +310,6 @@ const commonServiceFields = /* groq */ `
 
 const serviceFields = /* groq */ `
   ${commonServiceFields},
-  coverImage{
-    ${imageFields}
-  },
   description,
   hours,
   metadata
@@ -333,6 +333,9 @@ const commonTribeFields = /* groq */ `
   _type,
   _updatedAt,
   contactInfo,
+  coverImage{
+    ${imageFields}
+  },
   name,
   region,
   "slug": slug.current,
@@ -341,9 +344,6 @@ const commonTribeFields = /* groq */ `
 
 const tribeFields = /* groq */ `
   ${commonTribeFields},
-  coverImage{
-    ${imageFields}
-  },
   description,
   metadata
 `

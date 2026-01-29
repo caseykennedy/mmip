@@ -20,8 +20,8 @@ export default function SanityImage({
   ...props
 }: Props) {
   const isSVG = source?.extension === 'svg'
-  const width = source?.metadata?.dimensions?.width || 500
-  const height = source?.metadata?.dimensions?.height || 300
+  const width = source?.metadata?.dimensions?.width || 900
+  const height = source?.metadata?.dimensions?.height || 600
   const hasLqip = Boolean(source?.metadata && source.metadata.lqip)
   const imageUrl = !isSVG
     ? urlForImage(source)?.width(width).height(height).auto('format').url()
@@ -43,7 +43,7 @@ export default function SanityImage({
       {...props}
     />
   ) : (
-    <div className="aspect-video rounded-md border bg-sand-50" />
+    <div className="aspect-[3/2] rounded-md border bg-sand-50" />
   )
 
   return <div className="relative">{img}</div>

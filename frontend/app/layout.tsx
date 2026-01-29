@@ -104,7 +104,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main className="">{children}</main>
           <Footer />
         </section>
-        <CommandPalette />
+        {/* <CommandPalette /> */}
         <SpeedInsights />
       </body>
     </html>

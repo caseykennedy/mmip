@@ -6,33 +6,54 @@ import { SanityImage } from '@/types'
 export interface SearchResult {
   objectID: string
   title: string
+  name?: string // For services and tribes
   slug: string
-  excerpt: string
-  postType: 'article' | 'guide' | 'tool'
-  category: {
+  excerpt?: string // For posts
+  shortDescription?: string // For services and tribes
+  description?: string // For services and tribes
+  postType?: 'article' | 'guide' | 'tool' // Only for posts
+  category?: {
     name: string
     slug: string
-  }
-  topic: {
+  } // Only for posts
+  topic?: {
     name: string
     slug: string
-  }
+  } // Only for posts
+  serviceType?: {
+    name: string
+    slug: string
+  } // Only for services
   region: string
-  date: string
+  date?: string // Only for posts
+  contactInfo?: {
+    address?: string
+    city?: string
+    state?: string
+    zip?: string
+    phone?: string
+    email?: string
+    website?: string
+  } // For services and tribes
   url: string
-  type: 'post' | 'service'
-  coverImage: SanityImage
+  type: 'post' | 'service' | 'tribe'
+  coverImage?: SanityImage
 }
 
 const attributesToRetrieve = [
   'title',
+  'name',
   'slug',
   'excerpt',
+  'shortDescription',
+  'description',
   'postType',
   'category',
   'topic',
+  'serviceType',
   'region',
   'date',
+  'contactInfo',
   'url',
   'type',
   'coverImage',
@@ -54,17 +75,37 @@ export function useSearch(query: string): {
       setError(null)
 
       try {
-        const response = await searchClient.searchSingleIndex({
-          indexName: INDEXES.posts,
-          searchParams: {
-            query: query.trim(), // Empty query will return recent posts
-            hitsPerPage: 3, // Fewer results for command palette
-            attributesToRetrieve,
+        const response = await searchClient.search([
+          {
+            indexName: INDEXES.posts,
+            params: {
+              query: query.trim(),
+              hitsPerPage: 2,
+              attributesToRetrieve,
+            },
           },
-        })
+          {
+            indexName: INDEXES.services,
+            params: {
+              query: query.trim(),
+              hitsPerPage: 2,
+              attributesToRetrieve,
+            },
+          },
+          {
+            indexName: INDEXES.tribes,
+            params: {
+              query: query.trim(),
+              hitsPerPage: 2,
+              attributesToRetrieve,
+            },
+          },
+        ])
 
-        const newResults = response.hits as SearchResult[]
-        setResults(newResults)
+        // Combine results from all indexes
+        const allResults = response.results.flatMap((result: any) => result.hits) as SearchResult[]
+        const limitedResults = allResults.slice(0, 6)
+        setResults(limitedResults)
       } catch (err) {
         console.error('Search error:', err)
         setError('Search failed')
@@ -102,18 +143,58 @@ export function useSearchWithPagination(query: string, page: number = 0) {
       setError(null)
 
       try {
-        const searchParams = {
-          indexName: INDEXES.posts,
-          searchParams: {
-            query: query.trim(), // Empty string will return all results
-            page,
-            hitsPerPage: 12, // More results when showing all posts
-            attributesToRetrieve,
+        const response = await searchClient.search([
+          {
+            indexName: INDEXES.posts,
+            params: {
+              query: query.trim(),
+              page,
+              hitsPerPage: 4,
+              attributesToRetrieve,
+            },
           },
-        }
+          {
+            indexName: INDEXES.services,
+            params: {
+              query: query.trim(),
+              page,
+              hitsPerPage: 4,
+              attributesToRetrieve,
+            },
+          },
+          {
+            indexName: INDEXES.tribes,
+            params: {
+              query: query.trim(),
+              page,
+              hitsPerPage: 4,
+              attributesToRetrieve,
+            },
+          },
+        ])
 
-        const response = await searchClient.searchSingleIndex(searchParams)
-        const newResults = response.hits as SearchResult[]
+        // Extract individual results
+        const [postsResult, servicesResult, tribesResult] = response.results as any[]
+
+        // Add this debugging in the searchAlgolia function, right after the response:
+        console.log('Search response:', {
+          postsHits: postsResult?.hits?.length || 0,
+          servicesHits: servicesResult?.hits?.length || 0,
+          tribesHits: tribesResult?.hits?.length || 0,
+          postsTotal: postsResult?.nbHits || 0,
+          servicesTotal: servicesResult?.nbHits || 0,
+          tribesTotal: tribesResult?.nbHits || 0,
+          query: query.trim(),
+        })
+
+        // Combine results from all indexes
+        const newResults = [
+          ...(postsResult?.hits || []),
+          ...(servicesResult?.hits || []),
+          ...(tribesResult?.hits || []),
+        ] as SearchResult[]
+
+        console.log('Combined results:', newResults.length, newResults)
 
         // Determine if this is a new search or pagination
         const isNewSearch = page === 0 || currentQuery !== query.trim()
@@ -127,8 +208,15 @@ export function useSearchWithPagination(query: string, page: number = 0) {
           setResults(prev => [...prev, ...newResults])
         }
 
-        setTotalResults(response.nbHits ?? 0)
-        setHasMore(page < (response.nbPages ?? 1) - 1)
+        setTotalResults(
+          (postsResult?.nbHits ?? 0) + (servicesResult?.nbHits ?? 0) + (tribesResult?.nbHits ?? 0),
+        )
+        const maxPages = Math.max(
+          postsResult?.nbPages ?? 1,
+          servicesResult?.nbPages ?? 1,
+          tribesResult?.nbPages ?? 1,
+        )
+        setHasMore(page < maxPages - 1)
       } catch (err) {
         console.error('Search error:', err)
         setError('Search failed')
@@ -147,6 +235,8 @@ export function useSearchWithPagination(query: string, page: number = 0) {
     const debounceTimer = setTimeout(searchAlgolia, query.trim() ? 300 : 0)
     return () => clearTimeout(debounceTimer)
   }, [currentQuery, query, page]) // Fixed dependencies
+
+  console.log('use search', { results, isLoading, error, hasMore, totalResults })
 
   return { results, isLoading, error, hasMore, totalResults }
 }

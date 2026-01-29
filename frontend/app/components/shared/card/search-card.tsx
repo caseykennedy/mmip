@@ -24,7 +24,7 @@ export default function SearchCard({ className, orientation = 'vertical', post }
     <article className={cn('flex w-full flex-1', className)}>
       <Link
         aria-label={post.title}
-        href={`/${post.category.slug}/${post.slug}`}
+        href={`/${post.category?.slug}/${post.slug}`}
         className={cn(
           'flex flex-1 flex-col gap-6 rounded-xl border p-4 transition-colors',
           { 'items-center md:flex-row': isHorizontal },
@@ -36,7 +36,7 @@ export default function SearchCard({ className, orientation = 'vertical', post }
           <SanityImage
             source={post.coverImage}
             alt={post.coverImage?.alt}
-            className="aspect-video w-full rounded-lg"
+            className="aspect-[3/2] w-full rounded-lg"
           />
         </div>
 
@@ -46,7 +46,7 @@ export default function SearchCard({ className, orientation = 'vertical', post }
               {post.postType}
             </Badge>
             <Badge variant={post.postType} className="truncate bg-transparent">
-              {post.topic.name}
+              {post.topic?.name}
             </Badge>
           </div>
           <h4 className="max-w-[34ch] font-sans text-xl font-medium">{post.title}</h4>
