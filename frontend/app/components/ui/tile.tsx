@@ -10,7 +10,11 @@ export default function Tile({
   return (
     <div
       className={cn(
-        'rounded-xl border bg-card p-6 transition-colors hover:border-strong',
+        'rounded-xl border border-strong bg-card p-6',
+        'transition-[background-color] duration-fast ease-standard',
+        // Responds to its own hover and to an interactive ancestor marked `group`.
+        'hover:bg-card-hover',
+        'group-hover:bg-card-hover',
         className,
       )}
     >

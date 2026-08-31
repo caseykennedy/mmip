@@ -1,0 +1,244 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+
+import { AboutHeaderImage, isAboutPage } from '@/app/components/shared/about-artwork'
+import Breadcrumbs from '@/app/components/shared/breadcrumbs'
+import PageBuilderPage from '@/app/components/shared/page-builder'
+import { POST_TYPE } from '@/lib/constants'
+import {
+  createArticleJsonLd,
+  createCollectionPageJsonLd,
+  createWebPageJsonLd,
+  toJsonLdScript,
+} from '@/lib/jsonld'
+import { resolveRoute } from '@/lib/resolve-route'
+import { DEFAULT_SOCIAL_IMAGES } from '@/lib/social-image'
+import type { GetPageQueryResult } from '@/sanity.types'
+import { sanityFetch } from '@/sanity/lib/live'
+import { categoriesSlugs, pagesSlugs, postRoutesSlugs, topicsSlugs } from '@/sanity/lib/queries'
+
+import CategoryTemplate from './_components/category-template'
+import PostTemplate from './_components/post-template'
+import PostTypeTemplate from './_components/post-type-template'
+
+type Props = {
+  params: Promise<{ slug: string[] }>
+}
+
+/**
+ * These paths have dedicated App Router pages. The CMS also has lightweight
+ * `page` documents for them so editors can select them in navigation, but the
+ * catch-all route must never prerender those documents. Otherwise Next emits
+ * duplicate static output and serves the generic page builder in place of the
+ * directory.
+ */
+const DEDICATED_ROOT_ROUTE_SLUGS = new Set(['services', 'tribes'])
+
+/**
+ * Generate the static params for the page.
+ * https://nextjs.org/docs/app/api-reference/functions/generate-static-params
+ */
+export async function generateStaticParams() {
+  const [pagesResult, categoriesResult, topicsResult, postsResult] = await Promise.all([
+    sanityFetch({
+      query: pagesSlugs,
+      perspective: 'published',
+      stega: false,
+    }),
+    sanityFetch({
+      query: categoriesSlugs,
+      perspective: 'published',
+      stega: false,
+    }),
+    sanityFetch({
+      query: topicsSlugs,
+      perspective: 'published',
+      stega: false,
+    }),
+    sanityFetch({
+      query: postRoutesSlugs,
+      perspective: 'published',
+      stega: false,
+    }),
+  ])
+
+  const pages = (pagesResult.data || []) as Array<{ slug?: string }>
+  const categories = (categoriesResult.data || []) as Array<{ slug?: string }>
+  const topics = (topicsResult.data || []) as Array<{ slug?: string }>
+  const posts = (postsResult.data || []) as Array<{ slug?: string; categorySlug?: string }>
+
+  const staticParams = [
+    ...pages
+      .filter(page => page.slug && !DEDICATED_ROOT_ROUTE_SLUGS.has(page.slug))
+      .map(page => ({ slug: [page.slug as string] })),
+    ...categories
+      .filter(category => category.slug)
+      .map(category => ({ slug: [category.slug as string] })),
+    ...topics.filter(topic => topic.slug).map(topic => ({ slug: [topic.slug as string] })),
+    ...Object.keys(POST_TYPE).map(postTypeSlug => ({ slug: [postTypeSlug] })),
+    ...posts
+      .filter(post => post.categorySlug && post.slug)
+      .map(post => ({ slug: [post.categorySlug as string, post.slug as string] })),
+  ]
+
+  return staticParams
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const resolved = await resolveRoute(slug)
+
+  if (resolved.type === 'not-found') return {}
+
+  const path = `/${slug.join('/')}`
+
+  return {
+    title: resolved.metadata.title,
+    description: resolved.metadata.description,
+    openGraph: {
+      title: resolved.metadata.title,
+      description: resolved.metadata.description,
+      url: path,
+      type: 'website',
+      images: DEFAULT_SOCIAL_IMAGES,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: resolved.metadata.title,
+      description: resolved.metadata.description,
+      images: DEFAULT_SOCIAL_IMAGES,
+    },
+    robots:
+      resolved.type === 'post'
+        ? {
+            index: !resolved.metadata.hideSearchIndex,
+            follow: !resolved.metadata.hideSearchIndex,
+            googleBot: {
+              index: !resolved.metadata.hideSearchIndex,
+              follow: !resolved.metadata.hideSearchIndex,
+            },
+          }
+        : {},
+  }
+}
+
+export default async function Page({ params }: Props) {
+  const { slug } = await params
+  const resolved = await resolveRoute(slug)
+  const path = `/${slug.join('/')}`
+
+  const renderWithJsonLd = (jsonLd: Record<string, unknown>, content: React.ReactNode) => (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLdScript(jsonLd) }}
+      />
+      {content}
+    </>
+  )
+
+  switch (resolved.type) {
+    case 'page':
+      return renderWithJsonLd(
+        createWebPageJsonLd({
+          path,
+          title: resolved.metadata.title,
+          description: resolved.metadata.description,
+        }),
+        <RenderPage page={resolved.data} />,
+      )
+    case 'post-type':
+      return renderWithJsonLd(
+        createCollectionPageJsonLd({
+          path,
+          title: resolved.metadata.title,
+          description: resolved.metadata.description,
+          itemPaths: (resolved.data.posts || [])
+            .filter(post => post.category?.slug && post.slug)
+            .map(post => `/${post.category!.slug}/${post.slug}`),
+        }),
+        <PostTypeTemplate data={resolved} />,
+      )
+    case 'category':
+      return renderWithJsonLd(
+        createCollectionPageJsonLd({
+          path,
+          title: resolved.metadata.title,
+          description: resolved.metadata.description,
+          itemPaths: resolved.data.posts
+            .filter(post => post.category?.slug && post.slug)
+            .map(post => `/${post.category!.slug}/${post.slug}`),
+        }),
+        <CategoryTemplate data={resolved.data} />,
+      )
+    case 'topic':
+      return renderWithJsonLd(
+        createCollectionPageJsonLd({
+          path,
+          title: resolved.metadata.title,
+          description: resolved.metadata.description,
+          itemPaths: resolved.data.posts
+            .filter(post => post.category?.slug && post.slug)
+            .map(post => `/${post.category!.slug}/${post.slug}`),
+        }),
+        <CategoryTemplate data={resolved.data} />,
+      )
+    case 'post':
+      return renderWithJsonLd(
+        createArticleJsonLd({
+          path,
+          title: resolved.metadata.title,
+          description: resolved.metadata.description,
+          image: resolved.data.coverImage?.url || undefined,
+          datePublished: resolved.data.date || undefined,
+          section: resolved.data.category?.name || resolved.data.topic?.name || undefined,
+        }),
+        <PostTemplate post={resolved.data} />,
+      )
+    case 'not-found':
+      return notFound()
+    default: {
+      const _exhaustive: never = resolved
+      return _exhaustive
+    }
+  }
+}
+
+function RenderPage({ page }: { page: NonNullable<GetPageQueryResult> }) {
+  const showAboutHeader = isAboutPage(page.slug?.current)
+
+  return (
+    <div className="my-12 lg:my-24">
+      <div className="container border-b pb-6">
+        {showAboutHeader ? (
+          <>
+            <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: page.heading }]} />
+            <div className="mt-6 flex items-start justify-between gap-4 sm:gap-8 lg:gap-12">
+              <div className="min-w-0 max-w-3xl">
+                <h2 className="font-sans text-h1 font-bold tracking-tight text-foreground-heading sm:text-5xl lg:text-7xl">
+                  {page.heading}
+                </h2>
+                <p className="mt-4 text-body-small font-light uppercase leading-relaxed text-foreground-subtle lg:text-lg">
+                  {page.subheading}
+                </p>
+              </div>
+              <AboutHeaderImage />
+            </div>
+          </>
+        ) : (
+          <div className="max-w-3xl">
+            <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: page.heading }]} />
+            <h2 className="mt-6 font-sans text-h1 font-bold tracking-tight text-foreground-heading sm:text-5xl lg:text-7xl">
+              {page.heading}
+            </h2>
+            <p className="mt-4 text-body-small font-light uppercase leading-relaxed text-foreground-subtle lg:text-lg">
+              {page.subheading}
+            </p>
+          </div>
+        )}
+      </div>
+
+      <PageBuilderPage page={page} />
+    </div>
+  )
+}
