@@ -5,28 +5,22 @@ import { SanityDocument } from 'next-sanity'
 import { useOptimistic } from 'next-sanity/hooks'
 
 import BlockRenderer from '@/app/components/shared/block-renderer'
+import Section from '@/app/components/shared/section'
+import { Button } from '@/app/components/ui/button'
 import { GetPageQueryResult } from '@/sanity.types'
-import { studioUrl } from '@/sanity/lib/api'
 import { dataAttr } from '@/sanity/lib/utils'
 
 type PageBuilderPageProps = {
   page: GetPageQueryResult
 }
 
-type PageBuilderSection = {
-  _key: string
-  _type: string
-}
+type PageBuilderSection = NonNullable<NonNullable<GetPageQueryResult>['pageBuilder']>[number]
 
 type PageData = {
   _id: string
   _type: string
   pageBuilder?: PageBuilderSection[]
 }
-
-/**
- * The PageBuilder component is used to render the blocks from the `pageBuilder` field in the Page type in your Sanity Studio.
- */
 
 function renderSections(pageBuilderSections: PageBuilderSection[], page: GetPageQueryResult) {
   if (!page) {
@@ -40,7 +34,7 @@ function renderSections(pageBuilderSections: PageBuilderSection[], page: GetPage
         path: `pageBuilder`,
       }).toString()}
     >
-      {pageBuilderSections.map((block: any, index: number) => (
+      {pageBuilderSections.map((block, index) => (
         <BlockRenderer
           key={block._key}
           index={index}
@@ -58,22 +52,21 @@ function renderEmptyState(page: GetPageQueryResult) {
     return null
   }
   return (
-    <div className="container">
-      <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
-        This page has no content!
-      </h1>
-      <p className="mt-2 text-base text-gray-500">Open the page in Sanity Studio to add content.</p>
-      <div className="mt-10 flex">
-        <Link
-          className="mr-6 flex items-center gap-2 rounded-full bg-black px-6 py-3 text-white transition-colors duration-200 hover:bg-red-500 focus:bg-cyan-500"
-          href={`${studioUrl}/structure/intent/edit/template=page;type=page;path=pageBuilder;id=${page._id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Add content to this page
-        </Link>
+    <Section>
+      <div className="container">
+        <h1 className="text-h2 font-extrabold tracking-tight text-foreground-heading sm:text-h1">
+          More content is on the way
+        </h1>
+        <p className="mt-4 max-w-xl text-body-small text-foreground-muted">
+          We&apos;re working on bringing you more information here. Please check back soon.
+        </p>
+        <div className="mt-10 flex">
+          <Button asChild size="lg">
+            <Link href="/">Back to home</Link>
+          </Button>
+        </div>
       </div>
-    </div>
+    </Section>
   )
 }
 
@@ -82,15 +75,10 @@ export default function PageBuilder({ page }: PageBuilderPageProps) {
     PageBuilderSection[] | undefined,
     SanityDocument<PageData>
   >(page?.pageBuilder || [], (currentSections, action) => {
-    // The action contains updated document data from Sanity
-    // when someone makes an edit in the Studio
-
-    // If the edit was to a different document, ignore it
     if (action.id !== page?._id) {
       return currentSections
     }
 
-    // If there are sections in the updated document, use them
     if (action.document.pageBuilder) {
       // Reconcile References. https://www.sanity.io/docs/enabling-drag-and-drop#ffe728eea8c1
       return action.document.pageBuilder.map(
@@ -98,7 +86,6 @@ export default function PageBuilder({ page }: PageBuilderPageProps) {
       )
     }
 
-    // Otherwise keep the current sections
     return currentSections
   })
 

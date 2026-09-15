@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { INDEXES, searchClient } from '@/lib/algolia'
+import { getSearchClient, INDEXES } from '@/lib/algolia'
 import { SanityImage } from '@/types'
 
 export interface SearchResult {
@@ -40,6 +40,8 @@ export interface SearchResult {
   coverImage?: SanityImage
 }
 
+export type SearchError = 'not-configured' | 'request-failed'
+
 const attributesToRetrieve = [
   'title',
   'name',
@@ -59,15 +61,33 @@ const attributesToRetrieve = [
   'coverImage',
 ]
 
-// Original hook for command palette (no pagination)
+type AlgoliaIndexResult = {
+  hits: SearchResult[]
+  nbHits: number
+  nbPages: number
+}
+
+function asIndexResult(value: unknown): AlgoliaIndexResult {
+  if (typeof value !== 'object' || value === null) {
+    return { hits: [], nbHits: 0, nbPages: 1 }
+  }
+
+  const record = value as Record<string, unknown>
+  return {
+    hits: Array.isArray(record.hits) ? (record.hits as SearchResult[]) : [],
+    nbHits: typeof record.nbHits === 'number' ? record.nbHits : 0,
+    nbPages: typeof record.nbPages === 'number' ? record.nbPages : 1,
+  }
+}
+
 export function useSearch(query: string): {
   results: SearchResult[]
   isLoading: boolean
-  error: string | null
+  error: SearchError | null
 } {
   const [results, setResults] = useState<SearchResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<SearchError | null>(null)
 
   useEffect(() => {
     const searchAlgolia = async () => {
@@ -75,7 +95,14 @@ export function useSearch(query: string): {
       setError(null)
 
       try {
-        const response = await searchClient.search([
+        const client = getSearchClient()
+        if (!client) {
+          setError('not-configured')
+          setResults([])
+          return
+        }
+
+        const response = await client.search([
           {
             indexName: INDEXES.posts,
             params: {
@@ -102,13 +129,12 @@ export function useSearch(query: string): {
           },
         ])
 
-        // Combine results from all indexes
-        const allResults = response.results.flatMap((result: any) => result.hits) as SearchResult[]
+        const allResults = response.results.flatMap(result => asIndexResult(result).hits)
         const limitedResults = allResults.slice(0, 6)
         setResults(limitedResults)
       } catch (err) {
         console.error('Search error:', err)
-        setError('Search failed')
+        setError('request-failed')
         setResults([])
       } finally {
         setIsLoading(false)
@@ -132,7 +158,7 @@ export function useSearch(query: string): {
 export function useSearchWithPagination(query: string, page: number = 0) {
   const [results, setResults] = useState<SearchResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<SearchError | null>(null)
   const [hasMore, setHasMore] = useState(false)
   const [totalResults, setTotalResults] = useState(0)
   const [currentQuery, setCurrentQuery] = useState<string>('')
@@ -143,7 +169,18 @@ export function useSearchWithPagination(query: string, page: number = 0) {
       setError(null)
 
       try {
-        const response = await searchClient.search([
+        const client = getSearchClient()
+        if (!client) {
+          setError('not-configured')
+          if (page === 0) {
+            setResults([])
+          }
+          setHasMore(false)
+          setTotalResults(0)
+          return
+        }
+
+        const response = await client.search([
           {
             indexName: INDEXES.posts,
             params: {
@@ -173,54 +210,32 @@ export function useSearchWithPagination(query: string, page: number = 0) {
           },
         ])
 
-        // Extract individual results
-        const [postsResult, servicesResult, tribesResult] = response.results as any[]
+        const indexed = response.results.map(asIndexResult)
+        const postsResult = indexed[0] ?? { hits: [], nbHits: 0, nbPages: 1 }
+        const servicesResult = indexed[1] ?? { hits: [], nbHits: 0, nbPages: 1 }
+        const tribesResult = indexed[2] ?? { hits: [], nbHits: 0, nbPages: 1 }
 
-        // Add this debugging in the searchAlgolia function, right after the response:
-        console.log('Search response:', {
-          postsHits: postsResult?.hits?.length || 0,
-          servicesHits: servicesResult?.hits?.length || 0,
-          tribesHits: tribesResult?.hits?.length || 0,
-          postsTotal: postsResult?.nbHits || 0,
-          servicesTotal: servicesResult?.nbHits || 0,
-          tribesTotal: tribesResult?.nbHits || 0,
-          query: query.trim(),
-        })
-
-        // Combine results from all indexes
         const newResults = [
-          ...(postsResult?.hits || []),
-          ...(servicesResult?.hits || []),
-          ...(tribesResult?.hits || []),
-        ] as SearchResult[]
+          ...postsResult.hits,
+          ...servicesResult.hits,
+          ...tribesResult.hits,
+        ]
 
-        console.log('Combined results:', newResults.length, newResults)
-
-        // Determine if this is a new search or pagination
         const isNewSearch = page === 0 || currentQuery !== query.trim()
 
         if (isNewSearch) {
-          // New search - replace results and update current query
           setResults(newResults)
           setCurrentQuery(query.trim())
         } else {
-          // Same search, next page - append results
           setResults(prev => [...prev, ...newResults])
         }
 
-        setTotalResults(
-          (postsResult?.nbHits ?? 0) + (servicesResult?.nbHits ?? 0) + (tribesResult?.nbHits ?? 0),
-        )
-        const maxPages = Math.max(
-          postsResult?.nbPages ?? 1,
-          servicesResult?.nbPages ?? 1,
-          tribesResult?.nbPages ?? 1,
-        )
+        setTotalResults(postsResult.nbHits + servicesResult.nbHits + tribesResult.nbHits)
+        const maxPages = Math.max(postsResult.nbPages, servicesResult.nbPages, tribesResult.nbPages)
         setHasMore(page < maxPages - 1)
       } catch (err) {
         console.error('Search error:', err)
-        setError('Search failed')
-        // Only clear results on error if it's a new search, not pagination
+        setError('request-failed')
         if (page === 0) {
           setResults([])
         }
@@ -231,12 +246,9 @@ export function useSearchWithPagination(query: string, page: number = 0) {
       }
     }
 
-    // No debouncing for empty query, slight debounce for searches
     const debounceTimer = setTimeout(searchAlgolia, query.trim() ? 300 : 0)
     return () => clearTimeout(debounceTimer)
-  }, [currentQuery, query, page]) // Fixed dependencies
-
-  console.log('use search', { results, isLoading, error, hasMore, totalResults })
+  }, [currentQuery, query, page])
 
   return { results, isLoading, error, hasMore, totalResults }
 }

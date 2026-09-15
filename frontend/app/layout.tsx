@@ -1,41 +1,42 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { draftMode } from 'next/headers'
 import { toPlainText, VisualEditing } from 'next-sanity'
-import { Toaster } from 'sonner'
 
-import Footer from '@/app/components/global/footer'
-import Header from '@/app/components/global/header'
-import CommandPalette from '@/app/components/shared/command-palette'
+import { AppearanceProvider } from '@/app/components/global/appearance/appearance-provider'
+import { AppearanceToaster } from '@/app/components/global/appearance/appearance-toaster'
+import {
+  APPEARANCE_THEME_COLORS,
+  appearanceBootScript,
+} from '@/app/components/global/appearance/config'
 import DraftModeToast from '@/app/components/shared/draft-mode-toast'
-import { SITE_NAME } from '@/lib/constants'
+import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/constants'
 import { handleError } from '@/lib/handle-error'
+import { DEFAULT_SOCIAL_IMAGES, resolveMetadataBase } from '@/lib/social-image'
 import { cn } from '@/lib/utils'
-import * as demo from '@/sanity/lib/demo'
 import { fetchSettings } from '@/sanity/lib/fetch'
 import { SanityLive } from '@/sanity/lib/live'
-import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 
 import { HelveticaNowFont, RealHeadFont } from './fonts'
 
 import './globals.css'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
+export const viewport: Viewport = {
+  colorScheme: 'light dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FCF8F3' },
+    { media: '(prefers-color-scheme: dark)', color: '#26231F' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await fetchSettings()
 
-  const title = settings?.title || demo.title
-  const description = settings?.description || demo.description
-
-  const ogImage = resolveOpenGraphImage(settings?.ogImage)
-
-  let metadataBase: URL | undefined = undefined
-  try {
-    metadataBase = settings?.ogImage?.metadataBase
-      ? new URL(settings.ogImage.metadataBase)
-      : undefined
-  } catch {
-    // ignore invalid URL
-  }
+  const title = settings?.title || SITE_NAME
+  const description = settings?.description ? toPlainText(settings.description) : SITE_DESCRIPTION
+  const metadataBase = resolveMetadataBase(settings?.ogImage?.metadataBase)
 
   return {
     metadataBase,
@@ -43,21 +44,31 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${title}`,
       default: title,
     },
-    description: toPlainText(description),
-    keywords: ['default', 'keywords'],
-    authors: [{ name: 'Default Author' }],
+    description,
+    authors: [{ name: SITE_NAME }],
     generator: 'Next.js',
     applicationName: SITE_NAME,
     publisher: SITE_NAME,
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'default',
+      title: SITE_NAME,
+    },
     manifest: `/manifest.webmanifest`,
     openGraph: {
       title: title,
-      description: toPlainText(description),
+      description,
       url: '/',
       siteName: SITE_NAME,
-      images: ogImage ? [ogImage] : [],
+      images: DEFAULT_SOCIAL_IMAGES,
       locale: 'en_US',
       type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: DEFAULT_SOCIAL_IMAGES,
     },
     alternates: {
       canonical: '/',
@@ -68,9 +79,9 @@ export async function generateMetadata(): Promise<Metadata> {
       nocache: false,
     },
     icons: {
-      icon: '/favicon.ico',
-      shortcut: '/favicon-16x16.png',
-      apple: '/apple-touch-icon.png',
+      icon: '/logo/logo.svg',
+      shortcut: '/logo/logo.svg',
+      apple: '/logo/apple-touch-icon.png',
     },
   }
 }
@@ -81,16 +92,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         'bg-background text-foreground',
         HelveticaNowFont.variable,
         RealHeadFont.variable,
       )}
     >
-      <body>
-        <section className="min-h-screen pt-20">
-          {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
-          <Toaster />
+      <head>
+        <meta name="theme-color" content={APPEARANCE_THEME_COLORS.light} />
+        <script dangerouslySetInnerHTML={{ __html: appearanceBootScript }} />
+      </head>
+      <body id="top">
+        <AppearanceProvider>
+          <AppearanceToaster />
           {isDraftMode && (
             <>
               <DraftModeToast />
@@ -100,12 +115,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           )}
           {/* The <SanityLive> component is responsible for making all sanityFetch calls in your application live, so should always be rendered. */}
           <SanityLive onError={handleError} />
-          <Header />
-          <main className="">{children}</main>
-          <Footer />
-        </section>
-        {/* <CommandPalette /> */}
-        <SpeedInsights />
+          {children}
+          <SpeedInsights />
+        </AppearanceProvider>
       </body>
     </html>
   )

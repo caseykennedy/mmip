@@ -7,31 +7,32 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/app/components/ui/navigation-menu'
-import { fetchNavigation } from '@/sanity/lib/fetch'
 
-export default async function Navigation() {
-  const data = await fetchNavigation()
+import NavLinkLabel from './nav-link-label'
+import { filterPrimaryNav, type PrimaryNav } from './nav-items'
 
-  if (!data || !data.primaryNav || data.primaryNav.length === 0) {
+export default function Navigation({ primaryNav }: { primaryNav: PrimaryNav | null | undefined }) {
+  const items = filterPrimaryNav(primaryNav)
+
+  if (items.length === 0) {
     return null
   }
 
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        {data?.primaryNav?.map(({ dropdownLabel, link, type, dropdownItems }, i) => (
+        {items.map(({ dropdownLabel, link, type, dropdownItems }, i) => (
           <NavigationMenuItem key={i}>
             {type === 'dropdown' && dropdownItems ? (
               <>
                 <NavigationMenuTrigger>{dropdownLabel}</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[330px] gap-4">
-                    {dropdownItems.map((link, idx) => (
+                  <ul className="grid w-[360px] gap-1 p-1">
+                    {dropdownItems.map((item, idx) => (
                       <li key={idx}>
-                        <NavigationMenuLink asChild>
-                          <ResolvedLink link={link}>
-                            <div className="font-medium">{link.label}</div>
-                            {/* <div className="">Browse all components in the library.</div> */}
+                        <NavigationMenuLink asChild className="flex-row items-center">
+                          <ResolvedLink link={item}>
+                            <NavLinkLabel link={item} />
                           </ResolvedLink>
                         </NavigationMenuLink>
                       </li>
@@ -41,8 +42,10 @@ export default async function Navigation() {
               </>
             ) : (
               link && (
-                <NavigationMenuLink asChild>
-                  <ResolvedLink link={link}>{link?.label}</ResolvedLink>
+                <NavigationMenuLink asChild className="flex-row items-center">
+                  <ResolvedLink link={link}>
+                    <NavLinkLabel link={link} />
+                  </ResolvedLink>
                 </NavigationMenuLink>
               )
             )}
